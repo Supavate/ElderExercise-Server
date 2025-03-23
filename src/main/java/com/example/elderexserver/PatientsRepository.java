@@ -9,4 +9,7 @@ public interface PatientsRepository extends JpaRepository<Patients, Integer> {
 
     @Query(value = "select * from Patients p where p.Main_Caretaker=:Staff_ID", nativeQuery = true)
     List<Patients> getPatientsByStaff(int Staff_ID);
+
+    @Query(value = "SELECT *, TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE()) AS Age FROM Patients;", nativeQuery = true)
+    List<Patients> getPatientsAge();
 }

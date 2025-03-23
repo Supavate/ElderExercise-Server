@@ -2,7 +2,8 @@ package com.example.elderexserver;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Entity
 public class Patients {
@@ -17,7 +18,7 @@ public class Patients {
 
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private Integer Main_Caretaker;
     private Integer Status;
     private String Special_Note;
@@ -78,11 +79,11 @@ public class Patients {
         Height = height;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
