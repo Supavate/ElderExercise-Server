@@ -13,7 +13,7 @@ public class Routine {
     private String description;
     private int staff_id;
     @OneToMany(mappedBy = "routine")
-    private Set<Routines_exercises> Exercises;
+    private Set<Routine_exercises> Exercises;
 
     public int getId() {
         return id;
@@ -47,11 +47,11 @@ public class Routine {
         this.staff_id = staff_id;
     }
 
-    public Set<Routines_exercises> getExercises() {
+    public Set<Routine_exercises> getExercises() {
         return Exercises;
     }
 
-    public void setExercises(Set<Routines_exercises> exercises) {
+    public void setExercises(Set<Routine_exercises> exercises) {
         Exercises = exercises;
     }
 }

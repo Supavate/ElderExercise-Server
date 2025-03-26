@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 public class Patient {
@@ -22,6 +23,8 @@ public class Patient {
     private Integer caretaker;
     private String note;
     private Integer age;
+    @OneToMany(mappedBy = "patient")
+    private Set<Patient_Allergy> allergies;
 
     public Integer getId() {
         return id;
@@ -117,5 +120,13 @@ public class Patient {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public Set<Patient_Allergy> getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(Set<Patient_Allergy> allergies) {
+        this.allergies = allergies;
     }
 }
