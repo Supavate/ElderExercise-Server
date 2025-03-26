@@ -41,6 +41,10 @@ public class Patient {
     @JsonManagedReference
     private List<Patient_Note> notes;
 
+    @OneToMany(mappedBy = "patient")
+    @JsonManagedReference
+    private List<Patient_Status> status;
+
     public Integer getId() {
         return id;
     }
