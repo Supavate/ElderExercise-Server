@@ -1,5 +1,6 @@
 package com.example.elderexserver;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,6 +11,7 @@ public class Routine_exercises {
     @ManyToOne
     @MapsId("routine_id")
     @JoinColumn(name = "routine_id")
+    @JsonBackReference
     private Routine routine;
 
     @ManyToOne
