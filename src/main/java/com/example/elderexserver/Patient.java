@@ -1,9 +1,11 @@
 package com.example.elderexserver;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,6 +18,7 @@ public class Patient {
     private String blood_type;
     private Integer weight;
     private Integer height;
+
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date_of_birth;
@@ -33,6 +36,10 @@ public class Patient {
             joinColumns = @JoinColumn(name = "Patient_id"),
             inverseJoinColumns = @JoinColumn(name = "Allergy_id"))
     private Set<Allergy> allergies;
+
+    @OneToMany(mappedBy = "patient")
+    @JsonManagedReference
+    private List<Patient_Note> notes;
 
     public Integer getId() {
         return id;
@@ -136,5 +143,13 @@ public class Patient {
 
     public void setAllergies(Set<Allergy> allergies) {
         this.allergies = allergies;
+    }
+
+    public List<Patient_Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Patient_Note> notes) {
+        this.notes = notes;
     }
 }
