@@ -21,6 +21,7 @@ public class Patient {
     private String phone;
     private Integer caretaker;
     private String note;
+    private Integer age;
 
     public Integer getId() {
         return id;
@@ -108,5 +109,13 @@ public class Patient {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }

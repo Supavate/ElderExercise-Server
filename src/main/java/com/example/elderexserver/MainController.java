@@ -21,18 +21,7 @@ public class MainController {
     }
 
     @GetMapping("/pat/{id}")
-    public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id).get();}
-
-    @GetMapping("/pat/age/{id}")
-    public int getPatientAge(@PathVariable int id) {
-        Patient pat = patientRepository.findById(id).get();
-        return Period.between(pat.getDate_of_birth(), LocalDate.now()).getYears();
-    }
-
-    @GetMapping("/pat/age")
-    public List<Object> getPatientAge() {
-        return patientRepository.getPatientsAge();
-    }
+    public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id);}
 
     @Autowired
     private StaffRepository staffRepository;
