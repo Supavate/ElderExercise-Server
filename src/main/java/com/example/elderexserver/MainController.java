@@ -51,6 +51,13 @@ public class MainController {
     @GetMapping("/staff/super/{id}")
     public List<Staff> getStaffBySupervisor(@PathVariable int id) {return staffRepository.findBySupervisor(id);}
 
+    //Role
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @GetMapping("/role")
+    public List<Role> getAllRoles() {return roleRepository.findAll();}
+
     //Routine
     @Autowired
     RoutineRepository routineRepository;
