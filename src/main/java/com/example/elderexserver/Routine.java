@@ -11,7 +11,8 @@ public class Routine {
     private int id;
     private String name;
     private String description;
-    private int staff_id;
+    @ManyToOne
+    private Staff staff;
     @OneToMany(mappedBy = "routine")
     private Set<Routine_exercises> Exercises;
 
@@ -39,12 +40,12 @@ public class Routine {
         this.description = description;
     }
 
-    public int getStaff_id() {
-        return staff_id;
+    public Staff getStaff() {
+        return staff;
     }
 
-    public void setStaff_id(int staff_id) {
-        this.staff_id = staff_id;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
 
     public Set<Routine_exercises> getExercises() {

@@ -24,6 +24,18 @@ public class MainController {
     @GetMapping("/pat/{id}")
     public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id);}
 
+    //Allergy
+    @Autowired
+    private AllergyRepository allergyRepository;
+    @GetMapping("/allergy")
+    public List<Allergy> getAllAllergies() {return allergyRepository.findAll();}
+
+    //Status
+    @Autowired
+    private StatusRepository statusRepository;
+    @GetMapping("/status")
+    public List<Status> getAllStatus() {return statusRepository.findAll();}
+
     //Staff
     @Autowired
     private StaffRepository staffRepository;
@@ -39,7 +51,6 @@ public class MainController {
 
     @GetMapping("/staff/super/{id}")
     public List<Staff> getStaffBySupervisor(@PathVariable int id) {return staffRepository.findBySupervisor(id);}
-
 
     //Routine
     @Autowired

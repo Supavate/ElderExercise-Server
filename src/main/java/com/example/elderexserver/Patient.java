@@ -21,8 +21,20 @@ public class Patient {
     private LocalDate date_of_birth;
     private String phone;
     private Integer caretaker;
+
+    @ManyToOne
+    @JoinColumn(name = "caretaker_id")
+    private Staff staff;
     private String note;
     private Integer age;
+
+    @ManyToMany
+    @JoinTable(
+            name = "Patient_Allergy",
+            joinColumns = @JoinColumn(name = "Patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "Allergy_id"))
+    private Set<Allergy> allergies;
+
     @OneToMany(mappedBy = "patient")
     private Set<Patient_Allergy> allergies;
 
@@ -34,20 +46,20 @@ public class Patient {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirst_Name() {
+        return first_Name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirst_Name(String firstName) {
+        this.first_Name = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLast_Name() {
+        return last_Name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLast_Name(String lastName) {
+        this.last_Name = lastName;
     }
 
     public String getGender() {
@@ -98,12 +110,12 @@ public class Patient {
         this.phone = phone;
     }
 
-    public Integer getCaretaker() {
-        return caretaker;
+    public Staff getStaff() {
+        return staff;
     }
 
-    public void setCaretaker(Integer caretaker) {
-        this.caretaker = caretaker;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
 
     public String getNote() {
@@ -122,11 +134,11 @@ public class Patient {
         this.age = age;
     }
 
-    public Set<Patient_Allergy> getAllergies() {
+    public Set<Allergy> getAllergies() {
         return allergies;
     }
 
-    public void setAllergies(Set<Patient_Allergy> allergies) {
+    public void setAllergies(Set<Allergy> allergies) {
         this.allergies = allergies;
     }
 }

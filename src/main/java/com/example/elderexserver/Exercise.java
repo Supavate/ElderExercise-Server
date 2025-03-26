@@ -9,7 +9,7 @@ public class Exercise {
     private Integer id;
     private String name;
     private String description;
-    private String video;
+    private String video_url;
 
     public Integer getId() {
         return id;
@@ -35,11 +35,11 @@ public class Exercise {
         this.description = description;
     }
 
-    public String getVideo() {
-        return video;
+    public String getVideo_url() {
+        return video_url;
     }
 
-    public void setVideo(String video) {
-        this.video = video;
+    public void setVideo_url(String video) {
+        this.video_url = video;
     }
 }

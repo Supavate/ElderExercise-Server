@@ -9,8 +9,8 @@ import java.time.LocalDate;
 public class Staff {
     @Id
     private int id;
-    private String firstName;
-    private String lastName;
+    private String first_Name;
+    private String last_Name;
     private String gender;
     private String email;
     @Temporal(TemporalType.DATE)
@@ -19,7 +19,7 @@ public class Staff {
     private String username;
     private String password;
     @ManyToOne
-    @JoinColumn(name = "role")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     public int getId() {
@@ -30,20 +30,20 @@ public class Staff {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirst_Name() {
+        return first_Name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirst_Name(String firstName) {
+        this.first_Name = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLast_Name() {
+        return last_Name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLast_Name(String lastName) {
+        this.last_Name = lastName;
     }
 
     public String getGender() {

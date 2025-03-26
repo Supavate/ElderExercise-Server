@@ -19,6 +19,22 @@ public class Routine_exercises {
 
     private int amount;
 
+    public RoutinesExercisesKey getId() {
+        return id;
+    }
+
+    public void setId(RoutinesExercisesKey id) {
+        this.id = id;
+    }
+
+    public Routine getRoutine() {
+        return routine;
+    }
+
+    public void setRoutine(Routine routine) {
+        this.routine = routine;
+    }
+
     public Exercise getExercise() {
         return exercise;
     }
