@@ -12,6 +12,7 @@ import java.util.Objects;
 
 @RestController
 public class MainController {
+    //Patient
     @Autowired
     private PatientRepository patientRepository;
 
@@ -23,6 +24,7 @@ public class MainController {
     @GetMapping("/pat/{id}")
     public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id);}
 
+    //Staff
     @Autowired
     private StaffRepository staffRepository;
 
@@ -38,12 +40,15 @@ public class MainController {
     @GetMapping("/staff/super/{id}")
     public List<Staff> getStaffBySupervisor(@PathVariable int id) {return staffRepository.findBySupervisor(id);}
 
+
+    //Routine
     @Autowired
     RoutineRepository routineRepository;
 
     @GetMapping("/routine")
     public List<Routine> getAllRoutines() {return routineRepository.findAll();}
 
+    //Exercise
     @Autowired
     ExerciseRepository exerciseRepository;
     @GetMapping("/exe")

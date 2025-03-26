@@ -3,7 +3,7 @@ package com.example.elderexserver;
 import jakarta.persistence.*;
 
 @Entity
-public class Routines_exercises {
+public class Routine_exercises {
     @EmbeddedId
     RoutinesExercisesKey id;
 
