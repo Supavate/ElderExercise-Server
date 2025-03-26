@@ -10,8 +10,8 @@ import java.util.Set;
 public class Patient {
     @Id
     private Integer id;
-    private String firstName;
-    private String lastName;
+    private String first_Name;
+    private String last_Name;
     private String gender;
     private String blood_type;
     private Integer weight;
@@ -20,7 +20,6 @@ public class Patient {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date_of_birth;
     private String phone;
-    private Integer caretaker;
 
     @ManyToOne
     @JoinColumn(name = "caretaker_id")
@@ -34,9 +33,6 @@ public class Patient {
             joinColumns = @JoinColumn(name = "Patient_id"),
             inverseJoinColumns = @JoinColumn(name = "Allergy_id"))
     private Set<Allergy> allergies;
-
-    @OneToMany(mappedBy = "patient")
-    private Set<Patient_Allergy> allergies;
 
     public Integer getId() {
         return id;

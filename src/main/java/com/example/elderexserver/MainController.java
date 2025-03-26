@@ -30,12 +30,6 @@ public class MainController {
     @GetMapping("/allergy")
     public List<Allergy> getAllAllergies() {return allergyRepository.findAll();}
 
-    //Status
-    @Autowired
-    private StatusRepository statusRepository;
-    @GetMapping("/status")
-    public List<Status> getAllStatus() {return statusRepository.findAll();}
-
     //Staff
     @Autowired
     private StaffRepository staffRepository;
