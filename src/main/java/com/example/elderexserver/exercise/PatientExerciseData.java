@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.util.*;
 
+//Have problem of Actual_Exercise_Detail without Patient_Routine in date range
 public class PatientExerciseData {
     List<Week> weeks;
     //Actual_Exercise_Detail group by day done
