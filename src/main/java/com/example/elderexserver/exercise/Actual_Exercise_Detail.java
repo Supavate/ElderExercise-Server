@@ -18,6 +18,7 @@ public class Actual_Exercise_Detail {
     @ManyToOne
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
+    private int exercise_id;
 
     @Temporal(TemporalType.DATE)
     private Date start_time;
@@ -56,6 +57,14 @@ public class Actual_Exercise_Detail {
 
     public void setExercise(Exercise exercise) {
         this.exercise = exercise;
+    }
+
+    public int getExercise_id() {
+        return exercise_id;
+    }
+
+    public void setExercise_id(int exercise_id) {
+        this.exercise_id = exercise_id;
     }
 
     public Date getStart_time() {

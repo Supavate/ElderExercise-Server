@@ -16,10 +16,12 @@ public class Routine_exercises {
     @ManyToOne
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
+    private int exercise_id;
 
     @ManyToOne
     @JoinColumn(name = "week_day_id")
-    private Week_Day week_day_id;
+    private Week_Day week_day;
+    private int week_day_id;
 
     private int rep;
 
@@ -47,11 +49,27 @@ public class Routine_exercises {
         this.exercise = exercise;
     }
 
-    public Week_Day getWeek_day_id() {
+    public int getExercise_id() {
+        return exercise_id;
+    }
+
+    public void setExercise_id(int exercise_id) {
+        this.exercise_id = exercise_id;
+    }
+
+    public Week_Day getWeek_day() {
+        return week_day;
+    }
+
+    public void setWeek_day(Week_Day week_day_id) {
+        this.week_day = week_day_id;
+    }
+
+    public int getWeek_day_id() {
         return week_day_id;
     }
 
-    public void setWeek_day_id(Week_Day week_day_id) {
+    public void setWeek_day_id(int week_day_id) {
         this.week_day_id = week_day_id;
     }
 
