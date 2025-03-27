@@ -32,7 +32,7 @@ public class Actual_Exercise_Detail {
     private int hr_zone4;
     private int hr_zone5;
     private int reps;
-    private float calorie;
+    private float calories;
 
     public Integer getId() {
         return id;
@@ -130,11 +130,11 @@ public class Actual_Exercise_Detail {
         this.reps = reps;
     }
 
-    public float getCalorie() {
-        return calorie;
+    public float getCalories() {
+        return calories;
     }
 
-    public void setCalorie(float calorie) {
-        this.calorie = calorie;
+    public void setCalories(float calorie) {
+        this.calories = calorie;
     }
 }

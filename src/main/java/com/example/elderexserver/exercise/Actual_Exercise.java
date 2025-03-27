@@ -3,7 +3,6 @@ package com.example.elderexserver.exercise;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -11,12 +10,13 @@ import java.util.List;
 public class Actual_Exercise {
     @Id
     private Integer id;
+    private int patient_routine_id;
 
     @Temporal(TemporalType.DATE)
-    private Date startTime;
+    private Date start_time;
 
     @Temporal(TemporalType.DATE)
-    private Date endTime;
+    private Date end_time;
 
     @OneToMany(mappedBy = "actualExercise")
     @JsonManagedReference
@@ -30,21 +30,28 @@ public class Actual_Exercise {
         this.id = id;
     }
 
-
-    public Date getStartTime() {
-        return startTime;
+    public int getPatient_routine_id() {
+        return patient_routine_id;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setPatient_routine_id(int patient_routine_id) {
+        this.patient_routine_id = patient_routine_id;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Date getStart_time() {
+        return start_time;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setStart_time(Date startTime) {
+        this.start_time = startTime;
+    }
+
+    public Date getEnd_time() {
+        return end_time;
+    }
+
+    public void setEnd_time(Date endTime) {
+        this.end_time = endTime;
     }
 
     public List<Actual_Exercise_Detail> getExercise_details() {

@@ -1,7 +1,6 @@
 package com.example.elderexserver.exercise;
 
 import com.example.elderexserver.staff.Staff;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -18,7 +17,6 @@ public class Routine {
     private Staff staff;
 
     @OneToMany(mappedBy = "routine")
-    @JsonManagedReference
     private Set<Routine_exercises> Exercises;
 
     public int getId() {

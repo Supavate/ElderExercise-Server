@@ -1,10 +1,13 @@
 package com.example.elderexserver.patient;
 
+import com.example.elderexserver.exercise.Actual_Exercise;
 import com.example.elderexserver.exercise.Routine;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Patient_Routine {
@@ -23,6 +26,10 @@ public class Patient_Routine {
     @Temporal(TemporalType.DATE)
     private Date start_date;
     private int week;
+
+    @OneToMany(mappedBy = "patient_routine_id")
+    @JsonManagedReference
+    private List<Actual_Exercise> exercises;
 
     public int getId() {
         return id;
@@ -62,5 +69,13 @@ public class Patient_Routine {
 
     public void setWeek(int week) {
         this.week = week;
+    }
+
+    public List<Actual_Exercise> getExercise() {
+        return exercises;
+    }
+
+    public void setExercise(List<Actual_Exercise> exercises) {
+        this.exercises = exercises;
     }
 }
