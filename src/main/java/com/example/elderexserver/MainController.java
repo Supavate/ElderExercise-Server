@@ -1,5 +1,14 @@
 package com.example.elderexserver;
 
+import com.example.elderexserver.exercise.Exercise;
+import com.example.elderexserver.exercise.ExerciseRepository;
+import com.example.elderexserver.exercise.Routine;
+import com.example.elderexserver.exercise.RoutineRepository;
+import com.example.elderexserver.patient.*;
+import com.example.elderexserver.staff.Role;
+import com.example.elderexserver.staff.RoleRepository;
+import com.example.elderexserver.staff.Staff;
+import com.example.elderexserver.staff.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

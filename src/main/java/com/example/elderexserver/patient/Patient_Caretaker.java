@@ -1,12 +1,13 @@
-package com.example.elderexserver;
+package com.example.elderexserver.patient;
 
+import com.example.elderexserver.staff.Staff;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
 
 @Entity
-public class Patient_Status {
+public class Patient_Caretaker {
     @Id
     private int id;
 
@@ -16,10 +17,10 @@ public class Patient_Status {
     private Patient patient;
 
     @ManyToOne
-    @JoinColumn(name = "status_id")
-    private Status status;
+    @JoinColumn(name = "caretaker_id")
+    private Staff caretaker;
 
-    @Temporal(value = TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     private Date date;
 
     public int getId() {
@@ -38,12 +39,12 @@ public class Patient_Status {
         this.patient = patient;
     }
 
-    public Status getStatus() {
-        return status;
+    public Staff getCaretaker() {
+        return caretaker;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setCaretaker(Staff caretaker) {
+        this.caretaker = caretaker;
     }
 
     public Date getDate() {

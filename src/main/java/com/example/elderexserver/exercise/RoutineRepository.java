@@ -1,4 +1,4 @@
-package com.example.elderexserver;
+package com.example.elderexserver.exercise;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

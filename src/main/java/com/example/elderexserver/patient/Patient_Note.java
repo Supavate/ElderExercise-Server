@@ -1,5 +1,6 @@
-package com.example.elderexserver;
+package com.example.elderexserver.patient;
 
+import com.example.elderexserver.staff.Staff;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 

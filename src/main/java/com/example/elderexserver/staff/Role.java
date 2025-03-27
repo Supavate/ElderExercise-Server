@@ -1,10 +1,10 @@
-package com.example.elderexserver;
+package com.example.elderexserver.staff;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Status {
+public class Role {
     @Id
     private int id;
     private String name;

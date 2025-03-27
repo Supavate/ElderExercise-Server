@@ -1,5 +1,6 @@
-package com.example.elderexserver;
+package com.example.elderexserver.patient;
 
+import com.example.elderexserver.staff.Staff;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -14,8 +15,13 @@ public class Patient {
     private Integer id;
     private String first_Name;
     private String last_Name;
-    private String gender;
-    private String blood_type;
+    @ManyToOne
+    @JoinColumn(name = "gender_id")
+    private Gender gender;
+
+    @ManyToOne
+    @JoinColumn(name = "blood_type_id")
+    private Blood_Type blood_type;
     private Integer weight;
     private Integer height;
 
@@ -45,6 +51,10 @@ public class Patient {
     @JsonManagedReference
     private List<Patient_Status> status;
 
+    @OneToMany(mappedBy = "patient")
+    @JsonManagedReference
+    private List<Patient_Caretaker> caretakers;
+
     public Integer getId() {
         return id;
     }
@@ -69,20 +79,28 @@ public class Patient {
         this.last_Name = lastName;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
-    public String getBlood_type() {
+    public Blood_Type getBlood_type() {
         return blood_type;
     }
 
-    public void setBlood_type(String blood_type) {
+    public void setBlood_type(Blood_Type blood_type) {
         this.blood_type = blood_type;
+    }
+
+    public List<Patient_Status> getStatus() {
+        return status;
+    }
+
+    public void setStatus(List<Patient_Status> status) {
+        this.status = status;
     }
 
     public Integer getWeight() {

@@ -1,5 +1,6 @@
-package com.example.elderexserver;
+package com.example.elderexserver.exercise;
 
+import com.example.elderexserver.staff.Staff;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 

@@ -1,21 +1,20 @@
-package com.example.elderexserver;
+package com.example.elderexserver.patient;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Exercise {
+public class Allergy {
     @Id
-    private Integer id;
+    private int id;
     private String name;
     private String description;
-    private String video_url;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -33,13 +32,5 @@ public class Exercise {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getVideo_url() {
-        return video_url;
-    }
-
-    public void setVideo_url(String video) {
-        this.video_url = video;
     }
 }

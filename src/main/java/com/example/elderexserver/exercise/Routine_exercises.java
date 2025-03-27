@@ -1,31 +1,33 @@
-package com.example.elderexserver;
+package com.example.elderexserver.exercise;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 public class Routine_exercises {
-    @EmbeddedId
-    RoutinesExercisesKey id;
+    @Id
+    private int id;
 
     @ManyToOne
-    @MapsId("routine_id")
     @JoinColumn(name = "routine_id")
     @JsonBackReference
     private Routine routine;
 
     @ManyToOne
-    @MapsId("exercise_id")
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
-    private int amount;
+    @ManyToOne
+    @JoinColumn(name = "week_day_id")
+    private Week_Day week_day_id;
 
-    public RoutinesExercisesKey getId() {
+    private int rep;
+
+    public int getId() {
         return id;
     }
 
-    public void setId(RoutinesExercisesKey id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -45,11 +47,19 @@ public class Routine_exercises {
         this.exercise = exercise;
     }
 
-    public int getAmount() {
-        return amount;
+    public Week_Day getWeek_day_id() {
+        return week_day_id;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setWeek_day_id(Week_Day week_day_id) {
+        this.week_day_id = week_day_id;
+    }
+
+    public int getRep() {
+        return rep;
+    }
+
+    public void setRep(int amount) {
+        this.rep = amount;
     }
 }

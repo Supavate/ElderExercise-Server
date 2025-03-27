@@ -1,4 +1,4 @@
-package com.example.elderexserver;
+package com.example.elderexserver.staff;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
