@@ -13,7 +13,7 @@ public class Actual_Exercise_Detail {
     @ManyToOne
     @JoinColumn(name = "actual_exercise_id")
     @JsonBackReference
-    private ActualExercise actualExercise;
+    private Actual_Exercise actualExercise;
 
     @ManyToOne
     @JoinColumn(name = "exercise_id")
