@@ -17,7 +17,7 @@ public class PatientExerciseData {
             this.weeks = new ArrayList<>();
 
             for (int i = 0; i < patientRoutine.getWeek(); i++) {
-                Week week = new Week(patientRoutine.getRoutine(), getDate(patientRoutine.getStart_date(), i, 7));
+                Week week = new Week(patientRoutine.getRoutine(), getDate(patientRoutine.getStart_date(), i));
                 weeks.add(week);
             }
         }
@@ -28,9 +28,8 @@ public class PatientExerciseData {
     List<Week> getData() {
         int index = 0;
         for (Week week : weeks) {
-            int weekday = 0;
             for (Day day : week.getDays()) {
-                day.setDone(exerciseDetails.get(index++), getDate(week.getDate(), weekday, 0));
+                day.setDone(exerciseDetails.get(index++));
             }
         }
         return weeks;
@@ -41,10 +40,10 @@ public class PatientExerciseData {
         return ow.writeValueAsString(getData());
     }
 
-    private Date getDate(Date startDate, int i, int mul) {
+    private Date getDate(Date startDate, int i) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
-        calendar.add(Calendar.DATE, i * mul);
+        calendar.add(Calendar.DATE, i * 7);
         return calendar.getTime();
     }
 
@@ -56,6 +55,10 @@ public class PatientExerciseData {
             this.days = new Day[7];
             this.date = date;
 
+            for (int i = 0; i < 7; i++) {
+                days[i] = new Day(getDate(date, i));
+            }
+
             for (Routine_exercises routine_exercise : routine.getExercises()) {
                 days[routine_exercise.getWeek_day_id()].setGoal(routine_exercise);
             }
@@ -65,8 +68,11 @@ public class PatientExerciseData {
             return days;
         }
 
-        public Date getDate() {
-            return date;
+        private Date getDate(Date startDate, int i) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DATE, i);
+            return calendar.getTime();
         }
     }
 
@@ -79,23 +85,22 @@ public class PatientExerciseData {
         //List of all exercise done int that day
         List<Actual_Exercise_Detail> exercises;
 
-        Day() {
+        Day(Date date) {
             this.exerciseTarget = new HashMap<>();
             this.exerciseDone = new HashMap<>();
+            this.date = date;
         }
 
         void setGoal(Routine_exercises routine_exercise) {
             exerciseTarget.put(routine_exercise.getExercise_id(), exerciseTarget.getOrDefault(routine_exercise.getExercise_id(), 0) + routine_exercise.getRep());
         }
 
-        void setDone(List<Actual_Exercise_Detail> exercises, Date date) {
+        void setDone(List<Actual_Exercise_Detail> exercises) {
             this.exercises = exercises;
 
             for (Actual_Exercise_Detail exercise : exercises) {
                 exerciseDone.put(exercise.getExercise_id(), exerciseDone.getOrDefault(exercise.getExercise_id(), 0) + exercise.getReps());
             }
-
-            this.date = date;
         }
     }
 }
