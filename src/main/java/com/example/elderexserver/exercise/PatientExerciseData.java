@@ -1,6 +1,9 @@
 package com.example.elderexserver.exercise;
 
 import com.example.elderexserver.patient.Patient_Routine;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.util.*;
 
@@ -31,6 +34,11 @@ public class PatientExerciseData {
             }
         }
         return weeks;
+    }
+
+    public String getJson() throws JsonProcessingException {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        return ow.writeValueAsString(getData());
     }
 
     private Date getDate(Date startDate, int i, int mul) {
@@ -68,6 +76,8 @@ public class PatientExerciseData {
         Map<Integer, Integer> exerciseTarget;
         //Map of Exercises id  Exercises done
         Map<Integer, Integer> exerciseDone;
+        //List of all exercise done int that day
+        List<Actual_Exercise_Detail> exercises;
 
         Day() {
             this.exerciseTarget = new HashMap<>();
@@ -79,6 +89,8 @@ public class PatientExerciseData {
         }
 
         void setDone(List<Actual_Exercise_Detail> exercises, Date date) {
+            this.exercises = exercises;
+
             for (Actual_Exercise_Detail exercise : exercises) {
                 exerciseDone.put(exercise.getExercise_id(), exerciseDone.getOrDefault(exercise.getExercise_id(), 0) + exercise.getReps());
             }
