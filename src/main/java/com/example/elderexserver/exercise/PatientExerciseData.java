@@ -14,7 +14,7 @@ public class PatientExerciseData {
             this.weeks = new ArrayList<>();
 
             for (int i = 0; i < patientRoutine.getWeek(); i++) {
-                Week week = new Week(patientRoutine.getRoutine(), getWeekDate(patientRoutine.getStart_date(), i));
+                Week week = new Week(patientRoutine.getRoutine(), getDate(patientRoutine.getStart_date(), i, 7));
                 weeks.add(week);
             }
         }
@@ -25,17 +25,18 @@ public class PatientExerciseData {
     List<Week> getData() {
         int index = 0;
         for (Week week : weeks) {
+            int weekday = 0;
             for (Day day : week.getDays()) {
-                day.setDone(exerciseDetails.get(index++));
+                day.setDone(exerciseDetails.get(index++), getDate(week.getDate(), weekday, 0));
             }
         }
         return weeks;
     }
 
-    private Date getWeekDate(Date startDate, int i) {
+    private Date getDate(Date startDate, int i, int mul) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
-        calendar.add(Calendar.DATE, i * 7);
+        calendar.add(Calendar.DATE, i * mul);
         return calendar.getTime();
     }
 
@@ -55,6 +56,10 @@ public class PatientExerciseData {
         public Day[] getDays() {
             return days;
         }
+
+        public Date getDate() {
+            return date;
+        }
     }
 
     class Day {
@@ -73,10 +78,12 @@ public class PatientExerciseData {
             exerciseTarget.put(routine_exercise.getExercise_id(), exerciseTarget.getOrDefault(routine_exercise.getExercise_id(), 0) + routine_exercise.getRep());
         }
 
-        void setDone(List<Actual_Exercise_Detail> exercises) {
+        void setDone(List<Actual_Exercise_Detail> exercises, Date date) {
             for (Actual_Exercise_Detail exercise : exercises) {
                 exerciseDone.put(exercise.getExercise_id(), exerciseDone.getOrDefault(exercise.getExercise_id(), 0) + exercise.getReps());
             }
+
+            this.date = date;
         }
     }
 }
