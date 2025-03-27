@@ -1,6 +1,7 @@
 package com.example.elderexserver.patient;
 
 import com.example.elderexserver.exercise.Routine;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ public class Patient_Routine {
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
+    @JsonBackReference
     private Patient patient;
 
     @ManyToOne

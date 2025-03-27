@@ -55,6 +55,10 @@ public class Patient {
     @JsonManagedReference
     private List<Patient_Caretaker> caretakers;
 
+    @OneToMany(mappedBy = "patient")
+    @JsonManagedReference
+    private List<Patient_Routine> routines;
+
     public Integer getId() {
         return id;
     }
@@ -173,5 +177,21 @@ public class Patient {
 
     public void setNotes(List<Patient_Note> notes) {
         this.notes = notes;
+    }
+
+    public List<Patient_Caretaker> getCaretakers() {
+        return caretakers;
+    }
+
+    public void setCaretakers(List<Patient_Caretaker> caretakers) {
+        this.caretakers = caretakers;
+    }
+
+    public List<Patient_Routine> getRoutines() {
+        return routines;
+    }
+
+    public void setRoutines(List<Patient_Routine> routines) {
+        this.routines = routines;
     }
 }
