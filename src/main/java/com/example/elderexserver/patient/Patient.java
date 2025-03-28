@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +35,8 @@ public class Patient {
     @JoinColumn(name = "caretaker_id")
     private Staff staff;
     private String note;
+
+    @Transient
     private Integer age;
 
     @ManyToMany
@@ -156,7 +159,7 @@ public class Patient {
     }
 
     public Integer getAge() {
-        return age;
+        return Period.between(this.date_of_birth, LocalDate.now()).getYears();
     }
 
     public void setAge(Integer age) {

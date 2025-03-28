@@ -7,13 +7,12 @@ import java.util.List;
 
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
-    @Query(value = "SELECT *, TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE()) AS Age FROM Patient;", nativeQuery = true)
+    @Query(value = "SELECT * FROM Patient;", nativeQuery = true)
     List<Patient> findAll();
 
-    @Query(value = "SELECT *, TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE()) AS Age FROM Patient p WHERE p.id=:id;", nativeQuery = true)
+    @Query(value = "SELECT * FROM Patient p WHERE p.id=:id;", nativeQuery = true)
     Patient findById(int id);
 
-
-    @Query(value = "select *, TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE()) AS Age from Patient p WHERE p.caretaker_id=:id", nativeQuery = true)
+    @Query(value = "select * from Patient p WHERE p.caretaker_id=:id", nativeQuery = true)
     List<Patient> findByCaretaker(int id);
 }
