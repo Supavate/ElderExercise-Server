@@ -15,6 +15,7 @@ public class Routine_exercises {
 
     @ManyToOne
     @JoinColumn(name = "exercise_id")
+    @JsonBackReference
     private Exercise exercise;
 
     @ManyToOne

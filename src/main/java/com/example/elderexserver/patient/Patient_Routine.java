@@ -21,13 +21,14 @@ public class Patient_Routine {
 
     @ManyToOne
     @JoinColumn(name = "routine_id")
+    @JsonManagedReference
     private Routine routine;
 
     @Temporal(TemporalType.DATE)
     private Date start_date;
     private int week;
 
-    @OneToMany(mappedBy = "patient_routine_id")
+    @OneToMany(mappedBy = "patientRoutine")
     @JsonManagedReference
     private List<Actual_Exercise> exercises;
 
@@ -71,11 +72,11 @@ public class Patient_Routine {
         this.week = week;
     }
 
-    public List<Actual_Exercise> getExercise() {
+    public List<Actual_Exercise> getExercises() {
         return exercises;
     }
 
-    public void setExercise(List<Actual_Exercise> exercises) {
+    public void setExercises(List<Actual_Exercise> exercises) {
         this.exercises = exercises;
     }
 }

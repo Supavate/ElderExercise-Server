@@ -76,4 +76,24 @@ public class MainController {
     ExerciseRepository exerciseRepository;
     @GetMapping("/exe")
     public List<Exercise> getAllExercises() {return exerciseRepository.findAll();}
+
+    @Autowired
+    PatientRoutineRepository patientRoutineRepository;
+
+    @GetMapping("/patrou")
+    public  List<Patient_Routine> getAllPatientRoutine() {
+        return patientRoutineRepository.findAll();
+    }
+
+    @Autowired
+    ActualExerciseRepository actualExerciseRepository;
+
+    @GetMapping("/acte")
+    public List<Actual_Exercise> getAllActualExercise() {return actualExerciseRepository.findAll();}
+
+    @Autowired
+    ActualExerciseDetailRepository actualExerciseDetailRepository;
+
+    @GetMapping("/acted")
+    public List<Actual_Exercise_Detail> getAllActualExerciseDetails() {return actualExerciseDetailRepository.findAll();}
 }

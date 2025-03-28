@@ -1,5 +1,7 @@
 package com.example.elderexserver.exercise;
 
+import com.example.elderexserver.patient.Patient_Routine;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -10,7 +12,11 @@ import java.util.List;
 public class Actual_Exercise {
     @Id
     private Integer id;
-    private int patient_routine_id;
+
+    @ManyToOne
+    @JoinColumn(name = "patient_routine_id")
+    @JsonBackReference
+    private Patient_Routine patientRoutine;
 
     @Temporal(TemporalType.DATE)
     private Date start_time;
@@ -30,12 +36,12 @@ public class Actual_Exercise {
         this.id = id;
     }
 
-    public int getPatient_routine_id() {
-        return patient_routine_id;
+    public Patient_Routine getPatientRoutine() {
+        return patientRoutine;
     }
 
-    public void setPatient_routine_id(int patient_routine_id) {
-        this.patient_routine_id = patient_routine_id;
+    public void setPatientRoutine(Patient_Routine patientRoutine) {
+        this.patientRoutine = patientRoutine;
     }
 
     public Date getStart_time() {
