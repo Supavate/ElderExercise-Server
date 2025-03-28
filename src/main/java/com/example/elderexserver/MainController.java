@@ -1,9 +1,6 @@
 package com.example.elderexserver;
 
-import com.example.elderexserver.exercise.Exercise;
-import com.example.elderexserver.exercise.ExerciseRepository;
-import com.example.elderexserver.exercise.Routine;
-import com.example.elderexserver.exercise.RoutineRepository;
+import com.example.elderexserver.exercise.*;
 import com.example.elderexserver.patient.*;
 import com.example.elderexserver.staff.Role;
 import com.example.elderexserver.staff.RoleRepository;
@@ -30,6 +27,9 @@ public class MainController {
     @GetMapping("/pat/{id}")
     public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id);}
 
+    @GetMapping("/pat/staff/{id}")
+    public List<Patient> getPatientsByStaff(@PathVariable int id) {return patientRepository.findByCaretaker(id);}
+
     //Allergy
     @Autowired
     private AllergyRepository allergyRepository;
@@ -47,9 +47,6 @@ public class MainController {
     //Staff
     @Autowired
     private StaffRepository staffRepository;
-
-    @GetMapping("/pat/staff/{id}")
-    public List<Patient> getPatientsByStaff(@PathVariable int id) {return patientRepository.findByCaretaker(id);}
 
     @GetMapping("/staff")
     public List<Staff> getAllStaff() {return staffRepository.findAll();}

@@ -14,6 +14,6 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
     Patient findById(int id);
 
 
-    @Query(value = "select *, TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE()) AS Age from Patient p WHERE p.caretaker=:id", nativeQuery = true)
+    @Query(value = "select *, TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE()) AS Age from Patient p WHERE p.caretaker_id=:id", nativeQuery = true)
     List<Patient> findByCaretaker(int id);
 }
