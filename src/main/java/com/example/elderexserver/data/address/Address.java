@@ -1,0 +1,58 @@
+package com.example.elderexserver.data.address;
+
+import com.example.elderexserver.data.patient.Patient;
+import jakarta.persistence.*;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "address")
+public class Address {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "district_id", nullable = false)
+    private District district;
+
+    @OneToOne(mappedBy = "address")
+    private Patient patients;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public District getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(District district) {
+        this.district = district;
+    }
+
+    public Patient getPatients() {
+        return patients;
+    }
+
+    public void setPatients(Patient patients) {
+        this.patients = patients;
+    }
+}

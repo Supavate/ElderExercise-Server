@@ -1,5 +1,6 @@
 package com.example.elderexserver.data.patient;
 
+import com.example.elderexserver.data.address.Address;
 import com.example.elderexserver.data.staff.Staff;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -61,6 +62,9 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     @JsonManagedReference
     private List<Patient_Routine> routines;
+
+    @OneToOne
+    private Address address;
 
     public Integer getId() {
         return id;
