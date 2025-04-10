@@ -1,5 +1,6 @@
 package com.example.elderexserver.controller;
 
+import com.example.elderexserver.data.patient.DTOs.PatientWithAge;
 import com.example.elderexserver.data.exercise.Actual_Exercise;
 import com.example.elderexserver.data.exercise.Actual_Exercise_Detail;
 import com.example.elderexserver.data.exercise.Exercise;
@@ -11,6 +12,7 @@ import com.example.elderexserver.data.patient.Status;
 import com.example.elderexserver.repository.*;
 import com.example.elderexserver.data.staff.Role;
 import com.example.elderexserver.data.staff.Staff;
+import com.example.elderexserver.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,7 @@ public class MainController {
     //Patient
     @Autowired
     private PatientRepository patientRepository;
+    private final PatientService patientService;
 
     @GetMapping("/pat")
     public List<Patient> getAllPatients() {
@@ -31,6 +34,9 @@ public class MainController {
 
     @GetMapping("/pat/{id}")
     public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id);}
+
+    @GetMapping("/patAge")
+    public List<PatientWithAge> getAllPatientsWithAge() {return patientService.findAllWithAge();}
 
     @GetMapping("/pat/staff/{id}")
     public List<Patient> getPatientsByStaff(@PathVariable int id) {return patientRepository.findByCaretaker(id);}
@@ -101,4 +107,9 @@ public class MainController {
 
     @GetMapping("/acted")
     public List<Actual_Exercise_Detail> getAllActualExerciseDetails() {return actualExerciseDetailRepository.findAll();}
+
+    //Constructor
+    public MainController(PatientService patientService) {
+        this.patientService = patientService;
+    }
 }
