@@ -1,6 +1,6 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.patient.DTOs.PatientWithAge;
+import com.example.elderexserver.data.patient.DTO.PatientWithAge;
 import com.example.elderexserver.data.exercise.Actual_Exercise;
 import com.example.elderexserver.data.exercise.Actual_Exercise_Detail;
 import com.example.elderexserver.data.exercise.Exercise;
@@ -22,24 +22,25 @@ import java.util.List;
 
 @RestController
 public class MainController {
-    //Patient
-    @Autowired
-    private PatientRepository patientRepository;
-    private final PatientService patientService;
 
-    @GetMapping("/pat")
-    public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
-    }
-
-    @GetMapping("/pat/{id}")
-    public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id);}
-
-    @GetMapping("/patAge")
-    public List<PatientWithAge> getAllPatientsWithAge() {return patientService.findAllWithAge();}
-
-    @GetMapping("/pat/staff/{id}")
-    public List<Patient> getPatientsByStaff(@PathVariable int id) {return patientRepository.findByCaretaker(id);}
+//    //Patient
+//    @Autowired
+//    private PatientRepository patientRepository;
+//    private final PatientService patientService;
+//
+//    @GetMapping("/pat")
+//    public List<Patient> getAllPatients() {
+//        return patientRepository.findAll();
+//    }
+//
+//    @GetMapping("/pat/{id}")
+//    public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id);}
+//
+//    @GetMapping("/patAge")
+//    public List<PatientWithAge> getAllPatientsWithAge() {return patientService.getPatientsWithAge();}
+//
+//    @GetMapping("/pat/staff/{id}")
+//    public List<Patient> getPatientsByStaff(@PathVariable int id) {return patientRepository.findByCaretaker(id);}
 
     //Allergy
     @Autowired
@@ -108,8 +109,4 @@ public class MainController {
     @GetMapping("/acted")
     public List<Actual_Exercise_Detail> getAllActualExerciseDetails() {return actualExerciseDetailRepository.findAll();}
 
-    //Constructor
-    public MainController(PatientService patientService) {
-        this.patientService = patientService;
-    }
 }
