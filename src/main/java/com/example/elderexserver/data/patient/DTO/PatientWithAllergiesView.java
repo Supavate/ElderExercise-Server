@@ -1,6 +1,4 @@
-package com.example.elderexserver.data.patient.View;
-
-import java.util.Set;
+package com.example.elderexserver.data.patient.DTO;
 
 public interface PatientWithAllergiesView {
     Integer getId();

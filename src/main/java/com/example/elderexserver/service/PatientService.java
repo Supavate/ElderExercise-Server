@@ -2,8 +2,8 @@ package com.example.elderexserver.service;
 
 import com.example.elderexserver.data.patient.DTO.PatientWithAge;
 import com.example.elderexserver.data.patient.DTO.PatientWithAllergies;
-import com.example.elderexserver.data.patient.View.PatientWithAgeView;
-import com.example.elderexserver.data.patient.View.PatientWithAllergiesView;
+import com.example.elderexserver.data.patient.DTO.PatientWithAgeView;
+import com.example.elderexserver.data.patient.DTO.PatientWithAllergiesView;
 import com.example.elderexserver.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

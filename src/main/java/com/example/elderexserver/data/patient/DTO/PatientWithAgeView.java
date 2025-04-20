@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.patient.View;
+package com.example.elderexserver.data.patient.DTO;
 
 public interface PatientWithAgeView {
     Integer getId();

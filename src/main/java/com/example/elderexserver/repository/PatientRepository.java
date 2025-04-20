@@ -1,8 +1,8 @@
 package com.example.elderexserver.repository;
 
 import com.example.elderexserver.data.patient.Patient;
-import com.example.elderexserver.data.patient.View.PatientWithAgeView;
-import com.example.elderexserver.data.patient.View.PatientWithAllergiesView;
+import com.example.elderexserver.data.patient.DTO.PatientWithAgeView;
+import com.example.elderexserver.data.patient.DTO.PatientWithAllergiesView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
