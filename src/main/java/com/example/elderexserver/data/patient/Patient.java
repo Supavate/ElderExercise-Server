@@ -1,7 +1,8 @@
 package com.example.elderexserver.data.patient;
 
 import com.example.elderexserver.data.address.Address;
-import com.example.elderexserver.data.patient.DTOs.PatientWithAge;
+import com.example.elderexserver.data.patient.DTO.PatientWithAge;
+import com.example.elderexserver.data.patient.DTO.PatientWithAllergies;
 import com.example.elderexserver.data.staff.Staff;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -12,20 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@SqlResultSetMapping(
-        name = "PatientWithAgeMapping",
-        classes = @ConstructorResult(
-                targetClass = PatientWithAge.class,
-                columns = {
-                        @ColumnResult(name = "id", type = Integer.class),
-                        @ColumnResult(name = "first_name", type = String.class),
-                        @ColumnResult(name = "last_name", type = String.class),
-                        @ColumnResult(name = "weight", type = Integer.class),
-                        @ColumnResult(name = "height", type = Integer.class),
-                        @ColumnResult(name = "age", type = Integer.class)
-                }
-        )
-)
 public class Patient {
     @Id
     private Integer id;
