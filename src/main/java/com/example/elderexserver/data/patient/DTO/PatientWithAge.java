@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.patient.DTOs;
+package com.example.elderexserver.data.patient.DTO;
 
 public class PatientWithAge {
     private Integer id;
