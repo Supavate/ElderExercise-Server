@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/exe")
+@RequestMapping("/exercise")
 public class ExerciseController {
     @Autowired
     private ExerciseService exerciseService;
@@ -20,7 +20,7 @@ public class ExerciseController {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
-    @GetMapping("/list")
+    @GetMapping("/routine/list")
     public List<RoutineList> getAllRoutines() {
         return exerciseService.getRoutineList();
     }
