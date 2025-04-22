@@ -20,13 +20,12 @@ public class ExerciseService {
 
         for (RoutineListView row : routineList) {
             RoutineList routine = routineMap.computeIfAbsent(row.getRoutineId(),
-                    id -> new RoutineList(id, row.getRoutineName(), row.getRoutineDescription(),
-                            row.getStaffFirstName(), row.getStaffLastName(), new HashSet<>()));
+                    id -> new RoutineList(id, row.getRoutineName(), row.getRoutineDescription(), row.getStaffFirstName(), row.getStaffLastName(), new HashSet<>()));
 
-            RoutineList.Exercise exercise = routine.getExercise().stream()
-                    .filter(e -> e.getExerciseId().equals(row.getExerciseId()))
-                    .findFirst()
-                    .orElseGet(() -> {
+            Map<Integer, RoutineList.Exercise> exerciseMap = new HashMap<>();
+
+            RoutineList.Exercise exercise = exerciseMap.computeIfAbsent(row.getExerciseId(),
+                    id -> {
                         RoutineList.Exercise newExercise = new RoutineList.Exercise(row.getExerciseId(), row.getExerciseName(), new HashSet<>());
                         routine.getExercise().add(newExercise);
                         return newExercise;
