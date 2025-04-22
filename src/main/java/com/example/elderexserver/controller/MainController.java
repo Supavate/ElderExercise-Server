@@ -23,25 +23,6 @@ import java.util.List;
 @RestController
 public class MainController {
 
-//    //Patient
-//    @Autowired
-//    private PatientRepository patientRepository;
-//    private final PatientService patientService;
-//
-//    @GetMapping("/pat")
-//    public List<Patient> getAllPatients() {
-//        return patientRepository.findAll();
-//    }
-//
-//    @GetMapping("/pat/{id}")
-//    public Patient getPatientById(@PathVariable int id) {return patientRepository.findById(id);}
-//
-//    @GetMapping("/patAge")
-//    public List<PatientWithAge> getAllPatientsWithAge() {return patientService.getPatientsWithAge();}
-//
-//    @GetMapping("/pat/staff/{id}")
-//    public List<Patient> getPatientsByStaff(@PathVariable int id) {return patientRepository.findByCaretaker(id);}
-
     //Allergy
     @Autowired
     private AllergyRepository allergyRepository;
@@ -56,19 +37,6 @@ public class MainController {
     @GetMapping("/status")
     public List<Status> getAllStatus() {return statusRepository.findAll();}
 
-    //Staff
-    @Autowired
-    private StaffRepository staffRepository;
-
-    @GetMapping("/staff")
-    public List<Staff> getAllStaff() {return staffRepository.findAll();}
-
-    @GetMapping("/staff/{id}")
-    public Staff getStaffById(@PathVariable int id) {return staffRepository.findById(id).get();}
-
-    @GetMapping("/staff/super/{id}")
-    public List<Staff> getStaffBySupervisor(@PathVariable int id) {return staffRepository.findBySupervisor(id);}
-
     //Role
     @Autowired
     private RoleRepository roleRepository;
@@ -82,12 +50,6 @@ public class MainController {
 
     @GetMapping("/routine")
     public List<Routine> getAllRoutines() {return routineRepository.findAll();}
-
-    //Exercise
-    @Autowired
-    ExerciseRepository exerciseRepository;
-    @GetMapping("/exe")
-    public List<Exercise> getAllExercises() {return exerciseRepository.findAll();}
 
     @Autowired
     PatientRoutineRepository patientRoutineRepository;
