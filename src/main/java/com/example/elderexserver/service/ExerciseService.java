@@ -14,7 +14,7 @@ public class ExerciseService {
     private ExerciseRepository exerciseRepository;
 
     public List<RoutineList> getRoutineList() {
-        List<RoutineListView> routineList = exerciseRepository.getRoutineList();
+        List<RoutineListView> routineList = exerciseRepository.findRoutineList();
 
         Map<Integer, RoutineList> routineMap = new LinkedHashMap<>();
 
