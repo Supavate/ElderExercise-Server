@@ -1,8 +1,7 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.patient.DTO.PatientFromCaretakerId;
-import com.example.elderexserver.data.patient.DTO.PatientWithAge;
-import com.example.elderexserver.data.patient.DTO.PatientWithAllergies;
+import com.example.elderexserver.data.patient.DTO.*;
+import com.example.elderexserver.repository.PatientRepository;
 import com.example.elderexserver.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +17,12 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
+    @Autowired
+    private PatientRepository patientRepository;
+
     @GetMapping("/age")
-    public List<PatientWithAge> getPatientsWithAge() {
-        return patientService.getPatientsWithAge();
+    public List<PatientWithAgeView> getPatientsWithAge() {
+        return patientRepository.findAllWithAge();
     }
 
     @GetMapping("/allergy")
@@ -29,7 +31,7 @@ public class PatientController {
     }
 
     @GetMapping("/staff/{id}")
-    public List<PatientFromCaretakerId> getPatientFromCaretakerId(@PathVariable Integer id) {
-        return patientService.getPatientsByCaretakerId(id);
+    public List<PatientFromCaretakerIdView> getPatientFromCaretakerId(@PathVariable Integer id) {
+        return patientRepository.findAllByCaretakerId(id);
     }
 }
