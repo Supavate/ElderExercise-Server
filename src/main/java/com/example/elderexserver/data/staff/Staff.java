@@ -16,6 +16,7 @@ public class Staff {
     @JoinColumn(name = "gender_id")
     private Gender gender;
     private String email;
+    private String telephone;
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date_of_birth;
@@ -63,6 +64,14 @@ public class Staff {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
     public LocalDate getDate_of_birth() {
