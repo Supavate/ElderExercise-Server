@@ -1,21 +1,15 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.patient.DTO.PatientWithAge;
 import com.example.elderexserver.data.exercise.Actual_Exercise;
 import com.example.elderexserver.data.exercise.Actual_Exercise_Detail;
-import com.example.elderexserver.data.exercise.Exercise;
 import com.example.elderexserver.data.exercise.Routine;
 import com.example.elderexserver.data.patient.Allergy;
-import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.data.patient.Patient_Routine;
 import com.example.elderexserver.data.patient.Status;
 import com.example.elderexserver.repository.*;
 import com.example.elderexserver.data.staff.Role;
-import com.example.elderexserver.data.staff.Staff;
-import com.example.elderexserver.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
