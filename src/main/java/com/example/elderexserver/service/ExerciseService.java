@@ -13,7 +13,7 @@ public class ExerciseService {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
-    public List<RoutineList> getRoutineList() {
+    public List<RoutineList> findRoutineList() {
         List<RoutineListView> routineList = exerciseRepository.findRoutineList();
 
         Map<Integer, RoutineList> routineMap = new LinkedHashMap<>();
