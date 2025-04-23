@@ -34,4 +34,9 @@ public class PatientController {
     public List<PatientFromCaretakerIdView> getPatientFromCaretakerId(@PathVariable Integer id) {
         return patientRepository.findAllByCaretakerId(id);
     }
+
+    @GetMapping("/detail/{id}")
+    public PatientDetailView getPatientDetailById(@PathVariable Integer id) {
+        return patientRepository.findPatientDetailById(id);
+    }
 }

@@ -40,4 +40,9 @@ public class PatientService {
                 .map(p -> new PatientFromCaretakerId(p.getId(), p.getPicture(), p.getFirstName(), p.getLastName(), p.getGender(), p.getAge()))
                 .toList();
     }
+
+    public PatientDetail getPatientDetailById(int id) {
+        PatientDetailView p = patientRepository.findPatientDetailById(id);
+        return new PatientDetail(p.getId(), p.getPicture(), p.getCitizenId(), p.getFirstName(), p.getLastName(), p.getGenderId(), p.getGender(), p.getDateOfBirth(), p.getAge(), p.getBloodTypeId(), p.getBloodType(), p.getWeight(), p.getHeight(), (p.getAllergy() != null) ? new HashSet<>(Arrays.asList(p.getAllergy().split(","))) : new HashSet<>(), p.getPhone(), p.getAddress(), p.getProvince(), p.getAmphoe(), p.getDistrict(), p.getZipcode(), p.getNote());
+    }
 }
