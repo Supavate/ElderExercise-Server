@@ -1,6 +1,7 @@
 package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.staff.DTOs.StaffListView;
+import com.example.elderexserver.data.staff.DTOs.StaffProfileView;
 import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class StaffController {
     @GetMapping("/all")
     public List<Staff> getAllStaff() {return staffRepository.findAll();}
 
-    @GetMapping("/{id}")
-    public Staff getStaffById(@PathVariable int id) {return staffRepository.findById(id).get();}
+    @GetMapping("/profile/{id}")
+    public StaffProfileView getStaffProfileById(@PathVariable int id) {return staffRepository.findStaffProfileById(id);}
 
     @GetMapping("/list")
     public List<StaffListView> getStaffList() {return staffRepository.findStaff();}

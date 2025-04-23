@@ -1,6 +1,7 @@
 package com.example.elderexserver.repository;
 
 import com.example.elderexserver.data.staff.DTOs.StaffListView;
+import com.example.elderexserver.data.staff.DTOs.StaffProfileView;
 import com.example.elderexserver.data.staff.Staff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,13 @@ public interface StaffRepository extends JpaRepository<Staff, Integer> {
         GROUP BY s.id, s.picture, s.first_name, s.last_name;
     """, nativeQuery = true)
     List<StaffListView> findStaffBySupervisor(int supervisorId);
+
+    @Query(value = """
+        SELECT s.id, s.picture, s.first_name, s.last_name, g.name as gender, s.date_of_birth, r.name, s.role_id, r.name, s.email, s.telephone
+        FROM Staff s
+        LEFT JOIN gender g ON g.id = s.gender_id
+        LEFT JOIN role r ON r.id = s.role_id
+        WHERE s.id=:id;
+    """, nativeQuery = true)
+    StaffProfileView findStaffProfileById(int id);
 }
