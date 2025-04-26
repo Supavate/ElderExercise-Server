@@ -36,7 +36,7 @@ public class PatientController {
     }
 
     @GetMapping("/detail/{id}")
-    public PatientDetailView getPatientDetailById(@PathVariable Integer id) {
-        return patientRepository.findPatientDetailById(id);
+    public PatientDetail getPatientDetailById(@PathVariable Integer id) {
+        return patientService.getPatientDetailById(id);
     }
 }
