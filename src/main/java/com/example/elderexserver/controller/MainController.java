@@ -3,10 +3,7 @@ package com.example.elderexserver.controller;
 import com.example.elderexserver.data.exercise.Actual_Exercise;
 import com.example.elderexserver.data.exercise.Actual_Exercise_Detail;
 import com.example.elderexserver.data.exercise.Routine;
-import com.example.elderexserver.data.patient.Allergy;
-import com.example.elderexserver.data.patient.Blood_Type;
-import com.example.elderexserver.data.patient.Patient_Routine;
-import com.example.elderexserver.data.patient.Status;
+import com.example.elderexserver.data.patient.*;
 import com.example.elderexserver.repository.*;
 import com.example.elderexserver.data.staff.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +42,11 @@ public class MainController {
 
     @GetMapping("/bloodtype")
     public List<Blood_Type> getAllBloodTypes() {return bloodTypeRepository.findAll();}
+
+    //Gender
+    @Autowired
+    private GenderRepository genderRepository;
+
+    @GetMapping("/gender")
+    public List<Gender> getAllGenders() {return genderRepository.findAll();}
 }
