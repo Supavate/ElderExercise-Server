@@ -4,6 +4,7 @@ import com.example.elderexserver.data.exercise.Actual_Exercise;
 import com.example.elderexserver.data.exercise.Actual_Exercise_Detail;
 import com.example.elderexserver.data.exercise.Routine;
 import com.example.elderexserver.data.patient.Allergy;
+import com.example.elderexserver.data.patient.Blood_Type;
 import com.example.elderexserver.data.patient.Patient_Routine;
 import com.example.elderexserver.data.patient.Status;
 import com.example.elderexserver.repository.*;
@@ -38,31 +39,10 @@ public class MainController {
     @GetMapping("/role")
     public List<Role> getAllRoles() {return roleRepository.findAll();}
 
-    //Routine
+    //BloodType
     @Autowired
-    RoutineRepository routineRepository;
+    private BloodTypeRepository bloodTypeRepository;
 
-    @GetMapping("/routine")
-    public List<Routine> getAllRoutines() {return routineRepository.findAll();}
-
-    @Autowired
-    PatientRoutineRepository patientRoutineRepository;
-
-    @GetMapping("/patrou")
-    public  List<Patient_Routine> getAllPatientRoutine() {
-        return patientRoutineRepository.findAll();
-    }
-
-    @Autowired
-    ActualExerciseRepository actualExerciseRepository;
-
-    @GetMapping("/acte")
-    public List<Actual_Exercise> getAllActualExercise() {return actualExerciseRepository.findAll();}
-
-    @Autowired
-    ActualExerciseDetailRepository actualExerciseDetailRepository;
-
-    @GetMapping("/acted")
-    public List<Actual_Exercise_Detail> getAllActualExerciseDetails() {return actualExerciseDetailRepository.findAll();}
-
+    @GetMapping("/bloodtype")
+    public List<Blood_Type> getAllBloodTypes() {return bloodTypeRepository.findAll();}
 }
