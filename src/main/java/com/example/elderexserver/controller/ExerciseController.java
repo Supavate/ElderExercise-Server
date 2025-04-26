@@ -22,11 +22,6 @@ public class ExerciseController {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
-    @GetMapping("/routine/list")
-    public List<RoutineList> getAllRoutines() {
-        return exerciseService.findRoutineList();
-    }
-
     @GetMapping("/list")
     public List<ExerciseListView> getAllExercises() {
         return exerciseRepository.findExerciseList();
