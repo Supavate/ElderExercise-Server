@@ -1,7 +1,7 @@
 package com.example.elderexserver.repository;
 
-import com.example.elderexserver.data.staff.DTOs.StaffListView;
-import com.example.elderexserver.data.staff.DTOs.StaffProfileView;
+import com.example.elderexserver.data.staff.DTO.StaffListView;
+import com.example.elderexserver.data.staff.DTO.StaffProfileView;
 import com.example.elderexserver.data.staff.Staff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

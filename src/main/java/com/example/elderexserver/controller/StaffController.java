@@ -1,7 +1,7 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.staff.DTOs.StaffListView;
-import com.example.elderexserver.data.staff.DTOs.StaffProfileView;
+import com.example.elderexserver.data.staff.DTO.StaffListView;
+import com.example.elderexserver.data.staff.DTO.StaffProfileView;
 import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;

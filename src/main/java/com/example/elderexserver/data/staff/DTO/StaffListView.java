@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.staff.DTOs;
+package com.example.elderexserver.data.staff.DTO;
 
 public interface StaffListView {
     int getId();
