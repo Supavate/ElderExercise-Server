@@ -1,9 +1,6 @@
 package com.example.elderexserver.repository;
 
-import com.example.elderexserver.data.exercise.DTO.PatientDailyRoutineReport;
-import com.example.elderexserver.data.exercise.DTO.PatientDailyExerciseReport;
-import com.example.elderexserver.data.exercise.DTO.PatientRoutineDashboardReport;
-import com.example.elderexserver.data.exercise.DTO.PatientWeeklyRoutineReport;
+import com.example.elderexserver.data.exercise.DTO.*;
 import com.example.elderexserver.data.patient.Patient_Routine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -144,11 +141,12 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             p.id AS patient_id,
             p.first_name,
             p.last_name,
-            e.name AS exercise_name,
             YEAR(ae.start_time) AS YEAR,
             WEEK(ae.start_time, 1) AS week_number,
             MIN(DATE(ae.start_time)) AS week_start_date,
             MAX(DATE(ae.start_time)) AS week_end_date,
+            ae.id AS exercise_id,
+            e.name AS exercise_name,
             SUM(aed.reps) AS total_reps,
             (
             SELECT
@@ -208,7 +206,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             ,
             e.name;
     """, nativeQuery = true)
-    List<PatientWeeklyRoutineReport> findPatientWeeklyRoutineReport();
+    List<PatientWeeklyRoutineReportView> findPatientWeeklyRoutineReport();
 
     @Query(value = """
         SELECT
@@ -267,5 +265,5 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
         ORDER BY
             p.id
     """, nativeQuery = true)
-    List<PatientRoutineDashboardReport> findPatientRoutineDashboardReport();
+    List<PatientRoutineDashboardReportView> findPatientRoutineDashboardReport();
 }
