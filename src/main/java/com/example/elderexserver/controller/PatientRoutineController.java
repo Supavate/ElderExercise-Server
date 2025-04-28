@@ -1,5 +1,6 @@
 package com.example.elderexserver.controller;
 
+import com.example.elderexserver.data.routine.DTO.PatientDailyRoutineReport;
 import com.example.elderexserver.data.routine.DTO.PatientRoutineDashboardReportView;
 import com.example.elderexserver.data.routine.DTO.PatientWeeklyRoutineReport;
 import com.example.elderexserver.repository.PatientRoutineRepository;
@@ -25,7 +26,10 @@ public class PatientRoutineController {
         return patientRoutineRepository.findPatientRoutineDashboardReport();
     }
 
-
+    @GetMapping("/report/daily")
+    public List<PatientDailyRoutineReport> getDailyRoutineReport() {
+        return patientRoutineService.getDailyRoutineReport();
+    }
 
     @GetMapping("/report/week")
     public List<PatientWeeklyRoutineReport> getWeeklyRoutineReport() {
