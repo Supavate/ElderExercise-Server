@@ -1,8 +1,5 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.exercise.Actual_Exercise;
-import com.example.elderexserver.data.exercise.Actual_Exercise_Detail;
-import com.example.elderexserver.data.exercise.Routine;
 import com.example.elderexserver.data.patient.*;
 import com.example.elderexserver.repository.*;
 import com.example.elderexserver.data.staff.Role;
