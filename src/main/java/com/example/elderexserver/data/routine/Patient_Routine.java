@@ -1,7 +1,7 @@
-package com.example.elderexserver.data.patient;
+package com.example.elderexserver.data.routine;
 
 import com.example.elderexserver.data.exercise.Actual_Exercise;
-import com.example.elderexserver.data.exercise.Routine;
+import com.example.elderexserver.data.patient.Patient;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -26,7 +26,7 @@ public class Patient_Routine {
 
     @Temporal(TemporalType.DATE)
     private Date start_date;
-    private int week;
+    private Date end_date;
 
     @OneToMany(mappedBy = "patientRoutine")
     @JsonManagedReference
@@ -64,12 +64,12 @@ public class Patient_Routine {
         this.start_date = start_date;
     }
 
-    public int getWeek() {
-        return week;
+    public Date getEnd_date() {
+        return end_date;
     }
 
-    public void setWeek(int week) {
-        this.week = week;
+    public void setEnd_date(Date end_date) {
+        this.end_date = end_date;
     }
 
     public List<Actual_Exercise> getExercises() {

@@ -1,6 +1,6 @@
 package com.example.elderexserver.data.exercise;
 
-import com.example.elderexserver.data.patient.Patient_Routine;
+import com.example.elderexserver.data.routine.Patient_Routine;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;

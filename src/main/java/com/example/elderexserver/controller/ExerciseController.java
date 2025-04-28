@@ -2,7 +2,6 @@ package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.exercise.DTO.ExerciseListView;
 import com.example.elderexserver.data.exercise.DTO.ExerciseView;
-import com.example.elderexserver.data.exercise.DTO.RoutineList;
 import com.example.elderexserver.repository.ExerciseRepository;
 import com.example.elderexserver.service.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;

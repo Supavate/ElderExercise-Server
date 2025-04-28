@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.exercise;
+package com.example.elderexserver.data.routine;
 
 import com.example.elderexserver.data.staff.Staff;
 import jakarta.persistence.*;

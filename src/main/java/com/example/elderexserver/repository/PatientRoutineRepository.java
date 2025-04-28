@@ -1,7 +1,7 @@
 package com.example.elderexserver.repository;
 
-import com.example.elderexserver.data.exercise.DTO.*;
-import com.example.elderexserver.data.patient.Patient_Routine;
+import com.example.elderexserver.data.routine.DTO.*;
+import com.example.elderexserver.data.routine.Patient_Routine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -207,6 +207,11 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             e.name;
     """, nativeQuery = true)
     List<PatientWeeklyRoutineReportView> findPatientWeeklyRoutineReport();
+
+    @Query(value = """
+    """, nativeQuery = true)
+    List<PatientRoutineView> findPatientRoutineByPatientId();
+
 
     @Query(value = """
         SELECT

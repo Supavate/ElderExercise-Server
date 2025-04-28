@@ -1,7 +1,7 @@
 package com.example.elderexserver.service;
 
-import com.example.elderexserver.data.exercise.DTO.PatientWeeklyRoutineReport;
-import com.example.elderexserver.data.exercise.DTO.PatientWeeklyRoutineReportView;
+import com.example.elderexserver.data.routine.DTO.PatientWeeklyRoutineReport;
+import com.example.elderexserver.data.routine.DTO.PatientWeeklyRoutineReportView;
 import com.example.elderexserver.repository.PatientRoutineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

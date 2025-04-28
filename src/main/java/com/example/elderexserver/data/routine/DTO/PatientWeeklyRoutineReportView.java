@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.exercise.DTO;
+package com.example.elderexserver.data.routine.DTO;
 
 public interface PatientWeeklyRoutineReportView {
     Integer getPatientId();

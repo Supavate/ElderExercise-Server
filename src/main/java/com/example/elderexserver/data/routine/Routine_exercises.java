@@ -1,5 +1,7 @@
-package com.example.elderexserver.data.exercise;
+package com.example.elderexserver.data.routine;
 
+import com.example.elderexserver.data.exercise.Exercise;
+import com.example.elderexserver.data.exercise.Week_Day;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 

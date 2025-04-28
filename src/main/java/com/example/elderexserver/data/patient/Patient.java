@@ -1,8 +1,7 @@
 package com.example.elderexserver.data.patient;
 
 import com.example.elderexserver.data.address.Address;
-import com.example.elderexserver.data.patient.DTO.PatientWithAge;
-import com.example.elderexserver.data.patient.DTO.PatientWithAllergies;
+import com.example.elderexserver.data.routine.Patient_Routine;
 import com.example.elderexserver.data.staff.Staff;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

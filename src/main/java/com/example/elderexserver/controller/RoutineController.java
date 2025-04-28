@@ -1,6 +1,6 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.exercise.DTO.RoutineList;
+import com.example.elderexserver.data.routine.DTO.RoutineList;
 import com.example.elderexserver.service.RoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
