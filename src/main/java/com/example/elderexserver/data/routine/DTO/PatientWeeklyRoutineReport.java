@@ -1,5 +1,6 @@
 package com.example.elderexserver.data.routine.DTO;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 public class PatientWeeklyRoutineReport {
@@ -9,11 +10,11 @@ public class PatientWeeklyRoutineReport {
     String last_name;
     Integer year;
     Integer week_number;
-    String week_start_date;
-    String week_end_date;
+    LocalDate week_start_date;
+    LocalDate week_end_date;
     Set<Exercise> exerciseSet;
 
-    public PatientWeeklyRoutineReport(String id, Integer patient_id, String first_name, String last_name, Integer year, Integer week_number, String week_start_date, String week_end_date, Set<Exercise> exerciseSet) {
+    public PatientWeeklyRoutineReport(String id, Integer patient_id, String first_name, String last_name, Integer year, Integer week_number, LocalDate week_start_date, LocalDate week_end_date, Set<Exercise> exerciseSet) {
         this.id = id;
         this.patient_id = patient_id;
         this.first_name = first_name;
@@ -129,19 +130,19 @@ public class PatientWeeklyRoutineReport {
         this.week_number = week_number;
     }
 
-    public String getWeek_start_date() {
+    public LocalDate getWeek_start_date() {
         return week_start_date;
     }
 
-    public void setWeek_start_date(String week_start_date) {
+    public void setWeek_start_date(LocalDate week_start_date) {
         this.week_start_date = week_start_date;
     }
 
-    public String getWeek_end_date() {
+    public LocalDate getWeek_end_date() {
         return week_end_date;
     }
 
-    public void setWeek_end_date(String week_end_date) {
+    public void setWeek_end_date(LocalDate week_end_date) {
         this.week_end_date = week_end_date;
     }
 
