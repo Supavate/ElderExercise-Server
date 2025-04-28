@@ -2,7 +2,6 @@ package com.example.elderexserver.repository;
 
 import com.example.elderexserver.data.exercise.DTO.ExerciseListView;
 import com.example.elderexserver.data.exercise.DTO.ExerciseView;
-import com.example.elderexserver.data.exercise.DTO.RoutineListView;
 import com.example.elderexserver.data.exercise.Exercise;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
