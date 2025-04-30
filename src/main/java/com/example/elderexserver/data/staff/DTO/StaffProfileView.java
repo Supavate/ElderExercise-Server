@@ -8,6 +8,6 @@ public interface StaffProfileView {
     public String getDate_of_birth();
     public Integer getRole_id();
     public String getRole();
-    public String getTel();
+    public String getTelephone();
     public String getEmail();
 }
