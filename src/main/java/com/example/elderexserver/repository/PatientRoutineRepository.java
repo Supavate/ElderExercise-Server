@@ -1,13 +1,38 @@
 package com.example.elderexserver.repository;
 
+import com.example.elderexserver.data.exercise.DTO.ActualExerciseDetailListView;
 import com.example.elderexserver.data.routine.DTO.*;
 import com.example.elderexserver.data.routine.Patient_Routine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PatientRoutineRepository extends JpaRepository<Patient_Routine, Integer> {
+
+    @Query(value = """
+        SELECT
+            e.name AS exercise_name,
+            aed.*
+        FROM
+            actual_exercise_detail aed
+        JOIN actual_exercise ae ON
+            aed.actual_exercise_id = ae.id
+        JOIN patient_routine pr ON
+            ae.patient_routine_id = pr.id
+        JOIN patient p ON
+            pr.patient_id = p.id
+        JOIN exercise e ON
+            aed.exercise_id = e.id
+        WHERE
+            p.id =:patientId AND DATE(aed.start_time) =:date
+        ORDER BY
+            ae.start_time,
+            aed.start_time;
+    """, nativeQuery = true)
+    List<ActualExerciseDetailListView> findActualExerciseDetailListByPatientIdAndDate(Integer patientId, String date);
+    //patientId 1, date '2025-04-15'
 
     @Query(value = """
         SELECT
