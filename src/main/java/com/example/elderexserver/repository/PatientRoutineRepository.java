@@ -247,10 +247,11 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             aed.exercise_id = e.id
         WHERE
             ae.start_time >= CURDATE() - INTERVAL 7 DAY
+            AND p.caretaker_id =:caretaker_id
         GROUP BY
             p.id, pr.routine_id
         ORDER BY
             p.id
     """, nativeQuery = true)
-    List<PatientRoutineDashboardReportView> findPatientRoutineDashboardReport();
+    List<PatientRoutineDashboardReportView> findPatientRoutineDashboardReport(Integer caretakerId);
 }

@@ -24,9 +24,9 @@ public class PatientRoutineController {
     @Autowired
     private PatientRoutineService patientRoutineService;
 
-    @GetMapping("/dashboard")
-    public List<PatientRoutineDashboardReportView> getPatientRoutineDashboardReport() {
-        return patientRoutineRepository.findPatientRoutineDashboardReport();
+    @GetMapping("/dashboard/{caretakerId}")
+    public List<PatientRoutineDashboardReportView> getPatientRoutineDashboardReport(@PathVariable Integer caretakerId) {
+        return patientRoutineRepository.findPatientRoutineDashboardReport(caretakerId);
     }
 
     @GetMapping("/exercise_detail/{date}/{patientId}")
