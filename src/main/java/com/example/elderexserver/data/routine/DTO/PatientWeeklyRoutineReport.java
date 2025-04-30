@@ -4,15 +4,15 @@ import java.time.LocalDate;
 import java.util.Set;
 
 public class PatientWeeklyRoutineReport {
-    String id;
-    Integer patient_id;
-    String first_name;
-    String last_name;
-    Integer year;
-    Integer week_number;
-    LocalDate week_start_date;
-    LocalDate week_end_date;
-    Set<Exercise> exerciseSet;
+    private String id;
+    private Integer patient_id;
+    private String first_name;
+    private String last_name;
+    private Integer year;
+    private Integer week_number;
+    private LocalDate week_start_date;
+    private LocalDate week_end_date;
+    private Set<Exercise> exerciseSet;
 
     public PatientWeeklyRoutineReport(String id, Integer patient_id, String first_name, String last_name, Integer year, Integer week_number, LocalDate week_start_date, LocalDate week_end_date, Set<Exercise> exerciseSet) {
         this.id = id;
@@ -27,11 +27,11 @@ public class PatientWeeklyRoutineReport {
     }
 
     public static class Exercise {
-        Integer exercise_id;
-        String exercise_name;
-        Integer total_reps;
-        Integer weekly_rep_goal;
-        Float percentage_done;
+        private Integer exercise_id;
+        private String exercise_name;
+        private Integer total_reps;
+        private Integer weekly_rep_goal;
+        private Float percentage_done;
 
         public Exercise(Integer exercise_id, String exercise_name, Integer total_reps, Integer weekly_rep_goal, Float percentage_done) {
             this.exercise_id = exercise_id;
