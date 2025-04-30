@@ -6,7 +6,6 @@ import com.example.elderexserver.data.routine.Patient_Routine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface PatientRoutineRepository extends JpaRepository<Patient_Routine, Integer> {
@@ -31,8 +30,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             ae.start_time,
             aed.start_time;
     """, nativeQuery = true)
-    List<ActualExerciseDetailListView> findActualExerciseDetailListByPatientIdAndDate(Integer patientId, String date);
-    //patientId 1, date '2025-04-15'
+    List<ActualExerciseDetailListView> findActualExerciseDetailListByPatientIdAndDate(String date, Integer patientId);
 
     @Query(value = """
         SELECT
@@ -90,6 +88,9 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             ae.id = aed.actual_exercise_id
         JOIN exercise e ON
             aed.exercise_id = e.id
+        WHERE
+            DATE(ae.start_time) >= :startDate AND DATE(ae.start_time) <= :endDate
+            AND p.id =:patientId
         GROUP BY
             p.id,
             e.name,
@@ -102,7 +103,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             exercise_date,
             e.name;
     """, nativeQuery = true)
-    List<PatientDailyRoutineReportView> findPatientDailyRoutineReport();
+    List<PatientDailyRoutineReportView> findPatientDailyRoutineReport(String startDate, String endDate, Integer patientId);
 
     @Query(value = """
         SELECT
@@ -158,6 +159,8 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             ae.id = aed.actual_exercise_id
         JOIN exercise e ON
             aed.exercise_id = e.id
+        WHERE
+            pr.id =:patientRoutineId
         GROUP BY
             p.id,
             e.id,
@@ -174,12 +177,13 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             ,
             e.name;
     """, nativeQuery = true)
-    List<PatientWeeklyRoutineReportView> findPatientWeeklyRoutineReport();
+    List<PatientWeeklyRoutineReportView> findPatientWeeklyRoutineReport(Integer patientRoutineId);
 
     @Query(value = """
     SELECT
         r.name AS routine_name,
         r.description AS routine_description,
+        pr.id AS patient_routine_id,
         pr.start_date,
         pr.end_date
     FROM
@@ -189,7 +193,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
     WHERE
         pr.patient_id =:patient_id
     """, nativeQuery = true)
-    List<PatientRoutineView> findPatientRoutineByPatientId(Integer patient_id);
+    List<PatientRoutineView> findPatientRoutineByPatientId(Integer patientId);
 
     @Query(value = """
         SELECT

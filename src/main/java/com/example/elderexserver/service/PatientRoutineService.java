@@ -17,8 +17,8 @@ public class PatientRoutineService {
     @Autowired
     private PatientRoutineRepository patientRoutineRepository;
 
-    public List<PatientWeeklyRoutineReport> getWeeklyRoutineReport() {
-        List<PatientWeeklyRoutineReportView> patientWeeklyRoutineReport = patientRoutineRepository.findPatientWeeklyRoutineReport();
+    public List<PatientWeeklyRoutineReport> getWeeklyRoutineReport(Integer patientRoutineId) {
+        List<PatientWeeklyRoutineReportView> patientWeeklyRoutineReport = patientRoutineRepository.findPatientWeeklyRoutineReport(patientRoutineId);
 
         Map<String, PatientWeeklyRoutineReport> reportMap = new LinkedHashMap<>();
 
@@ -39,8 +39,8 @@ public class PatientRoutineService {
         return new ArrayList<>(reportMap.values());
     }
 
-    public List<PatientDailyRoutineReport> getDailyRoutineReport() {
-        List<PatientDailyRoutineReportView> patientDailyRoutineReport = patientRoutineRepository.findPatientDailyRoutineReport();
+    public List<PatientDailyRoutineReport> getDailyRoutineReport(String startDate, String endDate, Integer patientId) {
+        List<PatientDailyRoutineReportView> patientDailyRoutineReport = patientRoutineRepository.findPatientDailyRoutineReport(startDate, endDate, patientId);
 
         Map<LocalDate, PatientDailyRoutineReport> reportMap = new LinkedHashMap<>();
 
