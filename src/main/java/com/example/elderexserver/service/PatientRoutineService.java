@@ -59,14 +59,12 @@ public class PatientRoutineService {
 
         for (PatientLineChartView row : patientLineChart) {
             String weekKey = row.getYear() + "_" + row.getWeekNumber();
-            int exerciseId = row.getExerciseId();
-
             PatientLineChart.Day day = new PatientLineChart.Day(row.getTotalReps(), row.getRepGoal());
 
             weeklyExerciseMap
                     .computeIfAbsent(weekKey, k -> new HashMap<>())
-                    .computeIfAbsent(exerciseId, id -> new PatientLineChart.Exercise(
-                            exerciseId,
+                    .computeIfAbsent(row.getExerciseId(), id -> new PatientLineChart.Exercise(
+                            row.getExerciseId(),
                             row.getExerciseName(),
                             new LinkedHashSet<>()
                     ))
