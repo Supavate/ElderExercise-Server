@@ -57,17 +57,17 @@ public class PatientRoutineService {
 
         Map<String, Map<Integer, PatientLineChart.Exercise>> weeklyExerciseMap = new LinkedHashMap<>();
 
-        for (PatientLineChartView view : patientLineChart) {
-            String weekKey = view.getYear() + "_" + view.getWeekNumber();
-            int exerciseId = view.getExerciseId();
+        for (PatientLineChartView row : patientLineChart) {
+            String weekKey = row.getYear() + "_" + row.getWeekNumber();
+            int exerciseId = row.getExerciseId();
 
-            PatientLineChart.Day day = new PatientLineChart.Day(view.getTotalReps(), view.getRepGoal());
+            PatientLineChart.Day day = new PatientLineChart.Day(row.getTotalReps(), row.getRepGoal());
 
             weeklyExerciseMap
                     .computeIfAbsent(weekKey, k -> new HashMap<>())
                     .computeIfAbsent(exerciseId, id -> new PatientLineChart.Exercise(
                             exerciseId,
-                            view.getExerciseName(),
+                            row.getExerciseName(),
                             new LinkedHashSet<>()
                     ))
                     .getDaySet()
