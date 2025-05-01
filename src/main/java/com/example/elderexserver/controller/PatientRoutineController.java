@@ -1,10 +1,7 @@
 package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.exercise.DTO.ActualExerciseDetailListView;
-import com.example.elderexserver.data.routine.DTO.PatientDailyRoutineReport;
-import com.example.elderexserver.data.routine.DTO.PatientRoutineDashboardReportView;
-import com.example.elderexserver.data.routine.DTO.PatientRoutineView;
-import com.example.elderexserver.data.routine.DTO.PatientWeeklyRoutineReport;
+import com.example.elderexserver.data.routine.DTO.*;
 import com.example.elderexserver.repository.PatientRoutineRepository;
 import com.example.elderexserver.service.PatientRoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,5 +44,10 @@ public class PatientRoutineController {
     @GetMapping("/report/{patientId}")
     public List<PatientRoutineView> getPatientRoutineByPatientId(@PathVariable Integer patientId) {
         return patientRoutineRepository.findPatientRoutineByPatientId(patientId);
+    }
+
+    @GetMapping("/chart/line/{patientId}")
+    public List<PatientLineChart> getPatientRoutineChart(@PathVariable Integer patientId) {
+        return patientRoutineService.getPatientLineChart(patientId);
     }
 }

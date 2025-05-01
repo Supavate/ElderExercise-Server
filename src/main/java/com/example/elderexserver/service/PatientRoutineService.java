@@ -1,9 +1,6 @@
 package com.example.elderexserver.service;
 
-import com.example.elderexserver.data.routine.DTO.PatientDailyRoutineReport;
-import com.example.elderexserver.data.routine.DTO.PatientDailyRoutineReportView;
-import com.example.elderexserver.data.routine.DTO.PatientWeeklyRoutineReport;
-import com.example.elderexserver.data.routine.DTO.PatientWeeklyRoutineReportView;
+import com.example.elderexserver.data.routine.DTO.*;
 import com.example.elderexserver.repository.PatientRoutineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +50,35 @@ public class PatientRoutineService {
         }
 
         return new ArrayList<>(reportMap.values());
+    }
+
+    public List<PatientLineChart> getPatientLineChart(Integer patientId) {
+        List<PatientLineChartView> patientLineChart = patientRoutineRepository.findPatientLineChartView(patientId);
+
+        Map<String, Map<Integer, PatientLineChart.Exercise>> weeklyExerciseMap = new LinkedHashMap<>();
+
+        for (PatientLineChartView view : patientLineChart) {
+            String weekKey = view.getYear() + "_" + view.getWeekNumber();
+            int exerciseId = view.getExerciseId();
+
+            PatientLineChart.Day day = new PatientLineChart.Day(view.getTotalReps(), view.getRepGoal());
+
+            weeklyExerciseMap
+                    .computeIfAbsent(weekKey, k -> new HashMap<>())
+                    .computeIfAbsent(exerciseId, id -> new PatientLineChart.Exercise(
+                            exerciseId,
+                            view.getExerciseName(),
+                            new LinkedHashSet<>()
+                    ))
+                    .getDaySet()
+                    .add(day);
+        }
+
+        List<PatientLineChart> patientLineChartList = new ArrayList<>();
+        for (Map<Integer, PatientLineChart.Exercise> exerciseMap : weeklyExerciseMap.values()) {
+            patientLineChartList.add(new PatientLineChart(new LinkedHashSet<>(exerciseMap.values())));
+        }
+
+        return patientLineChartList;
     }
 }

@@ -98,8 +98,6 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             pr.routine_id,
             aed.exercise_id
         ORDER BY
-            p.last_name,
-            p.first_name,
             exercise_date,
             e.name;
     """, nativeQuery = true)
@@ -191,7 +189,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
     JOIN
         routine r ON pr.routine_id = r.id
     WHERE
-        pr.patient_id =:patient_id
+        pr.patient_id =:patientId
     """, nativeQuery = true)
     List<PatientRoutineView> findPatientRoutineByPatientId(Integer patientId);
 
@@ -247,11 +245,66 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             aed.exercise_id = e.id
         WHERE
             ae.start_time >= CURDATE() - INTERVAL 7 DAY
-            AND p.caretaker_id =:caretaker_id
+            AND p.caretaker_id =:caretakerId
         GROUP BY
             p.id, pr.routine_id
         ORDER BY
             p.id
     """, nativeQuery = true)
     List<PatientRoutineDashboardReportView> findPatientRoutineDashboardReport(Integer caretakerId);
+
+    @Query(value = """
+        SELECT
+            e.id AS exercise_id,
+            e.name AS exercise_name,
+            YEAR(ae.start_time) AS YEAR,
+            WEEK(ae.start_time, 1) AS weekNumber,
+            DAYOFWEEK(ae.start_time) - 1 AS dayOfWeek,
+            SUM(aed.reps) AS total_reps,
+            COALESCE(
+                (
+                SELECT
+                    re2.rep
+                FROM
+                    routine_exercises re2
+                WHERE
+                    re2.routine_id = pr.routine_id AND re2.exercise_id = aed.exercise_id AND re2.week_day_id = DAYOFWEEK(ae.start_time) - 1
+                LIMIT 1
+            ),
+            0
+            ) AS rep_goal
+        FROM
+            patient p
+        JOIN patient_routine pr ON
+            p.id = pr.patient_id
+        JOIN actual_exercise ae ON
+            pr.id = ae.patient_routine_id
+        JOIN actual_exercise_detail aed ON
+            ae.id = aed.actual_exercise_id
+        JOIN exercise e ON
+            aed.exercise_id = e.id
+        WHERE
+            pr.id = (SELECT
+                pr.id
+                FROM
+                patient_routine pr
+                WHERE
+                pr.patient_id =:patientId
+                ORDER BY
+                pr.id DESC
+                     LIMIT 1
+            )
+        GROUP BY
+            p.id,
+            e.name,
+            DATE(ae.start_time),
+            pr.routine_id,
+            aed.exercise_id
+        ORDER BY
+            YEAR,
+            weekNumber,
+            e.id,
+            DAYOFWEEK;
+    """, nativeQuery = true)
+    List<PatientLineChartView> findPatientLineChartView(Integer patientId);
 }
