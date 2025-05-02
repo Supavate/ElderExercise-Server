@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Entity
 public class Staff {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String first_Name;
     private String last_Name;
@@ -17,7 +18,6 @@ public class Staff {
     private Gender gender;
     private String email;
     private String telephone;
-    @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date_of_birth;
     private String username;
@@ -25,6 +25,25 @@ public class Staff {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+    private String picture;
+    private Integer supervisor_id;
+
+    public Staff(String first_Name, String last_Name, Gender gender, String email, LocalDate date_of_birth, String username, String password, Role role, String picture) {
+        this.first_Name = first_Name;
+        this.last_Name = last_Name;
+        this.gender = gender;
+        this.email = email;
+        this.date_of_birth = date_of_birth;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.picture = picture;
+    }
+
+
+    public Staff() {
+
+    }
 
     public int getId() {
         return id;
@@ -104,5 +123,21 @@ public class Staff {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public Integer getSupervisor_id() {
+        return supervisor_id;
+    }
+
+    public void setSupervisor_id(Integer supervisor_id) {
+        this.supervisor_id = supervisor_id;
     }
 }

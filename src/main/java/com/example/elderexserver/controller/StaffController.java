@@ -1,15 +1,18 @@
 package com.example.elderexserver.controller;
 
+import com.example.elderexserver.data.staff.DTO.NewStaff;
 import com.example.elderexserver.data.staff.DTO.StaffListView;
 import com.example.elderexserver.data.staff.DTO.StaffProfileView;
 import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.StaffRepository;
+import com.example.elderexserver.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -18,6 +21,9 @@ public class StaffController {
 
     @Autowired
     private StaffRepository staffRepository;
+
+    @Autowired
+    private StaffService staffService;
 
     @GetMapping("/all")
     public List<Staff> getAllStaff() {return staffRepository.findAll();}
@@ -30,4 +36,14 @@ public class StaffController {
 
     @GetMapping("/super/{id}")
     public List<StaffListView> getStaffBySupervisor(@PathVariable int id) {return staffRepository.findStaffBySupervisor(id);}
+
+    @PostMapping("/new")
+    public ResponseEntity<String> addNewStaff(@RequestBody NewStaff newStaff) {
+        try {
+            staffService.newStaff(newStaff);
+            return ResponseEntity.ok("New staff added");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error registering staff: " + e.getMessage());
+        }
+    }
 }
