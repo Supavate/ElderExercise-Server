@@ -48,7 +48,7 @@ public class StaffController {
         }
     }
 
-    @PutMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<String> updateStaff(@RequestBody UpdateStaff updateStaff) {
         try {
             staffService.updateStaff(updateStaff);

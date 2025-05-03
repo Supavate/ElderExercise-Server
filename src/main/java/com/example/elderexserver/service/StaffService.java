@@ -52,20 +52,41 @@ public class StaffService {
         Staff staff = staffRepository.findById(updateStaff.getId())
                 .orElseThrow(() -> new RuntimeException("Staff not found"));
 
-        Gender gender = genderRepository.findById(updateStaff.getGender_id())
-                .orElseThrow(() -> new RuntimeException("Gender not found"));
+        if (updateStaff.getFirst_name() != null) {
+            staff.setFirst_Name(updateStaff.getFirst_name());
+        }
 
-        Role role = roleRepository.findById(updateStaff.getRole_id())
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+        if (updateStaff.getLast_name() != null) {
+            staff.setLast_Name(updateStaff.getLast_name());
+        }
 
-        staff.setFirst_Name(updateStaff.getFirst_name());
-        staff.setLast_Name(updateStaff.getLast_name());
-        staff.setEmail(updateStaff.getEmail());
-        staff.setPassword(updateStaff.getPassword());
-        staff.setTelephone(updateStaff.getTelephone());
-        staff.setGender(gender);
-        staff.setRole(role);
-        staff.setDate_of_birth(LocalDate.parse(updateStaff.getDate_of_birth(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        if (updateStaff.getEmail() != null) {
+            staff.setEmail(updateStaff.getEmail());
+        }
+
+        if (updateStaff.getTelephone() != null) {
+            staff.setTelephone(updateStaff.getTelephone());
+        }
+
+        if (updateStaff.getPicture() != null) {
+            staff.setPicture(updateStaff.getPicture());
+        }
+
+        if (updateStaff.getDate_of_birth() != null) {
+            staff.setDate_of_birth(LocalDate.parse(updateStaff.getDate_of_birth()));
+        }
+
+        if (updateStaff.getRole_id() != null) {
+            Role role = roleRepository.findById(updateStaff.getRole_id())
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            staff.setRole(role);
+        }
+
+        if (updateStaff.getGender_id() != null) {
+            Gender gender = genderRepository.findById(updateStaff.getGender_id())
+                    .orElseThrow(() -> new RuntimeException("Gender not found"));
+            staff.setGender(gender);
+        }
 
         return staffRepository.save(staff);
     }
