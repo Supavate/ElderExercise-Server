@@ -9,7 +9,7 @@ public class UpdateStaff {
     private String email;
     private String password;
     private Integer role_id;
-    private String image;
+    private String picture;
     private String telephone;
 
     public Integer getId() {
@@ -76,12 +76,12 @@ public class UpdateStaff {
         this.role_id = role_id;
     }
 
-    public String getImage() {
-        return image;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public String getTelephone() {

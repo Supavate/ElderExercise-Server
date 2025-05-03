@@ -66,11 +66,11 @@ public class NewStaff {
         this.role_id = role_id;
     }
 
-    public String getImage() {
-        return image;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }
