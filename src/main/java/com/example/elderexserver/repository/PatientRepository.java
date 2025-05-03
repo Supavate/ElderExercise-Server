@@ -1,10 +1,7 @@
 package com.example.elderexserver.repository;
 
-import com.example.elderexserver.data.patient.DTO.PatientDetailView;
-import com.example.elderexserver.data.patient.DTO.PatientFromCaretakerIdView;
+import com.example.elderexserver.data.patient.DTO.*;
 import com.example.elderexserver.data.patient.Patient;
-import com.example.elderexserver.data.patient.DTO.PatientWithAgeView;
-import com.example.elderexserver.data.patient.DTO.PatientWithAllergiesView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -69,4 +66,19 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
         GROUP BY p.id;
     """, nativeQuery = true)
     PatientDetailView findPatientDetailById(int id);
+
+    @Query(value = """
+    SELECT
+            p.id,
+            p.first_name,
+            p.last_name,
+            s.first_name as caretaker_first_name,
+            s.last_name as caretaker_last_name,
+            p.picture
+    FROM
+            patient p
+    LEFT JOIN
+            staff s ON p.caretaker_id = s.id;
+    """, nativeQuery = true)
+    List<PatientListView> findPatientList();
 }

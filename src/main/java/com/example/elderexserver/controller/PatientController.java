@@ -1,6 +1,7 @@
 package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.patient.DTO.*;
+import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.repository.PatientRepository;
 import com.example.elderexserver.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,10 @@ public class PatientController {
     @GetMapping("/detail/{id}")
     public PatientDetail getPatientDetailById(@PathVariable Integer id) {
         return patientService.getPatientDetailById(id);
+    }
+
+    @GetMapping("/list")
+    public List<PatientListView> getPatientList() {
+        return patientRepository.findPatientList();
     }
 }
