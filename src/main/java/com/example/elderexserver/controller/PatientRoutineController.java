@@ -26,7 +26,7 @@ public class PatientRoutineController {
         return patientRoutineRepository.findPatientRoutineDashboardReport(caretakerId);
     }
 
-    @GetMapping("/exercise_detail/{date}/{patientId}")
+    @GetMapping("/report/detail/{date}/{patientId}")
     public List<ActualExerciseDetailListView> getActualExerciseDetailListByPatientIdAndDate(@PathVariable String date, @PathVariable Integer patientId) {
         return patientRoutineRepository.findActualExerciseDetailListByPatientIdAndDate(date, patientId);
     }
