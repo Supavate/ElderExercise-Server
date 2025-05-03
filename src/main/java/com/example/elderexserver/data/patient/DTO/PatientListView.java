@@ -4,6 +4,7 @@ public interface PatientListView {
     Integer getId();
     String getFirstName();
     String getLastName();
-    String getCaretaker();
+    String getCaretakerFirstName();
+    String getCaretakerLastName();
     String getPicture();
 }
