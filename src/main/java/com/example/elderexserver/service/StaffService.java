@@ -40,10 +40,9 @@ public class StaffService {
                 newStaff.getEmail(),     // temporarily use email as username
                 newStaff.getPassword(),
                 role,
-                newStaff.getPicture()
+                newStaff.getPicture(),
+                newStaff.getTelephone()
         );
-
-        staff.setTelephone("N/A");
 
         return staffRepository.save(staff);
     }

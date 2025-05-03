@@ -28,7 +28,7 @@ public class Staff {
     private String picture;
     private Integer supervisor_id;
 
-    public Staff(String first_Name, String last_Name, Gender gender, String email, LocalDate date_of_birth, String username, String password, Role role, String picture) {
+    public Staff(String first_Name, String last_Name, Gender gender, String email, LocalDate date_of_birth, String username, String password, Role role, String picture, String telephone) {
         this.first_Name = first_Name;
         this.last_Name = last_Name;
         this.gender = gender;
@@ -38,6 +38,7 @@ public class Staff {
         this.password = password;
         this.role = role;
         this.picture = picture;
+        this.telephone = telephone;
     }
 
 
