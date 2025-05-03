@@ -15,6 +15,7 @@ import java.util.Set;
 public class Patient {
     @Id
     private Integer id;
+    private String citizen_id;
     private String first_Name;
     private String last_Name;
     @ManyToOne
@@ -64,7 +65,25 @@ public class Patient {
     private List<Patient_Routine> routines;
 
     @OneToOne
+    @JoinColumn(name = "address_id")
     private Address address;
+
+    public Patient() {}
+
+    public Patient(String citizen_id, String first_Name, String last_Name, Gender gender, Blood_Type blood_type, Integer weight, Integer height, LocalDate date_of_birth, String phone, String note, Address address, Set<Allergy> allergies) {
+        this.citizen_id = citizen_id;
+        this.first_Name = first_Name;
+        this.last_Name = last_Name;
+        this.gender = gender;
+        this.blood_type = blood_type;
+        this.weight = weight;
+        this.height = height;
+        this.date_of_birth = date_of_birth;
+        this.phone = phone;
+        this.note = note;
+        this.address = address;
+        this.allergies = allergies;
+    }
 
     public Integer getId() {
         return id;
@@ -72,6 +91,14 @@ public class Patient {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCitizen_id() {
+        return citizen_id;
+    }
+
+    public void setCitizen_id(String citizen_id) {
+        this.citizen_id = citizen_id;
     }
 
     public String getFirst_Name() {
