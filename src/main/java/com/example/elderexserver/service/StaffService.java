@@ -37,7 +37,7 @@ public class StaffService {
                 gender,
                 newStaff.getEmail(),
                 LocalDate.parse(newStaff.getBirthday(), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                newStaff.getEmail(),     // temporarily use email as username
+                newStaff.getEmail(),
                 newStaff.getPassword(),
                 role,
                 newStaff.getPicture(),
