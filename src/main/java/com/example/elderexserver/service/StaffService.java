@@ -25,7 +25,7 @@ public class StaffService {
     private GenderRepository genderRepository;
 
     public Staff newStaff(NewStaff newStaff) {
-        Gender gender = genderRepository.findById(newStaff.getGender())
+        Gender gender = genderRepository.findById(newStaff.getGender_id())
                 .orElseThrow(() -> new RuntimeException("Gender not found"));
         Role role = roleRepository.findById(newStaff.getRole_id())
                 .orElseThrow(() -> new RuntimeException("Role not found"));

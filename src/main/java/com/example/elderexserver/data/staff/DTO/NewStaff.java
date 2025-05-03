@@ -3,11 +3,11 @@ package com.example.elderexserver.data.staff.DTO;
 public class NewStaff {
     private String firstName;
     private String lastName;
-    private Integer gender;
+    private Integer gender_id;
     private String birthday;
     private String email;
     private String password;
-    private Integer role;
+    private Integer role_id;
     private String image;
 
     public String getFirstName() {
@@ -26,12 +26,12 @@ public class NewStaff {
         this.lastName = lastName;
     }
 
-    public Integer getGender() {
-        return gender;
+    public Integer getGender_id() {
+        return gender_id;
     }
 
-    public void setGender(Integer gender) {
-        this.gender = gender;
+    public void setGender_id(Integer gender_id) {
+        this.gender_id = gender_id;
     }
 
     public String getBirthday() {
@@ -59,11 +59,11 @@ public class NewStaff {
     }
 
     public Integer getRole_id() {
-        return role;
+        return role_id;
     }
 
     public void setRole_id(Integer role_id) {
-        this.role = role_id;
+        this.role_id = role_id;
     }
 
     public String getImage() {
