@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 @Entity
 public class Routine_exercises {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
@@ -25,6 +26,15 @@ public class Routine_exercises {
     private Week_Day week_day_id;
 
     private int rep;
+
+    public Routine_exercises() {}
+
+    public Routine_exercises(Routine routine, Exercise exercise, Week_Day week_day_id, int rep) {
+        this.routine = routine;
+        this.exercise = exercise;
+        this.week_day_id = week_day_id;
+        this.rep = rep;
+    }
 
     public int getId() {
         return id;

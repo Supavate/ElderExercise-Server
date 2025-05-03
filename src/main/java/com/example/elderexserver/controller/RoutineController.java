@@ -1,11 +1,13 @@
 package com.example.elderexserver.controller;
 
+import com.example.elderexserver.data.patient.DTO.NewPatient;
+import com.example.elderexserver.data.routine.DTO.NewRoutine;
 import com.example.elderexserver.data.routine.DTO.RoutineList;
 import com.example.elderexserver.service.RoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +20,15 @@ public class RoutineController {
     @GetMapping("/list")
     public List<RoutineList> getAllRoutines() {
         return routineService.findRoutineList();
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<String> newPatient(@RequestBody NewRoutine newRoutine) {
+        try {
+            routineService.newRoutine(newRoutine);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error registering routine: " + e.getMessage());
+        }
     }
 }
