@@ -30,9 +30,8 @@ public interface StaffRepository extends JpaRepository<Staff, Integer> {
     List<StaffListView> findStaffBySupervisor(int supervisorId);
 
     @Query(value = """
-        SELECT s.id, s.picture, s.first_name, s.last_name, g.name as gender, DATE_FORMAT(s.date_of_birth,'%d/%m/%Y') as date_of_birth, r.name as role, s.role_id, r.name, s.email, s.telephone
+        SELECT s.id, s.picture, s.first_name, s.last_name, s.gender_id as gender_id, DATE_FORMAT(s.date_of_birth,'%d/%m/%Y') as date_of_birth, r.name as role, s.role_id, r.name, s.email, s.telephone
         FROM Staff s
-        LEFT JOIN gender g ON g.id = s.gender_id
         LEFT JOIN role r ON r.id = s.role_id
         WHERE s.id=:id;
     """, nativeQuery = true)
