@@ -54,12 +54,22 @@ public class PatientLineChart {
     }
 
     public static class Day {
+        private String dayName;
         private Integer reps;
         private Integer goals;
 
-        public Day(Integer reps, Integer goals) {
+        public Day(String dayName, Integer reps, Integer goals) {
+            this.dayName = dayName;
             this.reps = reps;
             this.goals = goals;
+        }
+
+        public String getDayName() {
+            return dayName;
+        }
+
+        public void setDayName(String dayName) {
+            this.dayName = dayName;
         }
 
         public Integer getReps() {

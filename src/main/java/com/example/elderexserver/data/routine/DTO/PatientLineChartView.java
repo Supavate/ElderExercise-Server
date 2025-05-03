@@ -6,6 +6,7 @@ public interface PatientLineChartView {
     Integer getYear();
     Integer getWeekNumber();
     Integer getDayOfWeek();
+    String getDayName();
     Integer getTotalReps();
     Integer getRepGoal();
 }

@@ -260,6 +260,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             YEAR(ae.start_time) AS YEAR,
             WEEK(ae.start_time, 1) AS weekNumber,
             DAYOFWEEK(ae.start_time) - 1 AS dayOfWeek,
+            (SELECT wd.name FROM week_day wd WHERE  wd.id = DAYOFWEEK(ae.start_time) - 1) AS dayName,
             SUM(aed.reps) AS total_reps,
             COALESCE(
                 (
