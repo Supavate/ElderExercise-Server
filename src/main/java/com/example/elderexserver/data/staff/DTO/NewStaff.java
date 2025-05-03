@@ -8,7 +8,7 @@ public class NewStaff {
     private String email;
     private String password;
     private Integer role_id;
-    private String image;
+    private String picture;
 
     public String getFirstName() {
         return firstName;
