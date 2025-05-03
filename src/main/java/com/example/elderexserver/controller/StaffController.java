@@ -3,6 +3,7 @@ package com.example.elderexserver.controller;
 import com.example.elderexserver.data.staff.DTO.NewStaff;
 import com.example.elderexserver.data.staff.DTO.StaffListView;
 import com.example.elderexserver.data.staff.DTO.StaffProfileView;
+import com.example.elderexserver.data.staff.DTO.UpdateStaff;
 import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.StaffRepository;
 import com.example.elderexserver.service.StaffService;
@@ -44,6 +45,16 @@ public class StaffController {
             return ResponseEntity.ok("New staff added");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error registering staff: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateStaff(@RequestBody UpdateStaff updateStaff) {
+        try {
+            staffService.updateStaff(updateStaff);
+            return ResponseEntity.ok("Staff updated");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating staff: " + e.getMessage());
         }
     }
 }
