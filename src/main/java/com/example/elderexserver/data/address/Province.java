@@ -1,5 +1,7 @@
 package com.example.elderexserver.data.address;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.LinkedHashSet;
@@ -13,6 +15,7 @@ public class Province {
     private String name;
 
     @OneToMany(mappedBy = "province")
+    @JsonManagedReference
     private Set<Amphoe> amphoes = new LinkedHashSet<>();
 
     public Integer getId() {

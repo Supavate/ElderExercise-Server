@@ -1,12 +1,13 @@
 package com.example.elderexserver.data.address;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "district")
 public class District {
     @Id
     private Integer id;
@@ -14,6 +15,7 @@ public class District {
 
     @ManyToOne
     @JoinColumn(name = "amphoe_id")
+    @JsonBackReference
     private Amphoe amphoe;
 
     @OneToMany

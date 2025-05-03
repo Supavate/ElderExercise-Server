@@ -1,5 +1,7 @@
 package com.example.elderexserver.data.address;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.LinkedHashSet;
@@ -14,9 +16,12 @@ public class Amphoe {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "province_id")
+    @JsonBackReference
     private Province province;
 
+
     @OneToMany(mappedBy = "amphoe")
+    @JsonManagedReference
     private Set<District> districts = new LinkedHashSet<>();
 
     public Set<District> getDistricts() {
