@@ -1,91 +1,101 @@
 package com.example.elderexserver.data.routine.DTO;
 
-import java.util.Set;
+import java.util.List;
 
 public class PatientLineChart {
-    private Set<Exercise> exerciseSet;
+    private String week;
+    private List<Exercise> exerciseList;
 
-    public PatientLineChart(Set<Exercise> exerciseSet) {
-        this.exerciseSet = exerciseSet;
-    }
-
-    public Set<Exercise> getExerciseSet() {
-        return exerciseSet;
-    }
-
-    public void setExerciseSet(Set<Exercise> exerciseSet) {
-        this.exerciseSet = exerciseSet;
+    public PatientLineChart(String week, List<Exercise> exerciseList) {
+        this.week = week;
+        this.exerciseList = exerciseList;
     }
 
     public static class Exercise {
-        private Integer id;
-        private String name;
-        private Set<Day> daySet;
+        private Integer exerciseId;
+        private String exerciseName;
+        private List<Day> days;
 
-        public Exercise(Integer id, String name, Set<Day> daySet) {
-            this.id = id;
-            this.name = name;
-            this.daySet = daySet;
+        public Exercise(Integer exerciseId, String exerciseName, List<Day> days) {
+            this.exerciseId = exerciseId;
+            this.exerciseName = exerciseName;
+            this.days = days;
         }
 
-        public Integer getId() {
-            return id;
+        public Integer getExerciseId() {
+            return exerciseId;
         }
 
-        public void setId(Integer id) {
-            this.id = id;
+        public void setExerciseId(Integer exerciseId) {
+            this.exerciseId = exerciseId;
         }
 
-        public String getName() {
-            return name;
+        public String getExerciseName() {
+            return exerciseName;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setExerciseName(String exerciseName) {
+            this.exerciseName = exerciseName;
         }
 
-        public Set<Day> getDaySet() {
-            return daySet;
+        public List<Day> getDays() {
+            return days;
         }
 
-        public void setDaySet(Set<Day> daySet) {
-            this.daySet = daySet;
+        public void setDays(List<Day> days) {
+            this.days = days;
         }
     }
 
     public static class Day {
-        private String dayName;
-        private Integer reps;
-        private Integer goals;
+        private String day;
+        private Integer goal;
+        private Integer done;
 
-        public Day(String dayName, Integer reps, Integer goals) {
-            this.dayName = dayName;
-            this.reps = reps;
-            this.goals = goals;
+        public Day(String day, Integer goal, Integer done) {
+            this.day = day;
+            this.goal = goal;
+            this.done = done;
         }
 
-        public String getDayName() {
-            return dayName;
+        public String getDay() {
+            return day;
         }
 
-        public void setDayName(String dayName) {
-            this.dayName = dayName;
+        public void setDay(String day) {
+            this.day = day;
         }
 
-        public Integer getReps() {
-            return reps;
+        public Integer getGoal() {
+            return goal;
         }
 
-        public void setReps(Integer reps) {
-            this.reps = reps;
+        public void setGoal(Integer goal) {
+            this.goal = goal;
         }
 
-        public Integer getGoals() {
-            return goals;
+        public Integer getDone() {
+            return done;
         }
 
-        public void setGoals(Integer goals) {
-            this.goals = goals;
+        public void setDone(Integer done) {
+            this.done = done;
         }
+    }
+
+    public String getWeek() {
+        return week;
+    }
+
+    public void setWeek(String week) {
+        this.week = week;
+    }
+
+    public List<Exercise> getExerciseList() {
+        return exerciseList;
+    }
+
+    public void setExerciseList(List<Exercise> exerciseList) {
+        this.exerciseList = exerciseList;
     }
 }

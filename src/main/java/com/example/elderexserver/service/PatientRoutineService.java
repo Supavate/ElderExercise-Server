@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientRoutineService {
@@ -55,28 +56,34 @@ public class PatientRoutineService {
     public List<PatientLineChart> getPatientLineChart(Integer patientId) {
         List<PatientLineChartView> patientLineChart = patientRoutineRepository.findPatientLineChartView(patientId);
 
-        Map<String, Map<Integer, PatientLineChart.Exercise>> weeklyExerciseMap = new LinkedHashMap<>();
+        Map<String, Map<Integer, PatientLineChart.Exercise>> chartExerciseMap = new LinkedHashMap<>();
 
         for (PatientLineChartView row : patientLineChart) {
             String weekKey = row.getYear() + "_" + row.getWeekNumber();
-            PatientLineChart.Day day = new PatientLineChart.Day(row.getDayName(), row.getTotalReps(), row.getRepGoal());
+            Integer exerciseId = row.getExerciseId();
+            String dayName = row.getDayName();
 
-            weeklyExerciseMap
-                    .computeIfAbsent(weekKey, k -> new HashMap<>())
-                    .computeIfAbsent(row.getExerciseId(), id -> new PatientLineChart.Exercise(
-                            row.getExerciseId(),
-                            row.getExerciseName(),
-                            new LinkedHashSet<>()
-                    ))
-                    .getDaySet()
-                    .add(day);
+            PatientLineChart.Exercise exercise = chartExerciseMap.computeIfAbsent(weekKey, x -> new HashMap<>())
+                    .computeIfAbsent(exerciseId,
+                            id -> new PatientLineChart.Exercise(
+                                    id,
+                                    row.getExerciseName(),
+                                    new ArrayList<>()
+                            ));
+
+
+
+            exercise.getDays().add(new PatientLineChart.Day(
+                    dayName,
+                    row.getRepGoal(),
+                    row.getTotalReps()
+            ));
         }
 
-        List<PatientLineChart> patientLineChartList = new ArrayList<>();
-        for (Map<Integer, PatientLineChart.Exercise> exerciseMap : weeklyExerciseMap.values()) {
-            patientLineChartList.add(new PatientLineChart(new LinkedHashSet<>(exerciseMap.values())));
-        }
-
-        return patientLineChartList;
+        return chartExerciseMap.entrySet().stream()
+                .map(entry -> new PatientLineChart(
+                        entry.getKey(),
+                        new ArrayList<>(entry.getValue().values())
+                        )).collect(Collectors.toList());
     }
 }
