@@ -21,8 +21,13 @@ public class Address {
     @JoinColumn(name = "district_id", nullable = false)
     private District district;
 
-    @OneToOne(mappedBy = "address")
-    private Patient patients;
+    public Address() {
+    }
+
+    public Address(String address, District district) {
+        this.address = address;
+        this.district = district;
+    }
 
     public Integer getId() {
         return id;
@@ -46,13 +51,5 @@ public class Address {
 
     public void setDistrict(District district) {
         this.district = district;
-    }
-
-    public Patient getPatients() {
-        return patients;
-    }
-
-    public void setPatients(Patient patients) {
-        this.patients = patients;
     }
 }
