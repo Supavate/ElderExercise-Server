@@ -18,7 +18,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class PatientService {
@@ -43,12 +42,25 @@ public class PatientService {
     @Autowired
     private ProvinceRepository provinceRepository;
 
+    public List<PatientListView> getPatientList() {
+        return patientRepository.findPatientList();
+    }
+
+    public List<PatientFromCaretakerIdView> getPatientFromCaretakerId(Integer id) {
+        return patientRepository.findAllByCaretakerId(id);
+    }
 
     public List<PatientWithAge> getPatientsWithAge() {
         List<PatientWithAgeView> patientsWithAge = patientRepository.findAllWithAge();
 
         return patientsWithAge.stream()
-                .map(p -> new PatientWithAge(p.getId(), p.getFirstName(), p.getLastName(), p.getWeight(), p.getHeight(), p.getAge()))
+                .map(p -> new PatientWithAge(
+                        p.getId(),
+                        p.getFirstName(),
+                        p.getLastName(),
+                        p.getWeight(),
+                        p.getHeight(),
+                        p.getAge()))
                 .toList();
     }
 

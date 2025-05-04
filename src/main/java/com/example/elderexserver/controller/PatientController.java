@@ -15,12 +15,9 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @Autowired
-    private PatientRepository patientRepository;
-
     @GetMapping("/age")
-    public List<PatientWithAgeView> getPatientsWithAge() {
-        return patientRepository.findAllWithAge();
+    public List<PatientWithAge> getPatientsWithAge() {
+        return patientService.getPatientsWithAge();
     }
 
     @GetMapping("/allergy")
@@ -30,7 +27,7 @@ public class PatientController {
 
     @GetMapping("/staff/{id}")
     public List<PatientFromCaretakerIdView> getPatientFromCaretakerId(@PathVariable Integer id) {
-        return patientRepository.findAllByCaretakerId(id);
+        return patientService.getPatientFromCaretakerId(id);
     }
 
     @GetMapping("/detail/{id}")
@@ -40,7 +37,7 @@ public class PatientController {
 
     @GetMapping("/list")
     public List<PatientListView> getPatientList() {
-        return patientRepository.findPatientList();
+        return patientService.getPatientList();
     }
 
     @PostMapping("/new")
