@@ -19,16 +19,13 @@ public class ExerciseController {
     @Autowired
     private ExerciseService exerciseService;
 
-    @Autowired
-    private ExerciseRepository exerciseRepository;
-
     @GetMapping("/list")
     public List<ExerciseListView> getAllExercises() {
-        return exerciseRepository.findExerciseList();
+        return exerciseService.getAllExercises();
     }
 
     @GetMapping("/{id}")
     public ExerciseView getExerciseById(@PathVariable int id) {
-        return exerciseRepository.findExerciseById(id);
+        return exerciseService.getExerciseById(id);
     }
 }
