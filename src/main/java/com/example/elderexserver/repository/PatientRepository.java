@@ -58,7 +58,7 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
         LEFT JOIN blood_type bt ON p.blood_type_id = bt.id
         LEFT JOIN patient_allergy pa ON p.id = pa.patient_id
         LEFT JOIN allergy a ON pa.allergy_id = a.id
-        LEFT JOIN address adr ON p.id = adr.patient_id
+        LEFT JOIN address adr ON p.address_id = adr.id
         LEFT JOIN district d ON adr.district_id = d.id
         LEFT JOIN amphoe amp ON d.amphoe_id = amp.id
         LEFT JOIN province prov ON amp.province_id = prov.id
