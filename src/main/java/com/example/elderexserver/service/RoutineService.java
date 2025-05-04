@@ -33,6 +33,43 @@ public class RoutineService {
     @Autowired
     private StaffRepository staffRepository;
 
+    public RoutineList findRoutineListById(Integer routineId) {
+        List<RoutineListView> routineListView = routineRepository.findRoutineListById(routineId);
+
+        RoutineListView firstRow = routineListView.getFirst();
+        RoutineList routine = new RoutineList(
+                firstRow.getRoutineId(),
+                firstRow.getRoutineName(),
+                firstRow.getRoutineDescription(),
+                firstRow.getStaffFirstName(),
+                firstRow.getStaffLastName(),
+                new HashSet<>()
+        );
+
+        for (RoutineListView row : routineListView) {
+
+            RoutineList.Exercise exercise = routine.getExercise().stream()
+                    .filter(e -> e.exerciseId.equals(row.getExerciseId()))
+                    .findFirst().orElseGet(() -> {
+                        RoutineList.Exercise newExercise = new RoutineList.Exercise(
+                                row.getExerciseId(),
+                                row.getExerciseName(),
+                                new HashSet<>()
+                        );
+                        routine.getExercise().add(newExercise);
+                        return newExercise;
+                    });
+            if (row.getDayId() != null && exercise.getDay().stream().noneMatch(day -> day.dayId.equals(row.getDayId()))) {
+                exercise.getDay().add((new RoutineList.Day(
+                        row.getDayId(),
+                        row.getRep()
+                )));
+            }
+        }
+
+        return routine;
+    }
+
     public List<RoutineList> findRoutineList() {
         List<RoutineListView> routineList = routineRepository.findRoutineList();
 
@@ -40,11 +77,24 @@ public class RoutineService {
 
         for (RoutineListView row : routineList) {
             RoutineList routine = routineMap.computeIfAbsent(row.getRoutineId(),
-                    id -> new RoutineList(id, row.getRoutineName(), row.getRoutineDescription(), row.getStaffFirstName(), row.getStaffLastName(), new HashSet<>()));
+                    id -> new RoutineList(
+                            id,
+                            row.getRoutineName(),
+                            row.getRoutineDescription(),
+                            row.getStaffFirstName(),
+                            row.getStaffLastName(),
+                            new HashSet<>()
+                    )
+            );
 
             RoutineList.Exercise exercise = routine.getExercise().stream()
-                    .filter(x -> x.getExerciseId().equals(row.getExerciseId())).findFirst().orElseGet(() -> {
-                        RoutineList.Exercise newExercise = new RoutineList.Exercise(row.getExerciseId(), row.getExerciseName(), new HashSet<>());
+                    .filter(e -> e.getExerciseId().equals(row.getExerciseId()))
+                    .findFirst().orElseGet(() -> {
+                        RoutineList.Exercise newExercise = new RoutineList.Exercise(
+                                row.getExerciseId(),
+                                row.getExerciseName(),
+                                new HashSet<>()
+                        );
                         routine.getExercise().add(newExercise);
                         return newExercise;
                     });

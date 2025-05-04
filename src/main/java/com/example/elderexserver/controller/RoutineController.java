@@ -31,4 +31,9 @@ public class RoutineController {
             return ResponseEntity.status(500).body("Error registering routine: " + e.getMessage());
         }
     }
+
+    @GetMapping("/list/{routineId}")
+    public RoutineList getRoutineListById(@PathVariable Integer routineId) {
+        return routineService.findRoutineListById(routineId);
+    }
 }
