@@ -308,4 +308,85 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             DAYOFWEEK;
     """, nativeQuery = true)
     List<PatientLineChartView> findPatientLineChartView(Integer patientId);
+
+    @Query(value = """
+        SELECT
+            r.name AS routine_name,
+            r.description AS routine_description,
+            e.id AS exercise_id,
+            e.name AS exercise_name,
+            YEAR(ae.start_time) AS YEAR,
+            WEEK(ae.start_time, 1) AS week_number,
+            SUM(aed.reps) AS total_done,
+            (
+            SELECT
+                COUNT(*)
+            FROM
+                routine_exercises re2
+            WHERE
+                re2.routine_id = pr.routine_id AND re2.exercise_id = e.id
+        ) *(
+            SELECT
+                re2.rep
+            FROM
+                routine_exercises re2
+            WHERE
+                re2.routine_id = pr.routine_id AND re2.exercise_id = e.id
+            LIMIT 1
+        ) AS rep_goal,
+        (
+            (
+            SELECT
+                COUNT(*)
+            FROM
+                routine_exercises re2
+            WHERE
+                re2.routine_id = pr.routine_id AND re2.exercise_id = e.id
+        ) *(
+            SELECT
+                re2.rep
+            FROM
+                routine_exercises re2
+            WHERE
+                re2.routine_id = pr.routine_id AND re2.exercise_id = e.id
+            LIMIT 1
+        )
+        ) - SUM(aed.reps) AS missing_reps
+        FROM
+            patient p
+        JOIN patient_routine pr ON
+            p.id = pr.patient_id
+        JOIN actual_exercise ae ON
+            pr.id = ae.patient_routine_id
+        JOIN actual_exercise_detail aed ON
+            ae.id = aed.actual_exercise_id
+        JOIN exercise e ON
+            aed.exercise_id = e.id
+        JOIN routine r ON
+            r.id = pr.id
+        WHERE
+            pr.id =(
+            SELECT
+                pr2.id
+            FROM
+                patient_routine pr2
+            WHERE
+                pr2.patient_id =:patientId
+            ORDER BY
+                pr2.id
+            DESC
+        LIMIT 1
+        )
+        GROUP BY
+            e.id,
+            e.name,
+            YEAR(ae.start_time),
+            WEEK(ae.start_time, 1),
+            pr.routine_id
+        ORDER BY
+            YEAR,
+            week_number,
+            e.id;
+    """, nativeQuery = true)
+    List<PatientBarChartView> findPatientBarChartView(Integer patientId);
 }

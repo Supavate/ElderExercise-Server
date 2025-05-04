@@ -54,11 +54,11 @@ public class PatientRoutineService {
     }
 
     public List<PatientLineChart> getPatientLineChart(Integer patientId) {
-        List<PatientLineChartView> patientLineChart = patientRoutineRepository.findPatientLineChartView(patientId);
+        List<PatientLineChartView> patientLineChartView = patientRoutineRepository.findPatientLineChartView(patientId);
 
         Map<String, Map<Integer, PatientLineChart.Exercise>> chartExerciseMap = new LinkedHashMap<>();
 
-        for (PatientLineChartView row : patientLineChart) {
+        for (PatientLineChartView row : patientLineChartView) {
             String weekKey = row.getYear() + "_" + row.getWeekNumber();
             Integer exerciseId = row.getExerciseId();
             String dayName = row.getDayName();
@@ -85,5 +85,28 @@ public class PatientRoutineService {
                         entry.getKey(),
                         new ArrayList<>(entry.getValue().values())
                         )).collect(Collectors.toList());
+    }
+
+    public List<PatientBarChart> getPatientBarChart(Integer patientId) {
+        List<PatientBarChartView> patientBarChartView = patientRoutineRepository.findPatientBarChartView(patientId);
+
+        Map<String, PatientBarChart> chartExerciseMap = new LinkedHashMap<>();
+
+        for (PatientBarChartView row : patientBarChartView) {
+            String weekKey = row.getYear() + "_" + row.getWeekNumber();
+
+            chartExerciseMap.computeIfAbsent(weekKey, x -> new PatientBarChart(
+                    weekKey,
+                    row.getRoutineName(),
+                    row.getRoutineDescription(),
+                    new ArrayList<>()
+            )).getExerciseList().add(new PatientBarChart.exercise(
+                    row.getExerciseName(),
+                    row.getTotalDone(),
+                    row.getMissingReps()
+            ));
+        }
+
+        return new ArrayList<>(chartExerciseMap.values());
     }
 }

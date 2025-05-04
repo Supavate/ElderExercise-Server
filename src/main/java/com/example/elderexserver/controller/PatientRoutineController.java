@@ -47,7 +47,12 @@ public class PatientRoutineController {
     }
 
     @GetMapping("/chart/line/{patientId}")
-    public List<PatientLineChart> getPatientRoutineChart(@PathVariable Integer patientId) {
+    public List<PatientLineChart> getPatientRoutineLineChart(@PathVariable Integer patientId) {
         return patientRoutineService.getPatientLineChart(patientId);
+    }
+
+    @GetMapping("/chart/bar/{patientId}")
+    public List<PatientBarChart> getPatientRoutineBarChart(@PathVariable Integer patientId) {
+        return patientRoutineService.getPatientBarChart(patientId);
     }
 }
