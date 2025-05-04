@@ -384,8 +384,8 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             WEEK(ae.start_time, 1),
             pr.routine_id
         ORDER BY
-            YEAR,
-            week_number,
+            YEAR DESC ,
+            week_number DESC ,
             e.id;
     """, nativeQuery = true)
     List<PatientBarChartView> findPatientBarChartView(Integer patientId);
