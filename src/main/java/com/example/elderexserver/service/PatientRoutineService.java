@@ -1,5 +1,6 @@
 package com.example.elderexserver.service;
 
+import com.example.elderexserver.data.exercise.DTO.ActualExerciseDetailListView;
 import com.example.elderexserver.data.routine.DTO.*;
 import com.example.elderexserver.repository.PatientRoutineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,19 @@ public class PatientRoutineService {
 
     @Autowired
     private PatientRoutineRepository patientRoutineRepository;
+
+
+    public List<PatientRoutineDashboardReportView> getPatientRoutineDashboardReport(Integer caretakerId) {
+        return patientRoutineRepository.findPatientRoutineDashboardReport(caretakerId);
+    }
+
+    public List<ActualExerciseDetailListView> getActualExerciseDetailListByPatientIdAndDate(String date, Integer patientId) {
+        return patientRoutineRepository.findActualExerciseDetailListByPatientIdAndDate(date, patientId);
+    }
+
+    public List<PatientRoutineView> getPatientRoutineByPatientId(Integer patientId) {
+        return patientRoutineRepository.findPatientRoutineByPatientId(patientId);
+    }
 
     public List<PatientWeeklyRoutineReport> getWeeklyRoutineReport(Integer patientRoutineId) {
         List<PatientWeeklyRoutineReportView> patientWeeklyRoutineReport = patientRoutineRepository.findPatientWeeklyRoutineReport(patientRoutineId);

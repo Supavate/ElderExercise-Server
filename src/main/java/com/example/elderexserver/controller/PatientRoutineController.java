@@ -2,7 +2,6 @@ package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.exercise.DTO.ActualExerciseDetailListView;
 import com.example.elderexserver.data.routine.DTO.*;
-import com.example.elderexserver.repository.PatientRoutineRepository;
 import com.example.elderexserver.service.PatientRoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,20 +14,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/patient_routine")
 public class PatientRoutineController {
-    @Autowired
-    private PatientRoutineRepository patientRoutineRepository;
 
     @Autowired
     private PatientRoutineService patientRoutineService;
 
     @GetMapping("/dashboard/{caretakerId}")
     public List<PatientRoutineDashboardReportView> getPatientRoutineDashboardReport(@PathVariable Integer caretakerId) {
-        return patientRoutineRepository.findPatientRoutineDashboardReport(caretakerId);
+        return patientRoutineService.getPatientRoutineDashboardReport(caretakerId);
     }
 
     @GetMapping("/report/detail/{date}/{patientId}")
     public List<ActualExerciseDetailListView> getActualExerciseDetailListByPatientIdAndDate(@PathVariable String date, @PathVariable Integer patientId) {
-        return patientRoutineRepository.findActualExerciseDetailListByPatientIdAndDate(date, patientId);
+        return patientRoutineService.getActualExerciseDetailListByPatientIdAndDate(date, patientId);
     }
 
     @GetMapping("/report/daily/{startDate}/{endDate}/{patientId}")
@@ -43,7 +40,7 @@ public class PatientRoutineController {
 
     @GetMapping("/report/{patientId}")
     public List<PatientRoutineView> getPatientRoutineByPatientId(@PathVariable Integer patientId) {
-        return patientRoutineRepository.findPatientRoutineByPatientId(patientId);
+        return patientRoutineService.getPatientRoutineByPatientId(patientId);
     }
 
     @GetMapping("/chart/line/{patientId}")
