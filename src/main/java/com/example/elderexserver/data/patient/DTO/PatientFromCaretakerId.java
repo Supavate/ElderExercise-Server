@@ -1,12 +1,12 @@
 package com.example.elderexserver.data.patient.DTO;
 
 public class PatientFromCaretakerId {
-    Integer id;
-    String picture;
-    String firstName;
-    String lastName;
-    String gender;
-    Integer age;
+    private Integer id;
+    private String picture;
+    private String firstName;
+    private String lastName;
+    private String gender;
+    private Integer age;
 
     public PatientFromCaretakerId(Integer id, String picture, String firstName, String lastName, String gender, Integer age) {
         this.id = id;

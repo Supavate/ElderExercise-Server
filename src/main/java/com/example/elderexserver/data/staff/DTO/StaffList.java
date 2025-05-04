@@ -1,11 +1,11 @@
 package com.example.elderexserver.data.staff.DTO;
 
 public class StaffList {
-    Integer id;
-    String picture;
-    String first_name;
-    String last_name;
-    Integer patientCount;
+    private Integer id;
+    private String picture;
+    private String first_name;
+    private String last_name;
+    private Integer patientCount;
 
     public StaffList(Integer id, String picture, String first_name, String last_name, Integer patientCount) {
         this.id = id;

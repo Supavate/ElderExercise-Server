@@ -1,14 +1,14 @@
 package com.example.elderexserver.data.routine.DTO;
 
 public class PatientRoutineDashboardReport {
-    Integer patient_id;
-    String first_name;
-    String last_name;
-    String period_start;
-    String period_end;
-    Integer total_reps;
-    Integer rep_goal;
-    Float percentage_done;
+    private Integer patient_id;
+    private String first_name;
+    private String last_name;
+    private String period_start;
+    private String period_end;
+    private Integer total_reps;
+    private Integer rep_goal;
+    private Float percentage_done;
 
     public PatientRoutineDashboardReport(Integer patient_id, String first_name, String last_name, String period_start, String period_end, Integer total_reps, Integer rep_goal, Float percentage_done) {
         this.patient_id = patient_id;

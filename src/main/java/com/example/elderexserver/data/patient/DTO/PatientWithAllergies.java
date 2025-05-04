@@ -1,6 +1,5 @@
 package com.example.elderexserver.data.patient.DTO;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class PatientWithAllergies {
