@@ -1,6 +1,5 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.address.Amphoe;
 import com.example.elderexserver.data.address.DTO.AmphoeView;
 import com.example.elderexserver.data.address.DTO.DistrictView;
 import com.example.elderexserver.data.address.DTO.ProvinceView;
