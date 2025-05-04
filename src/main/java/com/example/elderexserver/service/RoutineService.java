@@ -33,7 +33,7 @@ public class RoutineService {
     @Autowired
     private StaffRepository staffRepository;
 
-    public RoutineList findRoutineListById(Integer routineId) {
+    public RoutineList getRoutineListById(Integer routineId) {
         List<RoutineListView> routineListView = routineRepository.findRoutineListById(routineId);
 
         RoutineListView firstRow = routineListView.getFirst();
@@ -70,7 +70,7 @@ public class RoutineService {
         return routine;
     }
 
-    public List<RoutineList> findRoutineList() {
+    public List<RoutineList> getRoutineList() {
         List<RoutineListView> routineList = routineRepository.findRoutineList();
 
         Map<Integer, RoutineList> routineMap = new LinkedHashMap<>();

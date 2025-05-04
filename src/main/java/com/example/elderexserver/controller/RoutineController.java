@@ -1,6 +1,5 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.patient.DTO.NewPatient;
 import com.example.elderexserver.data.routine.DTO.NewRoutine;
 import com.example.elderexserver.data.routine.DTO.RoutineList;
 import com.example.elderexserver.service.RoutineService;
@@ -19,7 +18,7 @@ public class RoutineController {
 
     @GetMapping("/list")
     public List<RoutineList> getAllRoutines() {
-        return routineService.findRoutineList();
+        return routineService.getRoutineList();
     }
 
     @PostMapping("/new")
@@ -34,6 +33,6 @@ public class RoutineController {
 
     @GetMapping("/list/{routineId}")
     public RoutineList getRoutineListById(@PathVariable Integer routineId) {
-        return routineService.findRoutineListById(routineId);
+        return routineService.getRoutineListById(routineId);
     }
 }
