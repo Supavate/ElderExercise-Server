@@ -36,7 +36,7 @@ public class RoutineService {
     public RoutineList getRoutineListById(Integer routineId) {
         List<RoutineListView> routineListView = routineRepository.findRoutineListById(routineId);
 
-        RoutineListView firstRow = routineListView.getFirst();
+        RoutineListView firstRow = routineListView.get(0);
         RoutineList routine = new RoutineList(
                 firstRow.getRoutineId(),
                 firstRow.getRoutineName(),
