@@ -19,8 +19,11 @@ public interface PatientDetailView {
     String getAllergyDescription();
     String getPhone();
     String getAddress();
+    Integer getProvinceId();
     String getProvince();
+    Integer getAmphoeId();
     String getAmphoe();
+    Integer getDistrictId();
     String getDistrict();
     String getZipcode();
     String getNote();

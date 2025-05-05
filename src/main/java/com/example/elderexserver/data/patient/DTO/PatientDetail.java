@@ -20,8 +20,11 @@ public class PatientDetail {
     private Integer height;
     private String phone;
     private String address;
+    private Integer province_id;
     private String province;
+    private Integer amphoe_id;
     private String amphoe;
+    private Integer district_id;
     private String district;
     private String zipcode;
     private Set<Allergy> allergies;
@@ -63,7 +66,7 @@ public class PatientDetail {
         }
     }
 
-    public PatientDetail(Integer id, String picture, String citizen_id, String first_name, String last_name, Integer gender_id, String gender, String date_of_birth, Integer age, Integer blood_type_id, String blood_type, Integer weight, Integer height, String phone, String address, String province, String amphoe, String district, String zipcode, Set<Allergy> allergies, String note) {
+    public PatientDetail(Integer id, String picture, String citizen_id, String first_name, String last_name, Integer gender_id, String gender, String date_of_birth, Integer age, Integer blood_type_id, String blood_type, Integer weight, Integer height, String phone, String address, Integer province_id, String province, Integer amphoe_id, String amphoe, Integer district_id, String district, String zipcode, Set<Allergy> allergies, String note) {
         this.id = id;
         this.picture = picture;
         this.citizen_id = citizen_id;
@@ -79,8 +82,11 @@ public class PatientDetail {
         this.height = height;
         this.phone = phone;
         this.address = address;
+        this.province_id = province_id;
         this.province = province;
+        this.amphoe_id = amphoe_id;
         this.amphoe = amphoe;
+        this.district_id = district_id;
         this.district = district;
         this.zipcode = zipcode;
         this.allergies = allergies;
@@ -207,6 +213,14 @@ public class PatientDetail {
         this.address = address;
     }
 
+    public Integer getProvince_id() {
+        return province_id;
+    }
+
+    public void setProvince_id(Integer province_id) {
+        this.province_id = province_id;
+    }
+
     public String getProvince() {
         return province;
     }
@@ -215,12 +229,28 @@ public class PatientDetail {
         this.province = province;
     }
 
+    public Integer getAmphoe_id() {
+        return amphoe_id;
+    }
+
+    public void setAmphoe_id(Integer amphoe_id) {
+        this.amphoe_id = amphoe_id;
+    }
+
     public String getAmphoe() {
         return amphoe;
     }
 
     public void setAmphoe(String amphoe) {
         this.amphoe = amphoe;
+    }
+
+    public Integer getDistrict_id() {
+        return district_id;
+    }
+
+    public void setDistrict_id(Integer district_id) {
+        this.district_id = district_id;
     }
 
     public String getDistrict() {
