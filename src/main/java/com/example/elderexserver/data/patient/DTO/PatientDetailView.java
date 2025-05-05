@@ -14,7 +14,9 @@ public interface PatientDetailView {
     String getBloodType();
     Integer getWeight();
     Integer getHeight();
-    String getAllergy();
+    Integer getAllergyId();
+    String getAllergyName();
+    String getAllergyDescription();
     String getPhone();
     String getAddress();
     String getProvince();

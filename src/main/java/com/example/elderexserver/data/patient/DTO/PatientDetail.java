@@ -1,5 +1,7 @@
 package com.example.elderexserver.data.patient.DTO;
 
+import com.example.elderexserver.data.patient.Allergy;
+
 import java.util.Set;
 
 public class PatientDetail {
@@ -16,18 +18,52 @@ public class PatientDetail {
     private String blood_type;
     private Integer weight;
     private Integer height;
-    private Set<String> allergy;
-
     private String phone;
     private String address;
     private String province;
     private String amphoe;
     private String district;
     private String zipcode;
-
+    private Set<Allergy> allergies;
     private String note;
 
-    public PatientDetail(Integer id, String picture, String citizen_id, String first_name, String last_name, Integer gender_id, String gender, String date_of_birth, Integer age, Integer blood_type_id, String blood_type, Integer weight, Integer height, Set<String> allergy, String phone, String address, String province, String amphoe, String district, String zipcode, String note) {
+    public static class Allergy{
+        private Integer id;
+        private String name;
+        private String description;
+
+        public Allergy(Integer id, String name, String description) {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+    }
+
+    public PatientDetail(Integer id, String picture, String citizen_id, String first_name, String last_name, Integer gender_id, String gender, String date_of_birth, Integer age, Integer blood_type_id, String blood_type, Integer weight, Integer height, String phone, String address, String province, String amphoe, String district, String zipcode, Set<Allergy> allergies, String note) {
         this.id = id;
         this.picture = picture;
         this.citizen_id = citizen_id;
@@ -41,18 +77,14 @@ public class PatientDetail {
         this.blood_type = blood_type;
         this.weight = weight;
         this.height = height;
-        this.allergy = allergy;
         this.phone = phone;
         this.address = address;
         this.province = province;
         this.amphoe = amphoe;
         this.district = district;
         this.zipcode = zipcode;
+        this.allergies = allergies;
         this.note = note;
-    }
-
-    public void addAllergy(String allergy) {
-        if (allergy != null) this.allergy.add(allergy);
     }
 
     public Integer getId() {
@@ -159,14 +191,6 @@ public class PatientDetail {
         this.height = height;
     }
 
-    public Set<String> getAllergy() {
-        return allergy;
-    }
-
-    public void setAllergy(Set<String> allergy) {
-        this.allergy = allergy;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -213,6 +237,14 @@ public class PatientDetail {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public Set<Allergy> getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(Set<Allergy> allergies) {
+        this.allergies = allergies;
     }
 
     public String getNote() {

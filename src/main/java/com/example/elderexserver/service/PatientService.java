@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PatientService {
@@ -84,8 +85,41 @@ public class PatientService {
     }
 
     public PatientDetail getPatientDetailById(int id) {
-        PatientDetailView p = patientRepository.findPatientDetailById(id);
-        return new PatientDetail(p.getId(), p.getPicture(), p.getCitizenId(), p.getFirstName(), p.getLastName(), p.getGenderId(), p.getGender(), p.getDateOfBirth(), p.getAge(), p.getBloodTypeId(), p.getBloodType(), p.getWeight(), p.getHeight(), (p.getAllergy() != null) ? new HashSet<>(Arrays.asList(p.getAllergy().split(","))) : new HashSet<>(), p.getPhone(), p.getAddress(), p.getProvince(), p.getAmphoe(), p.getDistrict(), p.getZipcode(), p.getNote());
+        List<PatientDetailView> patientDetailViews = patientRepository.findPatientDetailById(id);
+        Set<PatientDetail.Allergy> allergies = new HashSet<>();
+        for (PatientDetailView row : patientDetailViews) {
+            allergies.add(new PatientDetail.Allergy(
+                    row.getAllergyId(),
+                    row.getAllergyName(),
+                    row.getAllergyDescription()
+                    )
+            );
+        }
+
+        PatientDetailView patient = patientDetailViews.get(0);
+        return new PatientDetail(
+                patient.getId(),
+                patient.getPicture(),
+                patient.getCitizenId(),
+                patient.getFirstName(),
+                patient.getLastName(),
+                patient.getGenderId(),
+                patient.getGender(),
+                patient.getDateOfBirth(),
+                patient.getAge(),
+                patient.getBloodTypeId(),
+                patient.getBloodType(),
+                patient.getWeight(),
+                patient.getHeight(),
+                patient.getPhone(),
+                patient.getAddress(),
+                patient.getProvince(),
+                patient.getAmphoe(),
+                patient.getDistrict(),
+                patient.getZipcode(),
+                allergies,
+                patient.getNote()
+        );
     }
 
     public Patient newPatient(NewPatient newPatient) {
