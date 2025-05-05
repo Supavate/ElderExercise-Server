@@ -14,6 +14,7 @@ import java.util.Set;
 @Entity
 public class Patient {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String citizen_id;
     private String first_Name;
