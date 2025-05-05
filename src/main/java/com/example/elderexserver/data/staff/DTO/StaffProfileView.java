@@ -10,4 +10,5 @@ public interface StaffProfileView {
     public String getRole();
     public String getTelephone();
     public String getEmail();
+    public String getPicture();
 }
