@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Service
 public class StaffService {
@@ -72,7 +73,13 @@ public class StaffService {
         }
 
         if (updateStaff.getDate_of_birth() != null) {
-            staff.setDate_of_birth(LocalDate.parse(updateStaff.getDate_of_birth()));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            try {
+                LocalDate dob = LocalDate.parse(updateStaff.getDate_of_birth(), formatter);
+                staff.setDate_of_birth(dob);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid date format. Expected dd/MM/yyyy");
+            }
         }
 
         if (updateStaff.getRole_id() != null) {
