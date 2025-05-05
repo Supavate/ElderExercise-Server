@@ -1,6 +1,7 @@
 package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.patient.DTO.*;
+import com.example.elderexserver.data.staff.DTO.UpdateStaff;
 import com.example.elderexserver.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +48,10 @@ public class PatientController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error registering new patient: " + e.getMessage());
         }
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<String> update(@RequestBody UpdatePatient updatePatient) {
+
     }
 }

@@ -10,15 +10,13 @@ import com.example.elderexserver.data.patient.DTO.*;
 import com.example.elderexserver.data.patient.Gender;
 import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.repository.*;
+import com.fasterxml.jackson.databind.util.ArrayIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PatientService {
@@ -42,6 +40,8 @@ public class PatientService {
 
     @Autowired
     private ProvinceRepository provinceRepository;
+    @Autowired
+    private AddressRepository addressRepository;
 
     public List<PatientListView> getPatientList() {
         return patientRepository.findPatientList();
@@ -158,6 +158,71 @@ public class PatientService {
                 new HashSet<>(allergy)
         );
 
+        return patientRepository.save(patient);
+    }
+
+    public Patient updatePatient(UpdatePatient updatePatient) {
+        Patient patient = patientRepository.findById(updatePatient.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
+
+        if (updatePatient.getCitizenId() != null) {
+            updatePatient.setCitizenId(updatePatient.getCitizenId());
+        }
+
+        if (updatePatient.getFirstName() != null) {
+            patient.setFirst_Name(updatePatient.getFirstName());
+        }
+
+        if (updatePatient.getLastName() != null) {
+            patient.setLast_Name(updatePatient.getLastName());
+        }
+
+        if (updatePatient.getDateOfBirth() != null) {
+            patient.setDate_of_birth(LocalDate.parse(updatePatient.getDateOfBirth()));
+        }
+
+        if (updatePatient.getWeight() != null) {
+            patient.setWeight(updatePatient.getWeight());
+        }
+
+        if (updatePatient.getHeight() != null) {
+            patient.setHeight(updatePatient.getHeight());
+        }
+
+        if (updatePatient.getPhone() != null) {
+            patient.setPhone(updatePatient.getPhone());
+        }
+
+        if (updatePatient.getNote() != null) {
+            patient.setNote(updatePatient.getNote());
+        }
+
+        if (updatePatient.getBloodTypeId() != null) {
+            Blood_Type bloodType = bloodTypeRepository.findById(updatePatient.getBloodTypeId())
+                    .orElseThrow(() -> new IllegalArgumentException("Blood type not found"));
+            patient.setBlood_type(bloodType);
+        }
+
+        if (updatePatient.getGenderId() != null) {
+            Gender gender = genderRepository.findById(updatePatient.getGenderId())
+                    .orElseThrow(() -> new IllegalArgumentException("Gender not found"));
+            patient.setGender(gender);
+        }
+
+        if (updatePatient.getAddress() != null) {
+            patient.getAddress().setAddress(updatePatient.getAddress());
+        }
+
+        if (updatePatient.getDistrictId() != null) {
+            District district = districtRepository.findById(updatePatient.getDistrictId())
+                    .orElseThrow(() -> new IllegalArgumentException("District not found"));
+            patient.getAddress().setDistrict(district);
+        }
+
+        if (updatePatient.getAllergy() != null) {
+            Set<Allergy> allergies = new HashSet<>(allergyRepository.findAllById(updatePatient.getAllergy()));
+            patient.setAllergies(allergies);
+        }
         return patientRepository.save(patient);
     }
 }
