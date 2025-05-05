@@ -334,18 +334,24 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
                 re2.routine_id = pr.routine_id AND re2.exercise_id = e.id
             LIMIT 1
         ) AS rep_goal,
-        COALESCE(
-                (
-                SELECT
-                    re2.rep
-                FROM
-                    routine_exercises re2
-                WHERE
-                    re2.routine_id = pr.routine_id AND re2.exercise_id = aed.exercise_id AND re2.week_day_id = DAYOFWEEK(ae.start_time) - 1
-                LIMIT 1
-            ),
-            0
-            ) AS missing_reps
+        (
+            (
+            SELECT
+                COUNT(*)
+            FROM
+                routine_exercises re2
+            WHERE
+                re2.routine_id = pr.routine_id AND re2.exercise_id = e.id
+        ) *(
+            SELECT
+                re2.rep
+            FROM
+                routine_exercises re2
+            WHERE
+                re2.routine_id = pr.routine_id AND re2.exercise_id = e.id
+            LIMIT 1
+        )
+        ) - SUM(aed.reps) AS missing_reps
         FROM
             patient p
         JOIN patient_routine pr ON
