@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @Service
@@ -181,7 +182,13 @@ public class PatientService {
         }
 
         if (updatePatient.getDateOfBirth() != null) {
-            patient.setDate_of_birth(LocalDate.parse(updatePatient.getDateOfBirth()));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            try {
+                LocalDate dob = LocalDate.parse(updatePatient.getDateOfBirth(), formatter);
+                patient.setDate_of_birth(dob);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid date format. Please use dd/MM/yyyy");
+            }
         }
 
         if (updatePatient.getWeight() != null) {
