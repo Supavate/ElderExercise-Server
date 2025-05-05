@@ -52,6 +52,11 @@ public class PatientController {
 
     @PatchMapping("/update")
     public ResponseEntity<String> update(@RequestBody UpdatePatient updatePatient) {
-
+        try {
+            patientService.updatePatient(updatePatient);
+            return ResponseEntity.ok("Patient updated");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating patient: " + e.getMessage());
+        }
     }
 }
