@@ -1,7 +1,6 @@
 package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.patient.DTO.*;
-import com.example.elderexserver.data.staff.DTO.UpdateStaff;
 import com.example.elderexserver.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
