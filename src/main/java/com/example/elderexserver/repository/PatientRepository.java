@@ -53,7 +53,7 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
                         prov.name AS province,
                         amp.id AS amphoe_id,
                         amp.name AS amphoe,
-                        d.id AS district,
+                        d.id AS district_id,
                         d.name AS district,
                           amp.zipcode AS zipcode,
                           p.note,
