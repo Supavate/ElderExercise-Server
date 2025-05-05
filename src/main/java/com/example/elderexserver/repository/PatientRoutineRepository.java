@@ -196,6 +196,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
     @Query(value = """
         SELECT
             p.id AS patient_id,
+            p.picture,
             p.first_name,
             p.last_name,
             TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) AS age,
