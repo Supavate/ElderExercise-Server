@@ -139,6 +139,8 @@ public class PatientService {
 
         Address address = new Address(newPatient.getAddress(), district);
 
+        addressRepository.save(address);
+
         Gender gender = genderRepository.findById(newPatient.getGenderId())
                 .orElseThrow(() -> new IllegalArgumentException("Gender not found"));
 

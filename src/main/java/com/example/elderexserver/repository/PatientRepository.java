@@ -39,7 +39,7 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
                           p.last_name,
                           p.gender_id,
                           g.name AS gender,
-                          p.date_of_birth,
+                          DATE_FORMAT(p.date_of_birth, '%d/%m/%Y') AS date_of_birth,
                           a.id AS allergy_id,
                           a.name AS allergy_name,
                           a.description AS allergy_description,
