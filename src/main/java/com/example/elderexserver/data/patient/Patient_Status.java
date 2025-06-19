@@ -3,7 +3,7 @@ package com.example.elderexserver.data.patient;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Patient_Status {
@@ -20,7 +20,15 @@ public class Patient_Status {
     private Status status;
 
     @Temporal(value = TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
+
+    public Patient_Status() {
+    }
+
+    public Patient_Status(Status status, LocalDate date) {
+        this.status = status;
+        this.date = date;
+    }
 
     public int getId() {
         return id;
@@ -46,11 +54,11 @@ public class Patient_Status {
         this.status = status;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

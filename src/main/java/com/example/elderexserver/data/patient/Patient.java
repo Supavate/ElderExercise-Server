@@ -95,7 +95,7 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     private Set<Patient_Routine> patientRoutines = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Patient_Status> patientStatuses = new LinkedHashSet<>();
 
     public Patient() {
@@ -308,4 +308,8 @@ public class Patient {
         this.patientStatuses = patientStatuses;
     }
 
+    public void addPatientStatus(Patient_Status status) {
+        status.setPatient(this);
+        this.patientStatuses.add(status);
+    }
 }

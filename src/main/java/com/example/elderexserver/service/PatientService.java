@@ -57,6 +57,9 @@ public class PatientService {
     @Autowired
     private MedicineRepository medicineRepository;
 
+    @Autowired
+    private StatusRepository statusRepository;
+
     public List<PatientListView> getPatientList() {
         return patientRepository.findPatientList();
     }
@@ -175,6 +178,9 @@ public class PatientService {
 
         List<Medicine> medicine = medicineRepository.findAllById(newPatient.getMedicine());
 
+        Status status = statusRepository.findById(newPatient.getStatusId())
+                .orElseThrow(() -> new IllegalArgumentException("Status not found"));
+
         Patient patient = new Patient(
                 newPatient.getCitizenId(),
                 newPatient.getFirstName(),
@@ -198,6 +204,9 @@ public class PatientService {
                 new HashSet<>()
         );
 
+        Patient_Status patientStatus = new Patient_Status(status, LocalDate.now());
+        patient.addPatientStatus(patientStatus);
+
         return patientRepository.save(patient);
     }
 
@@ -206,7 +215,7 @@ public class PatientService {
                 .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
 
         if (updatePatient.getCitizenId() != null) {
-            updatePatient.setCitizenId(updatePatient.getCitizenId());
+            patient.setCitizenId(updatePatient.getCitizenId());
         }
 
         if (updatePatient.getFirstName() != null) {
@@ -304,6 +313,12 @@ public class PatientService {
         if (updatePatient.getMedicine() != null) {
             Set<Medicine> medicine = new HashSet<>(medicineRepository.findAllById(updatePatient.getMedicine()));
             patient.setMedicines(medicine);
+        }
+
+        if (updatePatient.getStatusId() != null) {
+            Status status = statusRepository.findById(updatePatient.getStatusId())
+                    .orElseThrow(() -> new IllegalArgumentException("Status not found"));
+            patient.addPatientStatus(new Patient_Status(status, LocalDate.now()));
         }
 
         return patientRepository.save(patient);
