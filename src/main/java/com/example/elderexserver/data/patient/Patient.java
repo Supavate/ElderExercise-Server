@@ -3,87 +3,125 @@ package com.example.elderexserver.data.patient;
 import com.example.elderexserver.data.address.Address;
 import com.example.elderexserver.data.routine.Patient_Routine;
 import com.example.elderexserver.data.staff.Staff;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "patient")
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
-    private String citizen_id;
-    private String first_Name;
-    private String last_Name;
-    @ManyToOne
-    @JoinColumn(name = "gender_id")
+
+    @Column(name = "citizen_id", nullable = false, length = 13)
+    private String citizenId;
+
+    @Column(name = "first_name", nullable = false, length = 50)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 50)
+    private String lastName;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "gender_id", nullable = false)
     private Gender gender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blood_type_id")
-    private Blood_Type blood_type;
+    private Blood_Type bloodType;
+
+    @Column(name = "weight")
     private Integer weight;
+
+    @Column(name = "height")
     private Integer height;
 
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate date_of_birth;
+    @Column(name = "date_of_birth", nullable = false)
+    private LocalDate dateOfBirth;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "nationality", nullable = false)
+    private Nationality nationality;
+
+    @Column(name = "phone", length = 10)
     private String phone;
 
-    @ManyToOne
+    @Column(name = "picture")
+    private String picture;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "caretaker_id")
-    private Staff staff;
+    private Staff caretaker;
+
+    @Column(name = "note")
     private String note;
 
-    @Transient
-    private Integer age;
+    @Column(name = "surgical_history", nullable = false)
+    private String surgicalHistory;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Patient_Allergy",
-            joinColumns = @JoinColumn(name = "Patient_id"),
-            inverseJoinColumns = @JoinColumn(name = "Allergy_id"))
-    private Set<Allergy> allergies;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "primary_hospital", nullable = false)
+    private Hospital primaryHospital;
 
-    @OneToMany(mappedBy = "patient")
-    @JsonManagedReference
-    private List<Patient_Note> notes;
-
-    @OneToMany(mappedBy = "patient")
-    @JsonManagedReference
-    private List<Patient_Status> status;
-
-    @OneToMany(mappedBy = "patient")
-    @JsonManagedReference
-    private List<Patient_Caretaker> caretakers;
-
-    @OneToMany(mappedBy = "patient")
-    @JsonManagedReference
-    private List<Patient_Routine> routines;
-
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
 
-    public Patient() {}
+    @ManyToMany
+    @JoinTable(name = "patient_drug_allergy",
+            joinColumns = @JoinColumn(name = "patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "drug_allergy_id"))
+    private Set<Drug_Allergy> drugAllergies = new LinkedHashSet<>();
 
-    public Patient(String citizen_id, String first_Name, String last_Name, Gender gender, Blood_Type blood_type, Integer weight, Integer height, LocalDate date_of_birth, String phone, String note, Address address, Set<Allergy> allergies) {
-        this.citizen_id = citizen_id;
-        this.first_Name = first_Name;
-        this.last_Name = last_Name;
+    @ManyToMany
+    @JoinTable(name = "patient_food_allergy",
+            joinColumns = @JoinColumn(name = "patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "food_allergy_id"))
+    private Set<Food_Allergy> foodAllergies = new LinkedHashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "patient_medication",
+            joinColumns = @JoinColumn(name = "patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "medicine_id"))
+    private Set<Medicine> medicines = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "patient")
+    private Set<Patient_Note> patientNotes = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "patient")
+    private Set<Patient_Routine> patientRoutines = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "patient")
+    private Set<Patient_Status> patientStatuses = new LinkedHashSet<>();
+
+    public Patient() {
+    }
+
+    public Patient(String citizenId, String firstName, String lastName, Gender gender, Blood_Type bloodType, Integer weight, Integer height, LocalDate dateOfBirth, Nationality nationality, String phone, String picture, Staff caretaker, String note, String surgicalHistory, Hospital primaryHospital, Address address, Set<Drug_Allergy> drugAllergies, Set<Food_Allergy> foodAllergies, Set<Medicine> medicines, Set<Patient_Status> patientStatuses) {
+        this.citizenId = citizenId;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = gender;
-        this.blood_type = blood_type;
+        this.bloodType = bloodType;
         this.weight = weight;
         this.height = height;
-        this.date_of_birth = date_of_birth;
+        this.dateOfBirth = dateOfBirth;
+        this.nationality = nationality;
         this.phone = phone;
+        this.picture = picture;
+        this.caretaker = caretaker;
         this.note = note;
+        this.surgicalHistory = surgicalHistory;
+        this.primaryHospital = primaryHospital;
         this.address = address;
-        this.allergies = allergies;
+        this.drugAllergies = drugAllergies;
+        this.foodAllergies = foodAllergies;
+        this.medicines = medicines;
+        this.patientStatuses = patientStatuses;
     }
 
     public Integer getId() {
@@ -94,28 +132,28 @@ public class Patient {
         this.id = id;
     }
 
-    public String getCitizen_id() {
-        return citizen_id;
+    public String getCitizenId() {
+        return citizenId;
     }
 
-    public void setCitizen_id(String citizen_id) {
-        this.citizen_id = citizen_id;
+    public void setCitizenId(String citizenId) {
+        this.citizenId = citizenId;
     }
 
-    public String getFirst_Name() {
-        return first_Name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_Name(String firstName) {
-        this.first_Name = firstName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_Name() {
-        return last_Name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_Name(String lastName) {
-        this.last_Name = lastName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public Gender getGender() {
@@ -126,20 +164,12 @@ public class Patient {
         this.gender = gender;
     }
 
-    public Blood_Type getBlood_type() {
-        return blood_type;
+    public Blood_Type getBloodType() {
+        return bloodType;
     }
 
-    public void setBlood_type(Blood_Type blood_type) {
-        this.blood_type = blood_type;
-    }
-
-    public List<Patient_Status> getStatus() {
-        return status;
-    }
-
-    public void setStatus(List<Patient_Status> status) {
-        this.status = status;
+    public void setBloodType(Blood_Type bloodType) {
+        this.bloodType = bloodType;
     }
 
     public Integer getWeight() {
@@ -158,12 +188,20 @@ public class Patient {
         this.height = height;
     }
 
-    public LocalDate getDate_of_birth() {
-        return date_of_birth;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setDate_of_birth(LocalDate date_of_birth) {
-        this.date_of_birth = date_of_birth;
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Nationality getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(Nationality nationality) {
+        this.nationality = nationality;
     }
 
     public String getPhone() {
@@ -174,12 +212,20 @@ public class Patient {
         this.phone = phone;
     }
 
-    public Staff getStaff() {
-        return staff;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setStaff(Staff staff) {
-        this.staff = staff;
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public Staff getCaretaker() {
+        return caretaker;
+    }
+
+    public void setCaretaker(Staff caretaker) {
+        this.caretaker = caretaker;
     }
 
     public String getNote() {
@@ -190,44 +236,20 @@ public class Patient {
         this.note = note;
     }
 
-    public Integer getAge() {
-        return age;
+    public String getSurgicalHistory() {
+        return surgicalHistory;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setSurgicalHistory(String surgicalHistory) {
+        this.surgicalHistory = surgicalHistory;
     }
 
-    public Set<Allergy> getAllergies() {
-        return allergies;
+    public Hospital getPrimaryHospital() {
+        return primaryHospital;
     }
 
-    public void setAllergies(Set<Allergy> allergies) {
-        this.allergies = allergies;
-    }
-
-    public List<Patient_Note> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(List<Patient_Note> notes) {
-        this.notes = notes;
-    }
-
-    public List<Patient_Caretaker> getCaretakers() {
-        return caretakers;
-    }
-
-    public void setCaretakers(List<Patient_Caretaker> caretakers) {
-        this.caretakers = caretakers;
-    }
-
-    public List<Patient_Routine> getRoutines() {
-        return routines;
-    }
-
-    public void setRoutines(List<Patient_Routine> routines) {
-        this.routines = routines;
+    public void setPrimaryHospital(Hospital primaryHospital) {
+        this.primaryHospital = primaryHospital;
     }
 
     public Address getAddress() {
@@ -237,4 +259,53 @@ public class Patient {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    public Set<Drug_Allergy> getDrugAllergies() {
+        return drugAllergies;
+    }
+
+    public void setDrugAllergies(Set<Drug_Allergy> drugAllergies) {
+        this.drugAllergies = drugAllergies;
+    }
+
+    public Set<Food_Allergy> getFoodAllergies() {
+        return foodAllergies;
+    }
+
+    public void setFoodAllergies(Set<Food_Allergy> foodAllergies) {
+        this.foodAllergies = foodAllergies;
+    }
+
+    public Set<Medicine> getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(Set<Medicine> medicines) {
+        this.medicines = medicines;
+    }
+
+    public Set<Patient_Note> getPatientNotes() {
+        return patientNotes;
+    }
+
+    public void setPatientNotes(Set<Patient_Note> patientNotes) {
+        this.patientNotes = patientNotes;
+    }
+
+    public Set<Patient_Routine> getPatientRoutines() {
+        return patientRoutines;
+    }
+
+    public void setPatientRoutines(Set<Patient_Routine> patientRoutines) {
+        this.patientRoutines = patientRoutines;
+    }
+
+    public Set<Patient_Status> getPatientStatuses() {
+        return patientStatuses;
+    }
+
+    public void setPatientStatuses(Set<Patient_Status> patientStatuses) {
+        this.patientStatuses = patientStatuses;
+    }
+
 }

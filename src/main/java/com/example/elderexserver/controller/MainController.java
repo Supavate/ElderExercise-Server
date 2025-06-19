@@ -18,10 +18,16 @@ public class MainController {
 
     //Allergy
     @Autowired
-    private AllergyRepository allergyRepository;
+    private DrugAllergyRepository drugAllergyRepository;
 
-    @GetMapping("/allergy")
-    public List<Allergy> getAllAllergies() {return allergyRepository.findAll();}
+    @GetMapping("/allergy/drug")
+    public List<Drug_Allergy> getAllDrugAllergies() {return drugAllergyRepository.findAll();}
+
+    @Autowired
+    private FoodAllergyRepository foodAllergyRepository;
+
+    @GetMapping("/allergy/food")
+    public List<Food_Allergy> getAllFoodAllergies() {return foodAllergyRepository.findAll();}
 
     //Status
     @Autowired

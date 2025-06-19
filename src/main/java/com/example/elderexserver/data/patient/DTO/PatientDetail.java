@@ -1,7 +1,5 @@
 package com.example.elderexserver.data.patient.DTO;
 
-import com.example.elderexserver.data.patient.Allergy;
-
 import java.util.Set;
 
 public class PatientDetail {

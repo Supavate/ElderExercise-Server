@@ -9,9 +9,6 @@ import java.util.List;
 
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
-    @Query(value = "SELECT *, TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) AS age FROM Patient p WHERE p.id=:id;", nativeQuery = true)
-    Patient findById(int id);
-
     @Query(value = "SELECT id, first_name, last_name, weight, height, TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) AS age FROM patient;", nativeQuery = true)
     List<PatientWithAgeView> findAllWithAge();
 
@@ -89,6 +86,8 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
             p.id,
             p.first_name,
             p.last_name,
+            TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) AS age,
+            ROUND(p.weight / POWER(p.height / 100, 2), 3) AS BMI,
             s.first_name as caretaker_first_name,
             s.last_name as caretaker_last_name,
             p.picture

@@ -4,13 +4,10 @@ import com.example.elderexserver.data.address.Address;
 import com.example.elderexserver.data.address.Amphoe;
 import com.example.elderexserver.data.address.District;
 import com.example.elderexserver.data.address.Province;
-import com.example.elderexserver.data.patient.Allergy;
-import com.example.elderexserver.data.patient.Blood_Type;
+import com.example.elderexserver.data.patient.*;
 import com.example.elderexserver.data.patient.DTO.*;
-import com.example.elderexserver.data.patient.Gender;
-import com.example.elderexserver.data.patient.Patient;
+import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.*;
-import com.fasterxml.jackson.databind.util.ArrayIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +28,10 @@ public class PatientService {
     private BloodTypeRepository bloodTypeRepository;
 
     @Autowired
-    private AllergyRepository allergyRepository;
+    private FoodAllergyRepository foodAllergyRepository;
+
+    @Autowired
+    private DrugAllergyRepository drugAllergyRepository;
 
     @Autowired
     private AmphoeRepository amphoeRepository;
@@ -41,8 +41,21 @@ public class PatientService {
 
     @Autowired
     private ProvinceRepository provinceRepository;
+
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private StaffRepository staffRepository;
+
+    @Autowired
+    private NationalityRepository nationalityRepository;
+
+    @Autowired
+    private HospitalRepository hospitalRepository;
+
+    @Autowired
+    private MedicineRepository medicineRepository;
 
     public List<PatientListView> getPatientList() {
         return patientRepository.findPatientList();
@@ -147,7 +160,20 @@ public class PatientService {
         Blood_Type bloodType = bloodTypeRepository.findById(newPatient.getBloodTypeId())
                 .orElseThrow(() -> new IllegalArgumentException("Blood type not found"));
 
-        List<Allergy> allergy = allergyRepository.findAllById(newPatient.getAllergy());
+        Staff caretaker = staffRepository.findById(newPatient.getCaretakerId())
+                .orElseThrow(() -> new IllegalArgumentException("Caretaker not found"));
+
+        Nationality nationality = nationalityRepository.findById(newPatient.getNationalityId())
+                .orElseThrow(() -> new IllegalArgumentException("Nationality not found"));
+
+        Hospital hospital = hospitalRepository.findById(newPatient.getPrimaryHospitalId())
+                .orElseThrow(() -> new IllegalArgumentException("Primary hospital not found"));
+
+        List<Food_Allergy> foodAllergies = foodAllergyRepository.findAllById(newPatient.getFoodAllergy());
+
+        List<Drug_Allergy> drugAllergies = drugAllergyRepository.findAllById(newPatient.getDrugAllergy());
+
+        List<Medicine> medicine = medicineRepository.findAllById(newPatient.getMedicine());
 
         Patient patient = new Patient(
                 newPatient.getCitizenId(),
@@ -158,10 +184,18 @@ public class PatientService {
                 newPatient.getWeight(),
                 newPatient.getHeight(),
                 LocalDate.parse(newPatient.getDateOfBirth(), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                nationality,
                 newPatient.getPhone(),
+                newPatient.getPicture(),
+                caretaker,
                 newPatient.getNote(),
+                newPatient.getSurgicalHistory(),
+                hospital,
                 address,
-                new HashSet<>(allergy)
+                new HashSet<>(drugAllergies),
+                new HashSet<>(foodAllergies),
+                new HashSet<>(medicine),
+                new HashSet<>()
         );
 
         return patientRepository.save(patient);
@@ -176,21 +210,23 @@ public class PatientService {
         }
 
         if (updatePatient.getFirstName() != null) {
-            patient.setFirst_Name(updatePatient.getFirstName());
+            patient.setFirstName(updatePatient.getFirstName());
         }
 
         if (updatePatient.getLastName() != null) {
-            patient.setLast_Name(updatePatient.getLastName());
+            patient.setLastName(updatePatient.getLastName());
         }
 
-        if (updatePatient.getDateOfBirth() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            try {
-                LocalDate dob = LocalDate.parse(updatePatient.getDateOfBirth(), formatter);
-                patient.setDate_of_birth(dob);
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException("Invalid date format. Please use dd/MM/yyyy");
-            }
+        if (updatePatient.getGenderId() != null) {
+            Gender gender = genderRepository.findById(updatePatient.getGenderId())
+                    .orElseThrow(() -> new IllegalArgumentException("Gender not found"));
+            patient.setGender(gender);
+        }
+
+        if (updatePatient.getBloodTypeId() != null) {
+            Blood_Type bloodType = bloodTypeRepository.findById(updatePatient.getBloodTypeId())
+                    .orElseThrow(() -> new IllegalArgumentException("Blood type not found"));
+            patient.setBloodType(bloodType);
         }
 
         if (updatePatient.getWeight() != null) {
@@ -201,24 +237,48 @@ public class PatientService {
             patient.setHeight(updatePatient.getHeight());
         }
 
+        if (updatePatient.getDateOfBirth() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            try {
+                LocalDate dob = LocalDate.parse(updatePatient.getDateOfBirth(), formatter);
+                patient.setDateOfBirth(dob);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid date format. Please use dd/MM/yyyy");
+            }
+        }
+
+        if (updatePatient.getNationalityId() != null) {
+            Nationality nationality = nationalityRepository.findById(updatePatient.getNationalityId())
+                    .orElseThrow(() -> new IllegalArgumentException("Nationality not found"));
+            patient.setNationality(nationality);
+        }
+
         if (updatePatient.getPhone() != null) {
             patient.setPhone(updatePatient.getPhone());
+        }
+
+        if (updatePatient.getPicture() != null) {
+            patient.setPicture(updatePatient.getPicture());
+        }
+
+        if (updatePatient.getCaretakerId() != null) {
+            Staff caretaker = staffRepository.findById(updatePatient.getCaretakerId())
+                    .orElseThrow(() -> new IllegalArgumentException("Caretaker not found"));
+            patient.setCaretaker(caretaker);
         }
 
         if (updatePatient.getNote() != null) {
             patient.setNote(updatePatient.getNote());
         }
 
-        if (updatePatient.getBloodTypeId() != null) {
-            Blood_Type bloodType = bloodTypeRepository.findById(updatePatient.getBloodTypeId())
-                    .orElseThrow(() -> new IllegalArgumentException("Blood type not found"));
-            patient.setBlood_type(bloodType);
+        if (updatePatient.getSurgicalHistory() != null) {
+            patient.setSurgicalHistory(updatePatient.getSurgicalHistory());
         }
 
-        if (updatePatient.getGenderId() != null) {
-            Gender gender = genderRepository.findById(updatePatient.getGenderId())
-                    .orElseThrow(() -> new IllegalArgumentException("Gender not found"));
-            patient.setGender(gender);
+        if (updatePatient.getPrimaryHospitalId() != null) {
+            Hospital hospital = hospitalRepository.findById(updatePatient.getPrimaryHospitalId())
+                    .orElseThrow(() -> new IllegalArgumentException("Primary hospital not found"));
+            patient.setPrimaryHospital(hospital);
         }
 
         if (updatePatient.getAddress() != null) {
@@ -231,10 +291,21 @@ public class PatientService {
             patient.getAddress().setDistrict(district);
         }
 
-        if (updatePatient.getAllergy() != null) {
-            Set<Allergy> allergies = new HashSet<>(allergyRepository.findAllById(updatePatient.getAllergy()));
-            patient.setAllergies(allergies);
+        if (updatePatient.getFoodAllergy() != null) {
+            Set<Food_Allergy> foodAllergies = new HashSet<>(foodAllergyRepository.findAllById(updatePatient.getFoodAllergy()));
+            patient.setFoodAllergies(foodAllergies);
         }
+
+        if (updatePatient.getDrugAllergy() != null) {
+            Set<Drug_Allergy> drugAllergies = new HashSet<>(drugAllergyRepository.findAllById(updatePatient.getDrugAllergy()));
+            patient.setDrugAllergies(drugAllergies);
+        }
+
+        if (updatePatient.getMedicine() != null) {
+            Set<Medicine> medicine = new HashSet<>(medicineRepository.findAllById(updatePatient.getMedicine()));
+            patient.setMedicines(medicine);
+        }
+
         return patientRepository.save(patient);
     }
 }

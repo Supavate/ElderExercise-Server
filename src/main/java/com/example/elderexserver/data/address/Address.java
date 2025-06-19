@@ -1,10 +1,6 @@
 package com.example.elderexserver.data.address;
 
-import com.example.elderexserver.data.patient.Patient;
 import jakarta.persistence.*;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "address")
