@@ -44,7 +44,7 @@ public class Patient {
     private LocalDate dateOfBirth;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "nationality", nullable = false)
+    @JoinColumn(name = "nationality_id", nullable = false)
     private Nationality nationality;
 
     @Column(name = "phone", length = 10)
@@ -64,7 +64,7 @@ public class Patient {
     private String surgicalHistory;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "primary_hospital", nullable = false)
+    @JoinColumn(name = "primary_hospital_id", nullable = false)
     private Hospital primaryHospital;
 
     @ManyToOne(fetch = FetchType.LAZY)
