@@ -4,19 +4,26 @@ import java.util.Set;
 
 public class PatientDetail {
     private Integer id;
-    private String picture;
     private String citizen_id;
     private String first_name;
     private String last_name;
     private Integer gender_id;
     private String gender;
-    private String date_of_birth;
-    private Integer age;
     private Integer blood_type_id;
     private String blood_type;
     private Integer weight;
     private Integer height;
+    private Float bmi;
+    private String date_of_birth;
+    private Integer age;
+    private Integer nationality_id;
+    private String nationality;
     private String phone;
+    private String picture;
+    private String note;
+    private String surgicalHistory;
+    private Integer primary_hospital_id;
+    private String primaryHospital;
     private String address;
     private Integer province_id;
     private String province;
@@ -25,8 +32,10 @@ public class PatientDetail {
     private Integer district_id;
     private String district;
     private String zipcode;
-    private Set<Allergy> allergies;
-    private String note;
+    private Set<Allergy> food_allergies;
+    private Set<Allergy> drug_allergies;
+    private Set<Medicine> medicines;
+
 
     public static class Allergy{
         private Integer id;
@@ -64,21 +73,64 @@ public class PatientDetail {
         }
     }
 
-    public PatientDetail(Integer id, String picture, String citizen_id, String first_name, String last_name, Integer gender_id, String gender, String date_of_birth, Integer age, Integer blood_type_id, String blood_type, Integer weight, Integer height, String phone, String address, Integer province_id, String province, Integer amphoe_id, String amphoe, Integer district_id, String district, String zipcode, Set<Allergy> allergies, String note) {
+    public static class Medicine{
+        private Integer id;
+        private String name;
+        private String description;
+
+        public Medicine(Integer id, String name, String description) {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+    }
+
+    public PatientDetail(Integer id, String citizen_id, String first_name, String last_name, Integer gender_id, String gender, Integer blood_type_id, String blood_type, Integer weight, Integer height, Float bmi, String date_of_birth, Integer age, Integer nationality_id, String nationality, String phone, String picture, String note, String surgicalHistory, Integer primary_hospital_id, String primaryHospital, String address, Integer province_id, String province, Integer amphoe_id, String amphoe, Integer district_id, String district, String zipcode, Set<Allergy> food_allergies, Set<Allergy> drug_allergies, Set<Medicine> medicines) {
         this.id = id;
-        this.picture = picture;
         this.citizen_id = citizen_id;
         this.first_name = first_name;
         this.last_name = last_name;
         this.gender_id = gender_id;
         this.gender = gender;
-        this.date_of_birth = date_of_birth;
-        this.age = age;
         this.blood_type_id = blood_type_id;
         this.blood_type = blood_type;
         this.weight = weight;
         this.height = height;
+        this.bmi = bmi;
+        this.date_of_birth = date_of_birth;
+        this.age = age;
+        this.nationality_id = nationality_id;
+        this.nationality = nationality;
         this.phone = phone;
+        this.picture = picture;
+        this.note = note;
+        this.surgicalHistory = surgicalHistory;
+        this.primary_hospital_id = primary_hospital_id;
+        this.primaryHospital = primaryHospital;
         this.address = address;
         this.province_id = province_id;
         this.province = province;
@@ -87,8 +139,9 @@ public class PatientDetail {
         this.district_id = district_id;
         this.district = district;
         this.zipcode = zipcode;
-        this.allergies = allergies;
-        this.note = note;
+        this.food_allergies = food_allergies;
+        this.drug_allergies = drug_allergies;
+        this.medicines = medicines;
     }
 
     public Integer getId() {
@@ -97,14 +150,6 @@ public class PatientDetail {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
     }
 
     public String getCitizen_id() {
@@ -147,22 +192,6 @@ public class PatientDetail {
         this.gender = gender;
     }
 
-    public String getDate_of_birth() {
-        return date_of_birth;
-    }
-
-    public void setDate_of_birth(String date_of_birth) {
-        this.date_of_birth = date_of_birth;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
     public Integer getBlood_type_id() {
         return blood_type_id;
     }
@@ -195,12 +224,92 @@ public class PatientDetail {
         this.height = height;
     }
 
+    public Float getBmi() {
+        return bmi;
+    }
+
+    public void setBmi(Float bmi) {
+        this.bmi = bmi;
+    }
+
+    public String getDate_of_birth() {
+        return date_of_birth;
+    }
+
+    public void setDate_of_birth(String date_of_birth) {
+        this.date_of_birth = date_of_birth;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getNationality_id() {
+        return nationality_id;
+    }
+
+    public void setNationality_id(Integer nationality_id) {
+        this.nationality_id = nationality_id;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getSurgicalHistory() {
+        return surgicalHistory;
+    }
+
+    public void setSurgicalHistory(String surgicalHistory) {
+        this.surgicalHistory = surgicalHistory;
+    }
+
+    public Integer getPrimary_hospital_id() {
+        return primary_hospital_id;
+    }
+
+    public void setPrimary_hospital_id(Integer primary_hospital_id) {
+        this.primary_hospital_id = primary_hospital_id;
+    }
+
+    public String getPrimaryHospital() {
+        return primaryHospital;
+    }
+
+    public void setPrimaryHospital(String primaryHospital) {
+        this.primaryHospital = primaryHospital;
     }
 
     public String getAddress() {
@@ -267,19 +376,27 @@ public class PatientDetail {
         this.zipcode = zipcode;
     }
 
-    public Set<Allergy> getAllergies() {
-        return allergies;
+    public Set<Allergy> getFood_allergies() {
+        return food_allergies;
     }
 
-    public void setAllergies(Set<Allergy> allergies) {
-        this.allergies = allergies;
+    public void setFood_allergies(Set<Allergy> food_allergies) {
+        this.food_allergies = food_allergies;
     }
 
-    public String getNote() {
-        return note;
+    public Set<Allergy> getDrug_allergies() {
+        return drug_allergies;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setDrug_allergies(Set<Allergy> drug_allergies) {
+        this.drug_allergies = drug_allergies;
+    }
+
+    public Set<Medicine> getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(Set<Medicine> medicines) {
+        this.medicines = medicines;
     }
 }

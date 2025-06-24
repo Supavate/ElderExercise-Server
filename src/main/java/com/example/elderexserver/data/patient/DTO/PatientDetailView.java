@@ -2,23 +2,26 @@ package com.example.elderexserver.data.patient.DTO;
 
 public interface PatientDetailView {
     Integer getId();
-    String getPicture();
     String getCitizenId();
+    String getPicture();
     String getFirstName();
     String getLastName();
     Integer getGenderId();
     String getGender();
-    String getDateOfBirth();
-    Integer getAge();
     Integer getBloodTypeId();
     String getBloodType();
     Integer getWeight();
     Integer getHeight();
-    Integer getBMI();
-    Integer getAllergyId();
-    String getAllergyName();
-    String getAllergyDescription();
+    Float getBmi();
+    String getDateOfBirth();
+    Integer getAge();
+    Integer getNationalityId();
+    String getNationality();
     String getPhone();
+    String getNote();
+    String getSurgicalHistory();
+    Integer getPrimaryHospitalId();
+    String getPrimaryHospital();
     String getAddress();
     Integer getProvinceId();
     String getProvince();
@@ -27,5 +30,13 @@ public interface PatientDetailView {
     Integer getDistrictId();
     String getDistrict();
     String getZipcode();
-    String getNote();
+    Integer getFoodId();
+    String getFoodName();
+    String getFoodDescription();
+    Integer getDrugId();
+    String getDrugName();
+    String getDrugDescription();
+    Integer getMedicineId();
+    String getMedicineName();
+    String getMedicineDescription();
 }

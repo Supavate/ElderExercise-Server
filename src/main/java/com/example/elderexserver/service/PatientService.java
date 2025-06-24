@@ -103,12 +103,29 @@ public class PatientService {
 
     public PatientDetail getPatientDetailById(int id) {
         List<PatientDetailView> patientDetailViews = patientRepository.findPatientDetailById(id);
-        Set<PatientDetail.Allergy> allergies = new HashSet<>();
+        Set<PatientDetail.Allergy> food_allergies = new HashSet<>();
+        Set<PatientDetail.Allergy> drug_allergies = new HashSet<>();
+        Set<PatientDetail.Medicine> medicines = new HashSet<>();
+
         for (PatientDetailView row : patientDetailViews) {
-            allergies.add(new PatientDetail.Allergy(
-                    row.getAllergyId(),
-                    row.getAllergyName(),
-                    row.getAllergyDescription()
+            food_allergies.add(new PatientDetail.Allergy(
+                            row.getFoodId(),
+                            row.getFoodName(),
+                            row.getFoodDescription()
+                    )
+            );
+
+            drug_allergies.add(new PatientDetail.Allergy(
+                            row.getDrugId(),
+                            row.getDrugName(),
+                            row.getDrugDescription()
+                    )
+            );
+
+            medicines.add(new PatientDetail.Medicine(
+                        row.getMedicineId(),
+                        row.getMedicineName(),
+                        row.getMedicineDescription()
                     )
             );
         }
@@ -116,19 +133,26 @@ public class PatientService {
         PatientDetailView patient = patientDetailViews.get(0);
         return new PatientDetail(
                 patient.getId(),
-                patient.getPicture(),
                 patient.getCitizenId(),
                 patient.getFirstName(),
                 patient.getLastName(),
                 patient.getGenderId(),
                 patient.getGender(),
-                patient.getDateOfBirth(),
-                patient.getAge(),
                 patient.getBloodTypeId(),
                 patient.getBloodType(),
                 patient.getWeight(),
                 patient.getHeight(),
+                patient.getBmi(),
+                patient.getDateOfBirth(),
+                patient.getAge(),
+                patient.getNationalityId(),
+                patient.getNationality(),
                 patient.getPhone(),
+                patient.getPicture(),
+                patient.getNote(),
+                patient.getSurgicalHistory(),
+                patient.getPrimaryHospitalId(),
+                patient.getPrimaryHospital(),
                 patient.getAddress(),
                 patient.getProvinceId(),
                 patient.getProvince(),
@@ -137,8 +161,9 @@ public class PatientService {
                 patient.getDistrictId(),
                 patient.getDistrict(),
                 patient.getZipcode(),
-                allergies,
-                patient.getNote()
+                food_allergies,
+                drug_allergies,
+                medicines
         );
     }
 
