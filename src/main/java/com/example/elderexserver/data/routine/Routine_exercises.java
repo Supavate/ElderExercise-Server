@@ -1,7 +1,6 @@
 package com.example.elderexserver.data.routine;
 
 import com.example.elderexserver.data.exercise.Exercise;
-import com.example.elderexserver.data.exercise.Week_Day;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -21,19 +20,19 @@ public class Routine_exercises {
     @JsonBackReference
     private Exercise exercise;
 
-    @ManyToOne
-    @JoinColumn(name = "week_day_id")
-    private Week_Day week_day_id;
-
     private int rep;
+    private int set;
+    private int day;
 
     public Routine_exercises() {}
 
-    public Routine_exercises(Routine routine, Exercise exercise, Week_Day week_day_id, int rep) {
+    public Routine_exercises(int id, Routine routine, Exercise exercise, int rep, int set, int day) {
+        this.id = id;
         this.routine = routine;
         this.exercise = exercise;
-        this.week_day_id = week_day_id;
         this.rep = rep;
+        this.set = set;
+        this.day = day;
     }
 
     public int getId() {
@@ -60,19 +59,27 @@ public class Routine_exercises {
         this.exercise = exercise;
     }
 
-    public Week_Day getWeek_day_id() {
-        return week_day_id;
-    }
-
-    public void setWeek_day_id(Week_Day week_day_id) {
-        this.week_day_id = week_day_id;
-    }
-
     public int getRep() {
         return rep;
     }
 
     public void setRep(int amount) {
         this.rep = amount;
+    }
+
+    public int getSet() {
+        return set;
+    }
+
+    public void setSet(int set) {
+        this.set = set;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
     }
 }

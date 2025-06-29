@@ -8,6 +8,7 @@ public interface RoutineListView {
     String getStaffLastName();
     Integer getExerciseId();
     String getExerciseName();
-    Integer getDayId();
     Integer getRep();
+    Integer getSet();
+    Integer getDay();
 }

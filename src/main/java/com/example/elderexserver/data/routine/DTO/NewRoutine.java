@@ -10,8 +10,16 @@ public class NewRoutine {
 
     public static class routine_exercise {
         private Integer exercise_id;
-        private Integer week_day_id;
         private Integer rep;
+        private Integer set;
+        private Integer day;
+
+        public routine_exercise(Integer exercise_id, Integer rep, Integer set, Integer day) {
+            this.exercise_id = exercise_id;
+            this.rep = rep;
+            this.set = set;
+            this.day = day;
+        }
 
         public Integer getExercise_id() {
             return exercise_id;
@@ -21,20 +29,28 @@ public class NewRoutine {
             this.exercise_id = exercise_id;
         }
 
-        public Integer getWeek_day_id() {
-            return week_day_id;
-        }
-
-        public void setWeek_day_id(Integer week_day_id) {
-            this.week_day_id = week_day_id;
-        }
-
         public Integer getRep() {
             return rep;
         }
 
         public void setRep(Integer rep) {
             this.rep = rep;
+        }
+
+        public Integer getSet() {
+            return set;
+        }
+
+        public void setSet(Integer set) {
+            this.set = set;
+        }
+
+        public Integer getDay() {
+            return day;
+        }
+
+        public void setDay(Integer day) {
+            this.day = day;
         }
     }
 

@@ -22,11 +22,15 @@ public class RoutineList {
     public static class Exercise {
         public Integer exerciseId;
         public String name;
-        public Set<Day> day;
+        public Integer rep;
+        public Integer set;
+        public Integer day;
 
-        public Exercise(Integer exerciseId, String name, Set<Day> day) {
+        public Exercise(Integer exerciseId, String name, Integer rep, Integer set, Integer day) {
             this.exerciseId = exerciseId;
             this.name = name;
+            this.rep = rep;
+            this.set = set;
             this.day = day;
         }
 
@@ -46,38 +50,28 @@ public class RoutineList {
             this.name = name;
         }
 
-        public Set<Day> getDay() {
-            return day;
-        }
-
-        public void setDay(Set<Day> day) {
-            this.day = day;
-        }
-    }
-
-    public static class Day {
-        public Integer dayId;
-        public Integer rep;
-
-        public Day(Integer dayId, Integer rep) {
-            this.dayId = dayId;
-            this.rep = rep;
-        }
-
-        public Integer getDayId() {
-            return dayId;
-        }
-
-        public void setDayId(Integer dayId) {
-            this.dayId = dayId;
-        }
-
         public Integer getRep() {
             return rep;
         }
 
         public void setRep(Integer rep) {
             this.rep = rep;
+        }
+
+        public Integer getSet() {
+            return set;
+        }
+
+        public void setSet(Integer set) {
+            this.set = set;
+        }
+
+        public Integer getDay() {
+            return day;
+        }
+
+        public void setDay(Integer day) {
+            this.day = day;
         }
     }
 
