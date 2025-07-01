@@ -15,24 +15,6 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
     @Query(value = """
         SELECT
             p.id,
-            first_name,
-            last_name,
-            weight,
-            height,
-            GROUP_CONCAT(a.name) AS allergies
-        FROM
-            Patient p
-        LEFT JOIN patient_allergy ON patient_allergy.patient_id = p.id
-        LEFT JOIN allergy a ON
-            a.id = patient_allergy.allergy_id
-        GROUP BY
-            p.id;
-    """, nativeQuery = true)
-    List<PatientWithAllergiesView> findAllWithAllergies();
-
-    @Query(value = """
-        SELECT
-            p.id,
             p.picture,
             p.first_name,
             p.last_name,

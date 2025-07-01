@@ -19,11 +19,6 @@ public class PatientController {
         return patientService.getPatientsWithAge();
     }
 
-    @GetMapping("/allergy")
-    public List<PatientWithAllergies> getAllergy() {
-        return patientService.getPatientsWithAllergies();
-    }
-
     @GetMapping("/staff/{id}")
     public List<PatientFromCaretakerIdView> getPatientFromCaretakerId(@PathVariable Integer id) {
         return patientService.getPatientFromCaretakerId(id);

@@ -82,18 +82,6 @@ public class PatientService {
                 .toList();
     }
 
-    public List<PatientWithAllergies> getPatientsWithAllergies() {
-        List<PatientWithAllergiesView> patientWithAllergies = patientRepository.findAllWithAllergies();
-
-        return patientWithAllergies.stream()
-                .map(p -> new PatientWithAllergies(p.getId(), p.getFirstName(), p.getLastName(), p.getWeight(), p.getHeight(),
-                        new HashSet<>(Arrays.asList(
-                                (p.getAllergies() != null) ? p.getAllergies().split(",") : new String[0])
-                        )
-                ))
-                .toList();
-    }
-
     public List<PatientFromCaretakerId> getPatientsByCaretakerId(int caretakerId) {
         List<PatientFromCaretakerIdView> patientFromCaretakerId = patientRepository.findAllByCaretakerId(caretakerId);
         return patientFromCaretakerId.stream()
