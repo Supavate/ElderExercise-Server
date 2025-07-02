@@ -17,8 +17,9 @@ public interface RoutineRepository extends JpaRepository<Routine, Integer> {
             s.last_name AS staff_last_name,
             e.id AS exercise_id,
             e.name AS exercise_name,
-            wd.id AS day_id,
-            re.rep AS rep
+            re.rep AS rep,
+            re.set AS set,
+            re.day AS day
         FROM routine r
         LEFT JOIN staff s ON r.staff_id = s.id
         LEFT JOIN routine_exercises re ON re.routine_id = r.id
@@ -36,8 +37,9 @@ public interface RoutineRepository extends JpaRepository<Routine, Integer> {
             s.last_name AS staff_last_name,
             e.id AS exercise_id,
             e.name AS exercise_name,
-            wd.id AS day_id,
-            re.rep AS rep
+            re.rep AS rep,
+            re.set AS set,
+            re.day AS day
         FROM routine r
         LEFT JOIN staff s ON r.staff_id = s.id
         LEFT JOIN routine_exercises re ON re.routine_id = r.id
