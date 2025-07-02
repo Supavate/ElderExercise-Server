@@ -24,7 +24,6 @@ public interface RoutineRepository extends JpaRepository<Routine, Integer> {
         LEFT JOIN staff s ON r.staff_id = s.id
         LEFT JOIN routine_exercises re ON re.routine_id = r.id
         LEFT JOIN exercise e ON re.exercise_id = e.id
-        LEFT JOIN week_day wd ON re.week_day_id = wd.id
     """, nativeQuery = true)
     List<RoutineListView> findRoutineList();
 
@@ -44,7 +43,6 @@ public interface RoutineRepository extends JpaRepository<Routine, Integer> {
         LEFT JOIN staff s ON r.staff_id = s.id
         LEFT JOIN routine_exercises re ON re.routine_id = r.id
         LEFT JOIN exercise e ON re.exercise_id = e.id
-        LEFT JOIN week_day wd ON re.week_day_id = wd.id
         WHERE r.id = :routineId
     """, nativeQuery = true)
     List<RoutineListView> findRoutineListById(Integer routineId);
