@@ -7,6 +7,8 @@ public class PatientDetail {
     private String citizen_id;
     private String first_name;
     private String last_name;
+    private String email;
+    private String password;
     private Integer gender_id;
     private String gender;
     private Integer blood_type_id;
@@ -109,11 +111,13 @@ public class PatientDetail {
         }
     }
 
-    public PatientDetail(Integer id, String citizen_id, String first_name, String last_name, Integer gender_id, String gender, Integer blood_type_id, String blood_type, Integer weight, Integer height, Float bmi, String date_of_birth, Integer age, Integer nationality_id, String nationality, String phone, String picture, String note, String surgicalHistory, Integer primary_hospital_id, String primaryHospital, String address, Integer province_id, String province, Integer amphoe_id, String amphoe, Integer district_id, String district, String zipcode, Set<Allergy> food_allergies, Set<Allergy> drug_allergies, Set<Medicine> medicines) {
+    public PatientDetail(Integer id, String citizen_id, String first_name, String last_name, String email, String password, Integer gender_id, String gender, Integer blood_type_id, String blood_type, Integer weight, Integer height, Float bmi, String date_of_birth, Integer age, Integer nationality_id, String nationality, String phone, String picture, String note, String surgicalHistory, Integer primary_hospital_id, String primaryHospital, String address, Integer province_id, String province, Integer amphoe_id, String amphoe, Integer district_id, String district, String zipcode, Set<Allergy> food_allergies, Set<Allergy> drug_allergies, Set<Medicine> medicines) {
         this.id = id;
         this.citizen_id = citizen_id;
         this.first_name = first_name;
         this.last_name = last_name;
+        this.email = email;
+        this.password = password;
         this.gender_id = gender_id;
         this.gender = gender;
         this.blood_type_id = blood_type_id;
@@ -174,6 +178,22 @@ public class PatientDetail {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Integer getGender_id() {

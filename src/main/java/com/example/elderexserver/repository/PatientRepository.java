@@ -45,38 +45,41 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
             bt.type AS blood_type,
             p.weight,
             p.height,
-            ROUND(p.weight / POWER(p.height / 100, 2), 3) AS BMI,
+            ROUND(
+                p.weight / POWER(p.height / 100, 2),
+                3
+            ) AS BMI,
             DATE_FORMAT(p.date_of_birth, '%d/%m/%Y') AS date_of_birth,
             TIMESTAMPDIFF(
                 YEAR,
                 p.date_of_birth,
                 CURDATE()) AS age,
-            p.nationality_id,
-            n.name as nationality,
-            p.phone,
-            p.note,
-            p.surgical_history,
-            p.primary_hospital_id,
-            h.name as primaryHospital,
-            adr.address,
-            prov.id AS province_id,
-            prov.name AS province,
-            amp.id AS amphoe_id,
-            amp.name AS amphoe,
-            d.id AS district_id,
-            d.name AS district,
-            amp.zipcode AS zipcode,
-            fa.id AS food_id,
-            fa.name AS food_name,
-            fa.description AS food_description,
-            da.id AS drug_id,
-            da.name AS drug_name,
-            da.description AS drug_description,
-            m.id AS medicine_id,
-            m.name AS medicine_name,
-            m.description AS medicine_description
-        FROM
-            patient p
+                p.nationality_id,
+                n.name AS nationality,
+                p.phone,
+                p.note,
+                p.surgical_history,
+                p.primary_hospital_id,
+                h.name AS primaryHospital,
+                adr.address,
+                prov.id AS province_id,
+                prov.name AS province,
+                amp.id AS amphoe_id,
+                amp.name AS amphoe,
+                d.id AS district_id,
+                d.name AS district,
+                amp.zipcode AS zipcode,
+                fa.id AS food_id,
+                fa.name AS food_name,
+                fa.description AS food_description,
+                da.id AS drug_id,
+                da.name AS drug_name,
+                da.description AS drug_description,
+                m.id AS medicine_id,
+                m.name AS medicine_name,
+                m.description AS medicine_description
+            FROM
+                patient p
             LEFT JOIN gender g ON
                 p.gender_id = g.id
             LEFT JOIN blood_type bt ON
@@ -93,14 +96,20 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
                 amp.province_id = prov.id
             LEFT JOIN patient_food_allergy pfa ON
                 p.id = pfa.patient_id
-            LEFT JOIN food_allergy fa
+            LEFT JOIN food_allergy fa ON
                 pfa.food_allergy_id = fa.id
             LEFT JOIN patient_drug_allergy pda ON
                 p.id = pda.patient_id
             LEFT JOIN drug_allergy da ON
                 pda.drug_allergy_id = da.id
-        WHERE
-            p.id =:id;
+            LEFT JOIN hospital h ON
+                h.id = p.primary_hospital_id
+            LEFT JOIN patient_medication pm ON
+                pm.patient_id = p.id
+            LEFT JOIN medicine m ON
+                m.id = pm.medicine_id
+            WHERE
+                p.id =:id;
     """, nativeQuery = true)
     List<PatientDetailView> findPatientDetailById(int id);
 

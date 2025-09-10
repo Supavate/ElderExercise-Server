@@ -6,6 +6,8 @@ public interface PatientDetailView {
     String getPicture();
     String getFirstName();
     String getLastName();
+    String getEmail();
+    String getPassword();
     Integer getGenderId();
     String getGender();
     Integer getBloodTypeId();

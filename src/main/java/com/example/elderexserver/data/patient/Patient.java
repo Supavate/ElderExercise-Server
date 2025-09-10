@@ -26,6 +26,12 @@ public class Patient {
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "gender_id", nullable = false)
     private Gender gender;
@@ -101,10 +107,12 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(String citizenId, String firstName, String lastName, Gender gender, Blood_Type bloodType, Integer weight, Integer height, LocalDate dateOfBirth, Nationality nationality, String phone, String picture, Staff caretaker, String note, String surgicalHistory, Hospital primaryHospital, Address address, Set<Drug_Allergy> drugAllergies, Set<Food_Allergy> foodAllergies, Set<Medicine> medicines, Set<Patient_Status> patientStatuses) {
+    public Patient(String citizenId, String firstName, String lastName, String email, String password, Gender gender, Blood_Type bloodType, Integer weight, Integer height, LocalDate dateOfBirth, Nationality nationality, String phone, String picture, Staff caretaker, String note, String surgicalHistory, Hospital primaryHospital, Address address, Set<Drug_Allergy> drugAllergies, Set<Food_Allergy> foodAllergies, Set<Medicine> medicines, Set<Patient_Status> patientStatuses) {
         this.citizenId = citizenId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.password = password;
         this.gender = gender;
         this.bloodType = bloodType;
         this.weight = weight;
@@ -154,6 +162,22 @@ public class Patient {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Gender getGender() {
