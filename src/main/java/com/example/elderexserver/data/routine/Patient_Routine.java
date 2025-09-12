@@ -1,6 +1,6 @@
 package com.example.elderexserver.data.routine;
 
-import com.example.elderexserver.data.exercise.Actual_Exercise;
+import com.example.elderexserver.data.exercise.Exercise_Session;
 import com.example.elderexserver.data.patient.Patient;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -30,7 +30,7 @@ public class Patient_Routine {
 
     @OneToMany(mappedBy = "patientRoutine")
     @JsonManagedReference
-    private List<Actual_Exercise> exercises;
+    private List<Exercise_Session> exercises;
 
     public int getId() {
         return id;
@@ -72,11 +72,11 @@ public class Patient_Routine {
         this.end_date = end_date;
     }
 
-    public List<Actual_Exercise> getExercises() {
+    public List<Exercise_Session> getExercises() {
         return exercises;
     }
 
-    public void setExercises(List<Actual_Exercise> exercises) {
+    public void setExercises(List<Exercise_Session> exercises) {
         this.exercises = exercises;
     }
 }

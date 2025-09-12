@@ -2,7 +2,7 @@ package com.example.elderexserver.data.exercise.DTO;
 
 import java.time.LocalDateTime;
 
-public interface ActualExerciseDetailListView {
+public interface ExerciseSessionDetailListView {
     Integer getId();
     String getExerciseName();
     Integer getExerciseId();

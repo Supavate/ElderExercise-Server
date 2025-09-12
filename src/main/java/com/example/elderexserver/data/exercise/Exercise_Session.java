@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Actual_Exercise {
+public class Exercise_Session {
     @Id
     private Integer id;
 
@@ -24,9 +24,9 @@ public class Actual_Exercise {
     @Temporal(TemporalType.DATE)
     private Date end_time;
 
-    @OneToMany(mappedBy = "actualExercise")
+    @OneToMany(mappedBy = "exerciseSession")
     @JsonManagedReference
-    private List<Actual_Exercise_Detail> exercise_details;
+    private List<Exercise_Session_Detail> exercise_session_details;
 
     public Integer getId() {
         return id;
@@ -60,11 +60,11 @@ public class Actual_Exercise {
         this.end_time = endTime;
     }
 
-    public List<Actual_Exercise_Detail> getExercise_details() {
-        return exercise_details;
+    public List<Exercise_Session_Detail> getExercise_session_details() {
+        return exercise_session_details;
     }
 
-    public void setExercise_details(List<Actual_Exercise_Detail> exercise_details) {
-        this.exercise_details = exercise_details;
+    public void setExercise_session_details(List<Exercise_Session_Detail> exercise_details) {
+        this.exercise_session_details = exercise_details;
     }
 }

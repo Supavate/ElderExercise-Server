@@ -6,14 +6,14 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-public class Actual_Exercise_Detail {
+public class Exercise_Session_Detail {
     @Id
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "actual_exercise_id")
+    @JoinColumn(name = "session_id")
     @JsonBackReference
-    private Actual_Exercise actualExercise;
+    private Exercise_Session exerciseSession;
 
     @ManyToOne
     @JoinColumn(name = "exercise_id")
@@ -42,12 +42,12 @@ public class Actual_Exercise_Detail {
         this.id = id;
     }
 
-    public Actual_Exercise getActualExercise() {
-        return actualExercise;
+    public Exercise_Session getExerciseSession() {
+        return exerciseSession;
     }
 
-    public void setActualExercise(Actual_Exercise actualExercise) {
-        this.actualExercise = actualExercise;
+    public void setExerciseSession(Exercise_Session actualExercise) {
+        this.exerciseSession = actualExercise;
     }
 
     public Exercise getExercise() {
