@@ -340,4 +340,9 @@ public class PatientService {
 
         return patientRepository.save(patient);
     }
+
+    public Patient findByEmail(String email) {
+        Patient patient = patientRepository.findByEmail(email);
+        return patient;
+    }
 }

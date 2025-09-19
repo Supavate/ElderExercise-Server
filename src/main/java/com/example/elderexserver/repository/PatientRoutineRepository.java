@@ -34,16 +34,25 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
     List<ExerciseSessionDetailListView> findActualExerciseDetailListByPatientIdAndDate(@Param("date") String date, @Param("patientId") Integer patientId);
 
     @Query(value = """
-    SELECT
+
+            SELECT
         r.name AS routine_name,
         r.description AS routine_description,
         pr.id AS patient_routine_id,
         pr.start_date,
-        pr.end_date
+        pr.end_date,
+        e.name AS exercise_name,
+        re.rep,
+        re.set,
+        re.day
     FROM
         patient_routine pr
-    JOIN
-        routine r ON pr.routine_id = r.id
+    LEFT JOIN ROUTINE r ON
+        pr.routine_id = r.id
+    LEFT JOIN routine_exercises re ON
+        re.routine_id = pr.routine_id
+    LEFT JOIN exercise e ON
+        re.exercise_id = e.id
     WHERE
         pr.patient_id =:patientId
     """, nativeQuery = true)

@@ -129,4 +129,6 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
             staff s ON p.caretaker_id = s.id;
     """, nativeQuery = true)
     List<PatientListView> findPatientList();
+
+    Patient findByEmail(String email);
 }

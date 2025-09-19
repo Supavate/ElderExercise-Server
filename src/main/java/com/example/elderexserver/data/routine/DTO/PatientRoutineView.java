@@ -6,4 +6,8 @@ public interface PatientRoutineView {
     Integer getPatientRoutineId();
     String getStartDate();
     String getEndDate();
+    String getExerciseName();
+    Integer getRep();
+    Integer getSet();
+    Integer getDay();
 }
