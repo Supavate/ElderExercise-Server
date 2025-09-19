@@ -39,14 +39,16 @@ public class SecurityConfig {
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Autowired
     private PatientUserDetailsService patientUserDetailsService;
 
     @Bean
     public JwtUtil jwtUtil() {
         return new JwtUtil();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtUtil(), patientUserDetailsService);
     }
 
     @Bean
@@ -165,7 +167,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
 
                 // Add JWT filter
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .build();
     }

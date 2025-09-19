@@ -36,18 +36,10 @@ public class PatientAuth implements UserDetails {
             isEnabled = false;
         }
 
-        // 2. Check if patient is too young (e.g., under 18)
-        if (patient.getDateOfBirth() != null) {
-            int age = java.time.Period.between(patient.getDateOfBirth(), LocalDate.now()).getYears();
-            if (age < 18) {
-                isLocked = true; // Require guardian approval
-            }
-        }
-
-        // 3. Check if patient has been discharged recently (example rule)
+        // Check if patient has been discharged recently (example rule)
         // You could check patient status history here
 
-        // 4. Password expiry logic (if you track last password change)
+        // Password expiry logic (if you track last password change)
         // LocalDateTime lastPasswordChange = getLastPasswordChange(patient);
         // if (lastPasswordChange != null && lastPasswordChange.isBefore(LocalDateTime.now().minusMonths(6))) {
         //     isCredentialsExpired = true;
@@ -56,7 +48,7 @@ public class PatientAuth implements UserDetails {
         return new PatientAccountStatus(isEnabled, isLocked, isExpired, isCredentialsExpired);
     }
 
-    // ============ USERDETAILS IMPLEMENTATION ============
+    // ============ USER DETAILS IMPLEMENTATION ============
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -111,8 +103,9 @@ public class PatientAuth implements UserDetails {
     }
 
     public String getFullName() {
-        return (patient.getFirstName() != null ? patient.getFirstName() : "") +
-                (patient.getLastName() != null ? " " + patient.getLastName() : "").trim();
+        String firstName = patient.getFirstName() != null ? patient.getFirstName() : "";
+        String lastName = patient.getLastName() != null ? patient.getLastName() : "";
+        return firstName + " " + lastName;
     }
 
     public String getEmail() {
