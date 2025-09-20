@@ -9,6 +9,7 @@ import com.example.elderexserver.repository.GenderRepository;
 import com.example.elderexserver.repository.RoleRepository;
 import com.example.elderexserver.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,6 +18,9 @@ import java.time.format.DateTimeParseException;
 
 @Service
 public class StaffService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private StaffRepository staffRepository;
 
@@ -32,6 +36,8 @@ public class StaffService {
         Role role = roleRepository.findById(newStaff.getRole_id())
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
+        String hashedPassword = passwordEncoder.encode(newStaff.getPassword());
+
         Staff staff = new Staff(
                 newStaff.getFirstName(),
                 newStaff.getLastName(),
@@ -39,7 +45,7 @@ public class StaffService {
                 newStaff.getEmail(),
                 LocalDate.parse(newStaff.getBirthday(), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                 newStaff.getEmail(),
-                newStaff.getPassword(),
+                hashedPassword,
                 role,
                 newStaff.getPicture(),
                 newStaff.getTelephone()
