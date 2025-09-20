@@ -117,7 +117,7 @@ public class SecurityConfig {
 
                         // Patient endpoints
                         .requestMatchers("/auth/patient/**").hasRole("PATIENT")
-                        .requestMatchers("/patient/**").hasRole("PATIENT")
+                        .requestMatchers("/patient/**").hasAnyRole("PATIENT", "STAFF", "ADMIN")
 
                         // Staff endpoints
                         .requestMatchers("/auth/staff/**").hasAnyRole("STAFF", "ADMIN")
