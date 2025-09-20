@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // Public endpoints that should skip JWT processing
     private static final List<String> PUBLIC_ENDPOINTS = Arrays.asList(
-            "/api/auth/patient/login",
+            "/auth/**",
             "/api/public/",
             "/api/test/",
             "/api/health",
