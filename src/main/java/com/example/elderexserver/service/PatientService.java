@@ -9,6 +9,7 @@ import com.example.elderexserver.data.patient.DTO.*;
 import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,6 +19,9 @@ import java.util.*;
 
 @Service
 public class PatientService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private PatientRepository patientRepository;
 
@@ -196,12 +200,14 @@ public class PatientService {
         Status status = statusRepository.findById(newPatient.getStatusId())
                 .orElseThrow(() -> new IllegalArgumentException("Status not found"));
 
+        String hashedPassword = passwordEncoder.encode(newPatient.getPassword());
+
         Patient patient = new Patient(
                 newPatient.getCitizenId(),
                 newPatient.getFirstName(),
                 newPatient.getLastName(),
                 newPatient.getEmail(),
-                newPatient.getPassword(),
+                hashedPassword,
                 gender,
                 bloodType,
                 newPatient.getWeight(),
