@@ -17,12 +17,14 @@ public class RoutineController {
     private RoutineService routineService;
 
     @GetMapping("/list")
-    public List<RoutineList> getAllRoutines() {
-        return routineService.getRoutineList();
+    public ResponseEntity<List<RoutineList>> getAllRoutines() {
+        List<RoutineList> routineLists = routineService.getRoutineList();
+        if (routineLists.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(routineLists);
     }
 
     @PostMapping("/new")
-    public ResponseEntity<String> newPatient(@RequestBody NewRoutine newRoutine) {
+    public ResponseEntity<String> newRoutine(@RequestBody NewRoutine newRoutine) {
         try {
             routineService.newRoutine(newRoutine);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -32,7 +34,9 @@ public class RoutineController {
     }
 
     @GetMapping("/list/{routineId}")
-    public RoutineList getRoutineListById(@PathVariable Integer routineId) {
-        return routineService.getRoutineListById(routineId);
+    public ResponseEntity<RoutineList> getRoutineListById(@PathVariable Integer routineId) {
+        RoutineList routineList = routineService.getRoutineListById(routineId);
+        if (routineList == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(routineList);
     }
 }

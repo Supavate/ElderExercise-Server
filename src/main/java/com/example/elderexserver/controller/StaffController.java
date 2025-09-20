@@ -8,6 +8,7 @@ import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.StaffRepository;
 import com.example.elderexserver.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,16 +25,32 @@ public class StaffController {
     private StaffService staffService;
 
     @GetMapping("/all")
-    public List<Staff> getAllStaff() {return staffRepository.findAll();}
+    public ResponseEntity<List<Staff>> getAllStaff() {
+        List<Staff> staffList = staffRepository.findAll();
+        if (staffList.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(staffList);
+    }
 
     @GetMapping("/profile/{id}")
-    public StaffProfileView getStaffProfileById(@PathVariable int id) {return staffRepository.findStaffProfileById(id);}
+    public ResponseEntity<StaffProfileView> getStaffProfileById(@PathVariable int id) {
+        StaffProfileView staff = staffRepository.findStaffProfileById(id);
+        if (staff == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(staff);
+    }
 
     @GetMapping("/list")
-    public List<StaffListView> getStaffList() {return staffRepository.findStaff();}
+    public ResponseEntity<List<StaffListView>> getStaffList() {
+        List<StaffListView> staffListViews = staffRepository.findStaff();
+        if (staffListViews.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(staffListViews);
+    }
 
     @GetMapping("/super/{id}")
-    public List<StaffListView> getStaffBySupervisor(@PathVariable int id) {return staffRepository.findStaffBySupervisor(id);}
+    public ResponseEntity<List<StaffListView>> getStaffBySupervisor(@PathVariable int id) {
+        List<StaffListView> staffListViews = staffRepository.findStaffBySupervisor(id);
+        if (staffListViews.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(staffListViews);
+    }
 
     @PostMapping("/new")
     public ResponseEntity<String> addNewStaff(@RequestBody NewStaff newStaff) {

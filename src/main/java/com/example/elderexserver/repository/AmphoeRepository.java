@@ -13,7 +13,8 @@ public interface AmphoeRepository extends JpaRepository<Amphoe, Integer> {
     @Query(value = """
         SELECT
                 id,
-                name
+                name,
+                zipcode
         FROM
                 amphoe
         ORDER BY id;

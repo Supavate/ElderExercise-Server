@@ -3,6 +3,7 @@ package com.example.elderexserver.controller;
 import com.example.elderexserver.data.patient.DTO.*;
 import com.example.elderexserver.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +17,24 @@ public class PatientController {
     private PatientService patientService;
 
     @GetMapping("/age")
-    public List<PatientWithAge> getPatientsWithAge() {
-        return patientService.getPatientsWithAge();
+    public ResponseEntity<List<PatientWithAge>> getPatientsWithAge() {
+        List<PatientWithAge> patients = patientService.getPatientsWithAge();
+        if (patients.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(patients);
     }
 
     @GetMapping("/staff/{id}")
-    public List<PatientFromCaretakerIdView> getPatientFromCaretakerId(@PathVariable Integer id) {
-        return patientService.getPatientFromCaretakerId(id);
+    public ResponseEntity<List<PatientFromCaretakerIdView>> getPatientFromCaretakerId(@PathVariable Integer id) {
+        List<PatientFromCaretakerIdView> patients = patientService.getPatientFromCaretakerId(id);
+        if (patients.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(patients);
     }
 
     @GetMapping("/detail/{id}")
-    public PatientDetail getPatientDetailById(@PathVariable Integer id) {
-        return patientService.getPatientDetailById(id);
+    public ResponseEntity<PatientDetail> getPatientDetailById(@PathVariable Integer id) {
+        PatientDetail patientDetail = patientService.getPatientDetailById(id);
+        if (patientDetail == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(patientDetail);
     }
 
     @GetMapping("/list")
