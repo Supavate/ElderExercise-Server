@@ -44,22 +44,24 @@ public class PatientController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<String> newPatient(@RequestBody NewPatient newPatient) {
+    public ResponseEntity<?> newPatient(@RequestBody NewPatient newPatient) {
         try {
-            patientService.newPatient(newPatient);
-            return ResponseEntity.ok("New patient added");
+            Patient patient = patientService.newPatient(newPatient);
+            PatientDetail patientDetail = patientService.getPatientDetailById(patient.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(patientDetail);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error registering new patient: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering new patient: " + e.getMessage());
         }
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<String> update(@RequestBody UpdatePatient updatePatient) {
+    public ResponseEntity<?> updatePatient(@RequestBody UpdatePatient updatePatient) {
         try {
             Patient patient = patientService.updatePatient(updatePatient);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(patient.toString());
+            PatientDetail patientDetail = patientService.getPatientDetailById(patient.getId());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(patientDetail);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error updating patient: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating patient: " + e.getMessage());
         }
     }
 }
