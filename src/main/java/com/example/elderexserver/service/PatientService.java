@@ -129,7 +129,6 @@ public class PatientService {
                 patient.getFirstName(),
                 patient.getLastName(),
                 patient.getEmail(),
-                patient.getPassword(),
                 patient.getGenderId(),
                 patient.getGender(),
                 patient.getBloodTypeId(),

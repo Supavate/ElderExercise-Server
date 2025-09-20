@@ -1,6 +1,7 @@
 package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.patient.DTO.*;
+import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,8 +56,8 @@ public class PatientController {
     @PatchMapping("/update")
     public ResponseEntity<String> update(@RequestBody UpdatePatient updatePatient) {
         try {
-            patientService.updatePatient(updatePatient);
-            return ResponseEntity.ok("Patient updated");
+            Patient patient = patientService.updatePatient(updatePatient);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(patient.toString());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error updating patient: " + e.getMessage());
         }
