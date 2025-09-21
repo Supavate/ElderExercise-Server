@@ -23,4 +23,8 @@ public class PatientRoutineService {
     public List<PatientRoutineView> getPatientRoutineByPatientId(Integer patientId) {
         return patientRoutineRepository.findPatientRoutineByPatientId(patientId);
     }
+
+    public PatientRoutineView getCurrentPatientRoutineByPatientId(Integer patientId) {
+        return patientRoutineRepository.findCurrentPatientRoutineByPatientId(patientId);
+    }
 }
