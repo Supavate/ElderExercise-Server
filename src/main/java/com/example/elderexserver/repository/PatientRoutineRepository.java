@@ -77,7 +77,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
         LEFT JOIN exercise e ON
             re.exercise_id = e.id
         WHERE
-            pr.patient_id = 1 AND pr.start_date < NOW() AND pr.end_date > NOW()
+            pr.patient_id = :patientId AND pr.start_date < NOW() AND pr.end_date > NOW()
         LIMIT 1;
     """, nativeQuery = true)
     PatientRoutineView findCurrentPatientRoutineByPatientId(@Param("patientId") Integer patientId);
