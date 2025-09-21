@@ -40,6 +40,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             pr.id AS patient_routine_id,
             pr.start_date,
             pr.end_date,
+            e.id AS exercise_id,
             e.name AS exercise_name,
             re.rep,
             re.set,
@@ -64,6 +65,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             pr.id AS patient_routine_id,
             pr.start_date,
             pr.end_date,
+            e.id AS exercise_id,
             e.name AS exercise_name,
             re.rep,
             re.set,
@@ -78,7 +80,6 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             re.exercise_id = e.id
         WHERE
             pr.patient_id = :patientId AND pr.start_date < NOW() AND pr.end_date > NOW()
-        LIMIT 1;
     """, nativeQuery = true)
-    PatientRoutineView findCurrentPatientRoutineByPatientId(@Param("patientId") Integer patientId);
+    List<PatientRoutineView> findCurrentPatientRoutineByPatientId(@Param("patientId") Integer patientId);
 }

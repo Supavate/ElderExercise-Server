@@ -44,12 +44,12 @@ public class PatientRoutineController {
     }
 
     @GetMapping("/current")
-    public ResponseEntity<PatientRoutineView> getCurrentPatientRoutine(Authentication authentication) {
+    public ResponseEntity<PatientRoutine> getCurrentPatientRoutine(Authentication authentication) {
         PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
         int patientId = patientAuth.getPatient().getId();
 
-        PatientRoutineView patientRoutineView = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
-        if (patientRoutineView == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(patientRoutineView);
+        PatientRoutine routine = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
+        if (routine == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(routine);
     }
 }

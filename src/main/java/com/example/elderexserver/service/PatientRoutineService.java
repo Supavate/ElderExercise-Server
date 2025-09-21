@@ -24,7 +24,30 @@ public class PatientRoutineService {
         return patientRoutineRepository.findPatientRoutineByPatientId(patientId);
     }
 
-    public PatientRoutineView getCurrentPatientRoutineByPatientId(Integer patientId) {
-        return patientRoutineRepository.findCurrentPatientRoutineByPatientId(patientId);
+    public PatientRoutine getCurrentPatientRoutineByPatientId(Integer patientId) {
+        List<PatientRoutineView> patientRoutineViews = patientRoutineRepository.findCurrentPatientRoutineByPatientId(patientId);
+
+        PatientRoutineView firstRow = patientRoutineViews.get(0);
+        PatientRoutine routine = new PatientRoutine(
+                firstRow.getRoutineName(),
+                firstRow.getRoutineDescription(),
+                firstRow.getPatientRoutineId(),
+                new HashSet<>()
+        );
+
+        for (PatientRoutineView row : patientRoutineViews) {
+
+            PatientRoutine.Exercise exercise = new PatientRoutine.Exercise(
+                    row.getExerciseId(),
+                    row.getExerciseName(),
+                    row.getRep(),
+                    row.getSet(),
+                    row.getDay()
+            );
+
+            routine.getExercises().add(exercise);
+        }
+
+        return routine;
     }
 }
