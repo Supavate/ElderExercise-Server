@@ -69,7 +69,8 @@ public class AuthController {
 
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            throw new RuntimeException(e);
+            logger.warn("Patient login failed for: {}", request.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
     }
 
