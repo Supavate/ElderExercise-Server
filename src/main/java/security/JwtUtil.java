@@ -1,6 +1,7 @@
 package security;
 
 import com.example.elderexserver.data.patient.Patient;
+import com.example.elderexserver.data.staff.Staff;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -54,6 +55,17 @@ public class JwtUtil {
         claims.put("lastName", patient.getLastName());
 
         String subject = patient.getEmail();
+        return createToken(claims, subject);
+    }
+
+    public String generateStaffToken(Staff staff) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("staffId", staff.getId());
+        claims.put("role", "STAFF");
+        claims.put("firstName", staff.getFirst_Name());
+        claims.put("lastName", staff.getLast_Name());
+
+        String subject = staff.getEmail();
         return createToken(claims, subject);
     }
 

@@ -1,7 +1,11 @@
 package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.patient.DTO.PatientAuth;
+import com.example.elderexserver.data.staff.DTO.StaffAuth;
+import com.example.elderexserver.data.staff.DTO.StaffLoginResponse;
+import com.example.elderexserver.data.staff.Staff;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import security.JwtUtil;
 import com.example.elderexserver.data.patient.DTO.PatientLoginRequest;
@@ -74,7 +78,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/patient/logout")
     @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<?> logoutSecure(HttpServletRequest request, Authentication authentication) {
         try {
@@ -99,6 +103,43 @@ public class AuthController {
         } catch (Exception e) {
             logger.error("Error during secure logout", e);
             return ResponseEntity.ok(Map.of("message", "Logout completed"));
+        }
+    }
+
+    @PostMapping("/staff/login")
+    public ResponseEntity<?> staffLogin(@RequestBody PatientLoginRequest request) {
+        try {
+            logger.info("Staff login attempt for identifier: {}", request.getEmail());
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+
+            StaffAuth staffAuth = (StaffAuth) authentication.getPrincipal();
+            Staff staff = staffAuth.getStaff();
+
+
+            String token = jwtUtil.generateStaffToken(staff);
+
+            logger.info("Staff login successful for: {} (ID: {})", staff.getEmail(), staff.getId());
+
+            StaffLoginResponse response = new StaffLoginResponse(
+                    token,
+                    staff.getId(),
+                    staff.getEmail(),
+                    staff.getFirst_Name(),
+                    staff.getLast_Name(),
+                    staff.getTelephone(),
+                    staff.getPicture(),
+                    staffAuth.getGender(),
+                    staff.getSupervisor_id() != null ? staff.getSupervisor_id() : null,
+                    "Login successful"
+            );
+
+            return ResponseEntity.ok(response);
+        } catch (AuthenticationException e) {
+            logger.warn("Staff login failed for: {}", request.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
     }
 

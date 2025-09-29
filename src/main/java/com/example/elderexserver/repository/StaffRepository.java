@@ -36,4 +36,6 @@ public interface StaffRepository extends JpaRepository<Staff, Integer> {
         WHERE s.id=:id;
     """, nativeQuery = true)
     StaffProfileView findStaffProfileById(int id);
+
+    Staff findByEmail(String identifier);
 }
