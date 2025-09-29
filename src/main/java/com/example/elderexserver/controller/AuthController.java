@@ -78,34 +78,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/patient/logout")
-    @PreAuthorize("hasRole('PATIENT')")
-    public ResponseEntity<?> logoutSecure(HttpServletRequest request, Authentication authentication) {
-        try {
-            String username = authentication.getName();
-
-            // Extract JWT token from request
-            String token = extractTokenFromRequest(request);
-
-            if (token != null) {
-                Long expirationTime = jwtUtil.getTokenExpiryTime(token);
-
-                logger.info("Patient logout with token blacklisting for: {}", username);
-            }
-
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Logout successful - token invalidated");
-            response.put("timestamp", LocalDateTime.now());
-
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            logger.error("Error during secure logout", e);
-            return ResponseEntity.ok(Map.of("message", "Logout completed"));
-        }
-    }
-
     @PostMapping("/staff/login")
     public ResponseEntity<?> staffLogin(@RequestBody PatientLoginRequest request) {
         try {
@@ -140,6 +112,33 @@ public class AuthController {
         } catch (AuthenticationException e) {
             logger.warn("Staff login failed for: {}", request.getEmail());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutSecure(HttpServletRequest request, Authentication authentication) {
+        try {
+            String username = authentication.getName();
+
+            // Extract JWT token from request
+            String token = extractTokenFromRequest(request);
+
+            if (token != null) {
+                Long expirationTime = jwtUtil.getTokenExpiryTime(token);
+
+                logger.info("Patient logout with token blacklisting for: {}", username);
+            }
+
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Logout successful - token invalidated");
+            response.put("timestamp", LocalDateTime.now());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error during secure logout", e);
+            return ResponseEntity.ok(Map.of("message", "Logout completed"));
         }
     }
 
