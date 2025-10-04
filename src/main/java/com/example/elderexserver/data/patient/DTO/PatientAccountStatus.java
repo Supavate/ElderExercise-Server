@@ -1,5 +1,8 @@
 package com.example.elderexserver.data.patient.DTO;
 
+import lombok.Getter;
+
+@Getter
 public class PatientAccountStatus {
     private final boolean enabled;
     private final boolean accountLocked;
@@ -29,26 +32,6 @@ public class PatientAccountStatus {
         if (accountExpired) return "Account has expired";
         if (credentialsExpired) return "Password has expired";
         return "Account is active";
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public boolean isAccountLocked() {
-        return accountLocked;
-    }
-
-    public boolean isAccountExpired() {
-        return accountExpired;
-    }
-
-    public boolean isCredentialsExpired() {
-        return credentialsExpired;
-    }
-
-    public String getStatusReason() {
-        return statusReason;
     }
 
     public boolean isActive() {

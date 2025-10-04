@@ -1,6 +1,7 @@
 package com.example.elderexserver.data.staff.DTO;
 
 import com.example.elderexserver.data.staff.Staff;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 
+@Getter
 public class StaffAuth implements UserDetails {
     private final Staff staff;
     //private final StaffAccountStatus accountStatus;
@@ -31,10 +33,6 @@ public class StaffAuth implements UserDetails {
     @Override
     public String getUsername() {
         return staff.getUsername();
-    }
-
-    public Staff getStaff() {
-        return staff;
     }
 
     public String getFirstName() {

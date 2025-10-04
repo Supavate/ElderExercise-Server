@@ -2,6 +2,7 @@ package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.patient.DTO.PatientAuth;
 import com.example.elderexserver.data.staff.DTO.StaffAuth;
+import com.example.elderexserver.data.staff.DTO.StaffLoginRequest;
 import com.example.elderexserver.data.staff.DTO.StaffLoginResponse;
 import com.example.elderexserver.data.staff.Staff;
 import jakarta.servlet.http.HttpServletRequest;
@@ -79,7 +80,7 @@ public class AuthController {
     }
 
     @PostMapping("/staff/login")
-    public ResponseEntity<?> staffLogin(@RequestBody PatientLoginRequest request) {
+    public ResponseEntity<?> staffLogin(@RequestBody StaffLoginRequest request) {
         try {
             logger.info("Staff login attempt for identifier: {}", request.getEmail());
 

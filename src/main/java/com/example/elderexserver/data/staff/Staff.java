@@ -3,9 +3,15 @@ package com.example.elderexserver.data.staff;
 import com.example.elderexserver.data.patient.Gender;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 public class Staff {
     @Id
@@ -39,106 +45,5 @@ public class Staff {
         this.role = role;
         this.picture = picture;
         this.telephone = telephone;
-    }
-
-
-    public Staff() {
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirst_Name() {
-        return first_Name;
-    }
-
-    public void setFirst_Name(String firstName) {
-        this.first_Name = firstName;
-    }
-
-    public String getLast_Name() {
-        return last_Name;
-    }
-
-    public void setLast_Name(String lastName) {
-        this.last_Name = lastName;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public LocalDate getDate_of_birth() {
-        return date_of_birth;
-    }
-
-    public void setDate_of_birth(LocalDate date_of_birth) {
-        this.date_of_birth = date_of_birth;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public Integer getSupervisor_id() {
-        return supervisor_id;
-    }
-
-    public void setSupervisor_id(Integer supervisor_id) {
-        this.supervisor_id = supervisor_id;
     }
 }

@@ -1,7 +1,11 @@
 package com.example.elderexserver.data.patient;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "hospital")
 public class Hospital {
@@ -12,21 +16,4 @@ public class Hospital {
 
     @Column(name = "name", length = 50)
     private String name;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 }

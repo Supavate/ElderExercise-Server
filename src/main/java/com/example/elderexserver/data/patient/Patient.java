@@ -4,11 +4,15 @@ import com.example.elderexserver.data.address.Address;
 import com.example.elderexserver.data.routine.Patient_Routine;
 import com.example.elderexserver.data.staff.Staff;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "patient")
 public class Patient {
@@ -129,206 +133,6 @@ public class Patient {
         this.drugAllergies = drugAllergies;
         this.foodAllergies = foodAllergies;
         this.medicines = medicines;
-        this.patientStatuses = patientStatuses;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCitizenId() {
-        return citizenId;
-    }
-
-    public void setCitizenId(String citizenId) {
-        this.citizenId = citizenId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public Blood_Type getBloodType() {
-        return bloodType;
-    }
-
-    public void setBloodType(Blood_Type bloodType) {
-        this.bloodType = bloodType;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Nationality getNationality() {
-        return nationality;
-    }
-
-    public void setNationality(Nationality nationality) {
-        this.nationality = nationality;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public Staff getCaretaker() {
-        return caretaker;
-    }
-
-    public void setCaretaker(Staff caretaker) {
-        this.caretaker = caretaker;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public String getSurgicalHistory() {
-        return surgicalHistory;
-    }
-
-    public void setSurgicalHistory(String surgicalHistory) {
-        this.surgicalHistory = surgicalHistory;
-    }
-
-    public Hospital getPrimaryHospital() {
-        return primaryHospital;
-    }
-
-    public void setPrimaryHospital(Hospital primaryHospital) {
-        this.primaryHospital = primaryHospital;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public Set<Drug_Allergy> getDrugAllergies() {
-        return drugAllergies;
-    }
-
-    public void setDrugAllergies(Set<Drug_Allergy> drugAllergies) {
-        this.drugAllergies = drugAllergies;
-    }
-
-    public Set<Food_Allergy> getFoodAllergies() {
-        return foodAllergies;
-    }
-
-    public void setFoodAllergies(Set<Food_Allergy> foodAllergies) {
-        this.foodAllergies = foodAllergies;
-    }
-
-    public Set<Medicine> getMedicines() {
-        return medicines;
-    }
-
-    public void setMedicines(Set<Medicine> medicines) {
-        this.medicines = medicines;
-    }
-
-    public Set<Patient_Note> getPatientNotes() {
-        return patientNotes;
-    }
-
-    public void setPatientNotes(Set<Patient_Note> patientNotes) {
-        this.patientNotes = patientNotes;
-    }
-
-    public Set<Patient_Routine> getPatientRoutines() {
-        return patientRoutines;
-    }
-
-    public void setPatientRoutines(Set<Patient_Routine> patientRoutines) {
-        this.patientRoutines = patientRoutines;
-    }
-
-    public Set<Patient_Status> getPatientStatuses() {
-        return patientStatuses;
-    }
-
-    public void setPatientStatuses(Set<Patient_Status> patientStatuses) {
         this.patientStatuses = patientStatuses;
     }
 

@@ -1,6 +1,9 @@
 package com.example.elderexserver.data.patient.DTO;
 
 import com.example.elderexserver.data.patient.Patient;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +12,8 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 
+@Getter
+@AllArgsConstructor
 public class PatientAuth implements UserDetails {
 
     private final Patient patient;
@@ -18,12 +23,6 @@ public class PatientAuth implements UserDetails {
         this.patient = patient;
         this.accountStatus = determineAccountStatus(patient);
     }
-
-    public PatientAuth(Patient patient, PatientAccountStatus accountStatus) {
-        this.patient = patient;
-        this.accountStatus = accountStatus;
-    }
-
 
     private PatientAccountStatus determineAccountStatus(Patient patient) {
         // Add your business logic here
@@ -82,10 +81,6 @@ public class PatientAuth implements UserDetails {
 
     // ============ PATIENT ACCESS METHODS ============
 
-    public Patient getPatient() {
-        return patient;
-    }
-
     public Integer getPatientId() {
         return patient.getId();
     }
@@ -133,10 +128,6 @@ public class PatientAuth implements UserDetails {
 
     public String getGender() {
         return patient.getGender().getName();
-    }
-
-    public PatientAccountStatus getAccountStatus() {
-        return accountStatus;
     }
 
     @Override
