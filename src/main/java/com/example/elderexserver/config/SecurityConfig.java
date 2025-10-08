@@ -93,6 +93,8 @@ public class SecurityConfig {
                         // Public endpoints
                         .requestMatchers(
                                 "/auth/patient/login",
+                                "/auth/staff/login",
+                                "/websocket/**",
                                 "/public/**",
                                 "/exercise/**",
                                 "/test/public",
@@ -116,7 +118,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Patient endpoints
-                        .requestMatchers("/auth/patient/**").hasRole("PATIENT")
+                        .requestMatchers(
+                                "/auth/patient/**",
+                                "/app/**",
+                                "/topic/**"
+                        ).hasRole("PATIENT")
                         .requestMatchers("/patient/**").hasAnyRole("PATIENT", "STAFF", "ADMIN")
 
                         // Staff endpoints

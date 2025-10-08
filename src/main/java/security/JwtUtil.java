@@ -8,13 +8,16 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Component
@@ -209,5 +212,38 @@ public class JwtUtil {
 
     public Long getTokenExpiryTime(String token) {
         return jwtExpirationMs;
+    }
+
+    public Authentication getAuthentication(String token) {
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+
+            String username = claims.getSubject();
+            String role = (String) claims.get("role");
+
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            if (role != null) {
+                if (!role.startsWith("ROLE_")) {
+                    role = "ROLE_" + role;
+                }
+                authorities.add(new SimpleGrantedAuthority(role));
+            }
+
+            UserDetails userDetails = new User(
+                    username,
+                    "",
+                    authorities
+            );
+
+            return new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    authorities
+            );
+
+        } catch (Exception e) {
+            logger.error("Error getting authentication from token: {}", e.getMessage());
+            return null;
+        }
     }
 }
