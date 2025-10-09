@@ -38,10 +38,11 @@ public class WebSocketService {
 
     private SessionResultResponse processExerciseData(ExerciseDataEvent data) {
         int amount = data.getCount() != null ? data.getCount() : 0;
+        String exercise = determineExerciseType(data);
 
         SessionResultResponse response = new SessionResultResponse();
         response.setType("result");
-        response.setExerciseType("Exercise");
+        response.setExerciseType(exercise);
         response.setRep(amount);
         response.setTimestamp(System.currentTimeMillis());
 
