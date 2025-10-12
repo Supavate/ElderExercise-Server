@@ -2,7 +2,6 @@ package com.example.elderexserver.service;
 
 import com.example.elderexserver.data.exercise.DTO.ExerciseDataEvent;
 import com.example.elderexserver.data.exercise.DTO.SessionResultResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

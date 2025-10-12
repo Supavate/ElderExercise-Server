@@ -92,6 +92,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
                         .requestMatchers(
+                                "/routine/**",
                                 "/auth/patient/login",
                                 "/auth/staff/login",
                                 "/websocket/**",

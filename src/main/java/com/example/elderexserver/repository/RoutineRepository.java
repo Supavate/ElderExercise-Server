@@ -18,7 +18,7 @@ public interface RoutineRepository extends JpaRepository<Routine, Integer> {
             e.id AS exercise_id,
             e.name AS exercise_name,
             re.rep AS rep,
-            re.set AS set,
+            re.set AS 'set',
             re.day AS day
         FROM routine r
         LEFT JOIN staff s ON r.staff_id = s.id
