@@ -17,11 +17,13 @@ public class Exercise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private Integer tag_id;
     private String name;
     private String description;
     private String video_url;
 
-    public Exercise(String name, String description, String video_url) {
+    public Exercise(Integer tag_id, String name, String description, String video_url) {
+        this.tag_id = tag_id;
         this.name = name;
         this.description = description;
         this.video_url = video_url;
