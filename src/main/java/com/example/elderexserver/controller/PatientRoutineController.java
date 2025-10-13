@@ -6,13 +6,9 @@ import com.example.elderexserver.data.routine.DTO.*;
 import com.example.elderexserver.data.routine.Patient_Routine;
 import com.example.elderexserver.service.PatientRoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,12 +40,17 @@ public class PatientRoutineController {
     }
 
     @GetMapping("/current")
-    public ResponseEntity<PatientRoutine> getCurrentPatientRoutine(Authentication authentication) {
+    public ResponseEntity<PatientRoutineList> getCurrentPatientRoutine(Authentication authentication) {
         PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
         int patientId = patientAuth.getPatient().getId();
 
-        PatientRoutine routine = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
+        PatientRoutineList routine = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
         if (routine == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(routine);
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<Patient_Routine> newPatientRoutine(@RequestBody NewPatientRoutine patientRoutine) {
+        return ResponseEntity.ok(patientRoutineService.newPatientRoutine(patientRoutine));
     }
 }

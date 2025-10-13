@@ -347,7 +347,6 @@ public class PatientService {
     }
 
     public Patient findByEmail(String email) {
-        Patient patient = patientRepository.findByEmail(email);
-        return patient;
+        return patientRepository.findByEmail(email);
     }
 }

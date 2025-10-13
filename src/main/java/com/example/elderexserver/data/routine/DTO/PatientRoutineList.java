@@ -9,7 +9,7 @@ import java.util.Set;
 @Setter
 @Getter
 @AllArgsConstructor
-public class PatientRoutine {
+public class PatientRoutineList {
     private String routineName;
     private String routineDescription;
     private Integer patientRoutineId;

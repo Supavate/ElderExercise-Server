@@ -1,20 +1,31 @@
 package com.example.elderexserver.service;
 
 import com.example.elderexserver.data.exercise.DTO.ExerciseSessionDetailListView;
+import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.data.routine.DTO.*;
+import com.example.elderexserver.data.routine.Patient_Routine;
+import com.example.elderexserver.data.routine.Routine;
+import com.example.elderexserver.repository.PatientRepository;
 import com.example.elderexserver.repository.PatientRoutineRepository;
+import com.example.elderexserver.repository.RoutineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PatientRoutineService {
 
     @Autowired
     private PatientRoutineRepository patientRoutineRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private RoutineRepository routineRepository;
 
     public List<ExerciseSessionDetailListView> getActualExerciseDetailListByPatientIdAndDate(String date, Integer patientId) {
         return patientRoutineRepository.findActualExerciseDetailListByPatientIdAndDate(date, patientId);
@@ -24,11 +35,11 @@ public class PatientRoutineService {
         return patientRoutineRepository.findPatientRoutineByPatientId(patientId);
     }
 
-    public PatientRoutine getCurrentPatientRoutineByPatientId(Integer patientId) {
+    public PatientRoutineList getCurrentPatientRoutineByPatientId(Integer patientId) {
         List<PatientRoutineView> patientRoutineViews = patientRoutineRepository.findCurrentPatientRoutineByPatientId(patientId);
 
         PatientRoutineView firstRow = patientRoutineViews.get(0);
-        PatientRoutine routine = new PatientRoutine(
+        PatientRoutineList routine = new PatientRoutineList(
                 firstRow.getRoutineName(),
                 firstRow.getRoutineDescription(),
                 firstRow.getPatientRoutineId(),
@@ -37,7 +48,7 @@ public class PatientRoutineService {
 
         for (PatientRoutineView row : patientRoutineViews) {
 
-            PatientRoutine.Exercise exercise = new PatientRoutine.Exercise(
+            PatientRoutineList.Exercise exercise = new PatientRoutineList.Exercise(
                     row.getExerciseId(),
                     row.getExerciseName(),
                     row.getRep(),
@@ -49,5 +60,22 @@ public class PatientRoutineService {
         }
 
         return routine;
+    }
+
+    public Patient_Routine newPatientRoutine(NewPatientRoutine patientRoutine) {
+        Patient patient = patientRepository.findById(patientRoutine.getPatientId())
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
+
+        Routine routine = routineRepository.findById(patientRoutine.getRoutineId())
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found"));
+
+        Patient_Routine patient_routine = new Patient_Routine(
+                patient,
+                routine,
+                LocalDate.parse(patientRoutine.getStartDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                LocalDate.parse(patientRoutine.getEndDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+        );
+
+        return patientRoutineRepository.save(patient_routine);
     }
 }

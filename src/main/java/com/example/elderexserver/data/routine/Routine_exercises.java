@@ -31,4 +31,12 @@ public class Routine_exercises {
     private int rep;
     private int set;
     private int day;
+
+    public Routine_exercises(Routine routine, Exercise exercise, int rep, int set, int day) {
+        this.routine = routine;
+        this.exercise = exercise;
+        this.rep = rep;
+        this.set = set;
+        this.day = day;
+    }
 }

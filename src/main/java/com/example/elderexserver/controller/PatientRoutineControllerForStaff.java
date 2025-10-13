@@ -1,7 +1,7 @@
 package com.example.elderexserver.controller;
 
 import com.example.elderexserver.data.exercise.DTO.ExerciseSessionDetailListView;
-import com.example.elderexserver.data.routine.DTO.PatientRoutine;
+import com.example.elderexserver.data.routine.DTO.PatientRoutineList;
 import com.example.elderexserver.data.routine.DTO.PatientRoutineView;
 import com.example.elderexserver.service.PatientRoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +37,9 @@ public class PatientRoutineControllerForStaff {
     }
 
     @GetMapping("/current/{patientId}")
-    public ResponseEntity<PatientRoutine> getCurrentPatientRoutine(@PathVariable Integer patientId) {
-        PatientRoutine patientRoutineView = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
-        if (patientRoutineView == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(patientRoutineView);
+    public ResponseEntity<PatientRoutineList> getCurrentPatientRoutine(@PathVariable Integer patientId) {
+        PatientRoutineList patientRoutineListView = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
+        if (patientRoutineListView == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(patientRoutineListView);
     }
 }

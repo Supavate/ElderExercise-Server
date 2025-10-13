@@ -1,14 +1,21 @@
 package com.example.elderexserver.service;
 
+import com.example.elderexserver.data.exercise.Exercise;
+import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.data.routine.DTO.NewRoutine;
 import com.example.elderexserver.data.routine.DTO.RoutineList;
 import com.example.elderexserver.data.routine.DTO.RoutineListView;
+import com.example.elderexserver.data.routine.Patient_Routine;
 import com.example.elderexserver.data.routine.Routine;
+import com.example.elderexserver.data.routine.Routine_exercises;
+import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -25,6 +32,15 @@ public class RoutineService {
 
     @Autowired
     private StaffRepository staffRepository;
+
+    @Autowired
+    private PatientRoutineRepository patientRoutineRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private PatientRoutineService patientRoutineService;
 
     public RoutineList getRoutineListById(Integer routineId) {
         List<RoutineListView> routineListView = routineRepository.findRoutineListById(routineId);
@@ -88,6 +104,36 @@ public class RoutineService {
 
     @Transactional
     public Routine newRoutine(NewRoutine newRoutine) {
-        return new Routine();
+        Staff staff = staffRepository.findById(newRoutine.getStaff_id())
+                .orElseThrow(() -> new IllegalArgumentException("Staff not found"));
+
+        Routine routine = new Routine(
+                newRoutine.getName(),
+                newRoutine.getDescription(),
+                staff
+        );
+        routineRepository.save(routine);
+
+        List<NewRoutine.routine_exercise> routineExercises = newRoutine.getRoutine_exercises();
+        for (NewRoutine.routine_exercise routineExercise : routineExercises) {
+            Exercise exercise = exerciseRepository.findById(routineExercise.getExercise_id())
+                    .orElseThrow(() -> new IllegalArgumentException("Exercise not found"));
+
+            Routine_exercises routine_exercise = new Routine_exercises(
+                    routine,
+                    exercise,
+                    routineExercise.getRep(),
+                    routineExercise.getSet(),
+                    routineExercise.getDay()
+            );
+
+            routineExerciseRepository.save(routine_exercise);
+        }
+
+        if (newRoutine.getPatient_routine() != null) {
+            patientRoutineService.newPatientRoutine(newRoutine.getPatient_routine());
+        }
+
+        return routine;
     }
 }

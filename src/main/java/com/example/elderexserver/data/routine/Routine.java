@@ -26,4 +26,10 @@ public class Routine {
 
     @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Routine_exercises> Exercises;
+
+    public Routine(String name, String description, Staff staff) {
+        this.name = name;
+        this.description = description;
+        this.staff = staff;
+    }
 }
