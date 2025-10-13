@@ -30,4 +30,17 @@ public interface AmphoeRepository extends JpaRepository<Amphoe, Integer> {
         ORDER BY id;
     """, nativeQuery = true)
     List<ZipcodeView> getAllZipcode();
+
+    @Query(value = """
+        SELECT
+                id,
+                name,
+                zipcode
+        FROM
+                amphoe
+        WHERE
+                province_id = :province
+        ORDER BY id;
+    """, nativeQuery = true)
+    List<AmphoeView> getAmphoesByProvince(Integer province);
 }

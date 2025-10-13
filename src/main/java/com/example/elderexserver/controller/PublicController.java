@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -87,11 +88,6 @@ public class PublicController {
         return ResponseEntity.ok(genders);
     }
 
-    //Address
-
-//    @Autowired
-//    private AddressRepository addressRepository; Private information
-
     @Autowired
     private ProvinceRepository provinceRepository;
 
@@ -115,9 +111,23 @@ public class PublicController {
         return ResponseEntity.ok(amphoeViews);
     }
 
+    @GetMapping("/amphoe/{province}")
+    public ResponseEntity<List<AmphoeView>> getAmphoesByProvince(@PathVariable Integer province) {
+        List<AmphoeView> amphoeViews = amphoeRepository.getAmphoesByProvince(province);
+        if (amphoeViews.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(amphoeViews);
+    }
+
     @GetMapping("/district")
     public ResponseEntity<List<DistrictView>> getAllDistrict() {
         List<DistrictView> districtViews = districtRepository.getAllDistrict();
+        if (districtViews.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(districtViews);
+    }
+
+    @GetMapping("/district/{amphoe}")
+    public ResponseEntity<List<DistrictView>> getDistrictByAmphoe(@PathVariable Integer amphoe) {
+        List<DistrictView> districtViews = districtRepository.getDistrictsByAmphoe(amphoe);
         if (districtViews.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(districtViews);
     }

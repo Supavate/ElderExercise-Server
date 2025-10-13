@@ -17,4 +17,16 @@ public interface DistrictRepository extends JpaRepository<District, Integer> {
         ORDER BY id;
     """, nativeQuery = true)
     List<DistrictView> getAllDistrict();
+
+    @Query(value = """
+        SELECT
+                id,
+                name
+        FROM
+                district
+        WHERE
+                amphoe_id = :amphoe_id
+        ORDER BY id;
+    """, nativeQuery = true)
+    List<DistrictView> getDistrictsByAmphoe(Integer amphoe);
 }
