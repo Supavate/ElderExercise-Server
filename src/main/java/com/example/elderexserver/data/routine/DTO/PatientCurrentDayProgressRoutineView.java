@@ -1,6 +1,6 @@
 package com.example.elderexserver.data.routine.DTO;
 
-public interface CurrentDayPatientRoutineStatusView {
+public interface PatientCurrentDayProgressRoutineView {
     int getExerciseId();
     String getExerciseName();
     int getTotalReps();

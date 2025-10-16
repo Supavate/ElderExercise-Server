@@ -166,5 +166,5 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
                 pr.routine_id,
                 e.id;
     """, nativeQuery = true)
-    List<CurrentDayPatientRoutineStatusView> findCurrentDayPatientRoutineStatusByPatientId(@Param("patientId") Integer patientId);
+    List<PatientCurrentDayProgressRoutineView> findCurrentDayPatientRoutineStatusByPatientId(@Param("patientId") Integer patientId);
 }
