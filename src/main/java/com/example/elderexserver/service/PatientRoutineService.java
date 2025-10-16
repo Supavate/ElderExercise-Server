@@ -78,4 +78,30 @@ public class PatientRoutineService {
 
         return patientRoutineRepository.save(patient_routine);
     }
+
+    public PatientCurrentWeekProgressRoutine getPatientCurrentWeekProgressRoutine(Integer patientId) {
+        List<PatientCurrentWeekProgressRoutineView> view = patientRoutineRepository.findCurrentWeekPatientRoutineStatusByPatientId(patientId);
+
+        List<PatientCurrentWeekProgressRoutine.Exercise> exercises = new ArrayList<>();
+
+        for (PatientCurrentWeekProgressRoutineView row : view) {
+            PatientCurrentWeekProgressRoutine.Exercise exercise = new PatientCurrentWeekProgressRoutine.Exercise(
+                    row.getExerciseId(),
+                    row.getExerciseName(),
+                    row.getGoalHit(),
+                    row.getGoal()
+            );
+
+            exercises.add(exercise);
+        }
+
+        PatientCurrentWeekProgressRoutineView firstRow = view.get(0);
+        PatientCurrentWeekProgressRoutine result = new PatientCurrentWeekProgressRoutine(
+                firstRow.getRoutineId(),
+                firstRow.getRoutineName(),
+                exercises
+        );
+
+        return result;
+    }
 }

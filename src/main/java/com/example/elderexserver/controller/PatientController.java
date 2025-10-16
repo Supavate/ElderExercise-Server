@@ -19,7 +19,7 @@ public class PatientController {
     @GetMapping("/detail")
     public ResponseEntity<PatientDetail> getPatientDetailById(Authentication authentication) {
         PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatient().getId();
+        int patientId = patientAuth.getPatientId();
 
         PatientDetail patientDetail = patientService.getPatientDetailById(patientId);
         if (patientDetail == null) return ResponseEntity.notFound().build();

@@ -22,7 +22,7 @@ public class PatientRoutineController {
     @GetMapping("/report/detail/{date}")
     public ResponseEntity<List<ExerciseSessionDetailListView>> getActualExerciseDetailListByPatientIdAndDate(@PathVariable String date, Authentication authentication) {
         PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatient().getId();
+        int patientId = patientAuth.getPatientId();
 
         List<ExerciseSessionDetailListView> exerciseSessionDetailListViews = patientRoutineService.getActualExerciseDetailListByPatientIdAndDate(date, patientId);
         if (exerciseSessionDetailListViews.isEmpty()) return ResponseEntity.notFound().build();
@@ -32,7 +32,7 @@ public class PatientRoutineController {
     @GetMapping("/report")
     public ResponseEntity<List<PatientRoutineView>> getPatientRoutineByPatientId(Authentication authentication) {
         PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatient().getId();
+        int patientId = patientAuth.getPatientId();
 
         List<PatientRoutineView> patientRoutineViews = patientRoutineService.getPatientRoutineByPatientId(patientId);
         if (patientRoutineViews.isEmpty()) return ResponseEntity.notFound().build();
@@ -42,7 +42,7 @@ public class PatientRoutineController {
     @GetMapping("/current")
     public ResponseEntity<PatientRoutineList> getCurrentPatientRoutine(Authentication authentication) {
         PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatient().getId();
+        int patientId = patientAuth.getPatientId();
 
         PatientRoutineList routine = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
         if (routine == null) return ResponseEntity.notFound().build();
