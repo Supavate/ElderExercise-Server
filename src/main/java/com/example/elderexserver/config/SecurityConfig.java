@@ -121,6 +121,7 @@ public class SecurityConfig {
                         // Patient endpoints
                         .requestMatchers(
                                 "/auth/patient/**",
+                                "/session/**",
                                 "/app/**",
                                 "/topic/**"
                         ).hasRole("PATIENT")
