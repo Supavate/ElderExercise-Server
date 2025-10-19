@@ -49,8 +49,23 @@ public class PatientRoutineController {
         return ResponseEntity.ok(routine);
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<Patient_Routine> newPatientRoutine(@RequestBody NewPatientRoutine patientRoutine) {
-        return ResponseEntity.ok(patientRoutineService.newPatientRoutine(patientRoutine));
+    @GetMapping("/week")
+    public ResponseEntity<PatientCurrentWeekProgressRoutine> getWeeklyRoutineProgress(Authentication authentication) {
+        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+        int patientId = patientAuth.getPatientId();
+
+        PatientCurrentWeekProgressRoutine weekProgress = patientRoutineService.getPatientCurrentWeekProgressRoutine(patientId);
+        if (weekProgress == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(weekProgress);
+    }
+
+    @GetMapping("/day")
+    public ResponseEntity<List<PatientCurrentDayProgressRoutineView>> getDayRoutineProgress(Authentication authentication) {
+        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+        int patientId = patientAuth.getPatientId();
+
+        List<PatientCurrentDayProgressRoutineView> dailyProgress = patientRoutineService.getPatientCurrentDayRoutineByPatientId(patientId);
+        if (dailyProgress.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(dailyProgress);
     }
 }

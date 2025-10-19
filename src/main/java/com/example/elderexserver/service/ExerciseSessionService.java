@@ -15,7 +15,7 @@ public class ExerciseSessionService {
     @Autowired
     private ExerciseSessionRepository exerciseSessionRepository;
 
-    List<ExerciseSessionHistory> findAllByPatientId(int patientId) {
+    public List<ExerciseSessionHistory> findAllHistoryByPatientId(int patientId) {
         List<ExerciseSessionHistoryView> views = exerciseSessionRepository.findAllByPatientId(patientId);
         HashMap<Integer, ExerciseSessionHistory> result = new HashMap<>();
 

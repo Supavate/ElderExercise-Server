@@ -81,6 +81,7 @@ public class PatientRoutineService {
 
     public PatientCurrentWeekProgressRoutine getPatientCurrentWeekProgressRoutine(Integer patientId) {
         List<PatientCurrentWeekProgressRoutineView> view = patientRoutineRepository.findCurrentWeekPatientRoutineStatusByPatientId(patientId);
+        if (view.isEmpty()) return null;
 
         List<PatientCurrentWeekProgressRoutine.Exercise> exercises = new ArrayList<>();
 
@@ -103,5 +104,10 @@ public class PatientRoutineService {
         );
 
         return result;
+    }
+
+    public List<PatientCurrentDayProgressRoutineView> getPatientCurrentDayRoutineByPatientId(Integer patientId) {
+        List<PatientCurrentDayProgressRoutineView> result = patientRoutineRepository.findCurrentDayPatientRoutineStatusByPatientId(patientId);
+        return (result.isEmpty()) ? null : result;
     }
 }
