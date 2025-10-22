@@ -3,15 +3,19 @@ package com.example.elderexserver.data.exercise;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Setter
 @Getter
+@NoArgsConstructor
 @Entity
 public class Exercise_Session_Detail {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
@@ -23,11 +27,8 @@ public class Exercise_Session_Detail {
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
-    @Temporal(TemporalType.DATE)
-    private Date start_time;
-
-    @Temporal(TemporalType.DATE)
-    private Date end_time;
+    private LocalDateTime start_time;
+    private LocalDateTime end_time;
 
     private float avg_heart_rate;
     private int hr_zone1;

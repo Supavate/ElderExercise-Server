@@ -5,16 +5,21 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 @Setter
 @Getter
+@NoArgsConstructor
 @Entity
 public class Exercise_Session {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
@@ -22,14 +27,10 @@ public class Exercise_Session {
     @JsonBackReference
     private Patient_Routine patientRoutine;
 
-    @Temporal(TemporalType.DATE)
-    private Date start_time;
+    private LocalDateTime start_time;
+    private LocalDateTime end_time;
 
-    @Temporal(TemporalType.DATE)
-    private Date end_time;
-
-    @OneToMany(mappedBy = "exerciseSession")
+    @OneToMany(mappedBy = "exerciseSession", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Exercise_Session_Detail> exercise_session_details;
-
 }
