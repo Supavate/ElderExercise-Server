@@ -151,4 +151,23 @@ public class AuthController {
         return null;
     }
 
+    @GetMapping("/validate")
+    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authHeader) {
+        try {
+            if (!StringUtils.hasText(authHeader) || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing Bearer token");
+            }
+
+            String token = authHeader.substring(7);
+
+            if (jwtUtil.validateToken(token)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Token validated");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is invalid or expired");
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
 }
