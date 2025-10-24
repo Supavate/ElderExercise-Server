@@ -8,6 +8,7 @@ import com.example.elderexserver.data.staff.Staff;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import security.JwtUtil;
 import com.example.elderexserver.data.patient.DTO.PatientLoginRequest;
 import com.example.elderexserver.data.patient.DTO.PatientLoginResponse;

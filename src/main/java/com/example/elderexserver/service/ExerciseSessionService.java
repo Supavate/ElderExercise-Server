@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -35,18 +36,28 @@ public class ExerciseSessionService {
 
     public List<ExerciseSessionHistory> findAllHistoryByPatientId(int patientId) {
         List<ExerciseSessionHistoryView> views = exerciseSessionRepository.findAllByPatientId(patientId);
-        HashMap<Integer, ExerciseSessionHistory> result = new HashMap<>();
+        LinkedHashMap<String, ExerciseSessionHistory> result = new LinkedHashMap<>();
+        HashMap<Integer, ExerciseSessionHistory.Session> sessionMap = new HashMap<>();
 
         for (ExerciseSessionHistoryView row : views) {
-            result.computeIfAbsent(row.getId(), k -> new ExerciseSessionHistory(
-                    row.getId(),
-                    row.getPatientRoutineId(),
-                    row.getSessionTime(),
+            ExerciseSessionHistory  date = result.computeIfAbsent(row.getDate(), k -> new ExerciseSessionHistory(
                     row.getDate(),
+                    row.getPatientRoutineId(),
                     new ArrayList<>()
             ));
 
-            result.get(row.getId()).getExercises().add(
+            ExerciseSessionHistory.Session session = sessionMap.computeIfAbsent(row.getId(), k -> {
+                ExerciseSessionHistory.Session newSession = new ExerciseSessionHistory.Session(
+                        row.getId(),
+                        row.getSessionTime(),
+                        new ArrayList<>()
+                );
+                date.getSessions().add(newSession);
+                return newSession;
+            });
+
+
+            session.getExercises().add(
                     new ExerciseSessionHistory.Exercise(
                             row.getExerciseId(),
                             row.getName(),
