@@ -17,19 +17,29 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class WebSocketController {
 
-    @Autowired
     private final WebSocketService webSocketService;
 
     @MessageMapping("/websocket")
     public void websocketMessage(@Payload ExerciseDataEvent data, SimpMessageHeaderAccessor headerAccessor, Principal principal) {
 
+        if (data == null) {
+            log.warn("Received null data from user: {}",
+                    principal != null ? principal.getName() : "unknown");
+            return;
+        }
+
         if (principal == null) {
-            log.warn("⚠️ Received WebSocket message from unauthenticated user");
+            log.error("Received message from unauthenticated user - this should not happen!");
             return;
         }
 
         log.info("Received message from user: {},Type: {}, Count: {}", principal.getName(), data.getType(), data.getCount());
 
-        webSocketService.handleExerciseData(data, headerAccessor.getUser());
+        try {
+            webSocketService.handleExerciseData(data, principal);
+        } catch (Exception e) {
+            log.error("Error processing exercise data for user {}: {}", principal.getName(), e.getMessage(), e);
+        }
+
     }
 }

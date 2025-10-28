@@ -52,7 +52,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
                     if (token == null) {
                         log.warn("No JWT token provided for WebSocket");
-                        return message;
+                        throw new IllegalArgumentException("Token required");
                     }
 
                     if (!jwtUtil.validateToken(token)) {
