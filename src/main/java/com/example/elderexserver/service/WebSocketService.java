@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 public class WebSocketService {
@@ -18,107 +22,84 @@ public class WebSocketService {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void handleExerciseData(ExerciseDataEvent data, String sessionId) {
+    public void handleExerciseData(ExerciseDataEvent data, Principal principal) {
         if ("session_end".equals(data.getType())) {
             int totalReps = data.getCount() != null ? data.getCount() : 0;
-            sendFinalResult(sessionId, totalReps);
+            sendFinalResult(principal, data);
             return;
         }
 
-        log.info("Processing - SessionId: {}, Count: {}",
-                sessionId,
+        log.info("Processing - User: {}, Count: {}",
+                principal.getName(),
                 data.getCount());
-
-        data.setSessionId(sessionId);
-        SessionResultResponse result = processExerciseData(data);
-
-        sendResultToClient(sessionId, result);
     }
 
     private SessionResultResponse processExerciseData(ExerciseDataEvent data) {
-        int amount = data.getCount() != null ? data.getCount() : 0;
-        String exercise = determineExerciseType(data);
+        int totalReps = data.getCount() != null ? data.getCount() : 0;
+
+        List<SessionResultResponse.SessionExercis> exercises = new ArrayList<>();
+
+        int remainingReps = totalReps;
+        int currentCount = 1;
+
+        while (remainingReps > 0) {
+            String exerciseType = determineExerciseType(currentCount);
+            int repsForThisExercise = Math.min(3, remainingReps);
+
+            SessionResultResponse.SessionExercis exerciseResult = new SessionResultResponse.SessionExercis();
+            exerciseResult.setExerciseType(exerciseType);
+            exerciseResult.setRep(repsForThisExercise);
+
+            exercises.add(exerciseResult);
+
+            remainingReps -= repsForThisExercise;
+            currentCount += repsForThisExercise;
+        }
 
         SessionResultResponse response = new SessionResultResponse();
-        response.setType("result");
-        response.setExerciseType(exercise);
-        response.setRep(amount);
+        response.setType("final_result");
         response.setTimestamp(System.currentTimeMillis());
+        response.setExercises(exercises);
 
-        log.info("Session Result: {} reps", amount);
+        log.info("Session Result: {} reps split into {} exercises", totalReps, exercises.size());
 
         return response;
     }
 
-    private String determineExerciseType(ExerciseDataEvent data) {
-        int count = data.getCount();
-
-        if (count < 3) {
-            return "Squat";
-        } else if (count < 6) {
-            return "Push-up";
-        } else if (count < 9) {
-            return "Sit-up";
-        } else if (count < 12) {
-            return "Lunge";
-        } else {
-            return "Plank";
-        }
+    private String determineExerciseType(int count) {
+        int index = (count - 1) / 3;
+        return switch (index) {
+            case 0 -> "Squat";
+            case 1 -> "Push-up";
+            case 2 -> "Sit-up";
+            case 3 -> "Lunge";
+            default -> "Plank";
+        };
     }
 
-    public void sendResultToClient(String sessionId, SessionResultResponse result) {
+    public void sendResultToClient(Principal principal, SessionResultResponse result) {
         try {
-            messagingTemplate.convertAndSend(
-                    "/topic/exercises/" + sessionId,
+            messagingTemplate.convertAndSendToUser(
+                    principal.getName(),
+                    "/topic/exercises",
                     result
             );
-            log.info("Sent result to session: {}", sessionId);
+            log.info("Sent result to user {}", principal.getName());
 
         } catch (Exception e) {
             log.error("Failed to send result: {}", e.getMessage());
         }
     }
 
-    private void sendFinalResult(String sessionId, int totalReps) {
-        SessionResultResponse result = new SessionResultResponse();
-        result.setType("final_result");
-        result.setExerciseType("Exercise");
-        result.setRep(totalReps);
-        result.setTimestamp(System.currentTimeMillis());
+    private void sendFinalResult(Principal principal, ExerciseDataEvent data) {
+        SessionResultResponse response = processExerciseData(data);
 
-        messagingTemplate.convertAndSend("/topic/exercises/" + sessionId, result);
-        log.info("📤 Sent final result for session {}: {} reps", sessionId, totalReps);
-    }
-
-    public void sendMessage(String sessionId, String message) {
-        try {
-            SessionResultResponse response = new SessionResultResponse();
-            response.setType("message");
-            response.setExerciseType(message);
-            response.setTimestamp(System.currentTimeMillis());
-
-            messagingTemplate.convertAndSend("/topic/exercises/" + sessionId, response);
-
-            log.info("Sent message to session {}: {}", sessionId, message);
-
-        } catch (Exception e) {
-            log.error("Failed to send message: {}", e.getMessage());
-        }
-    }
-
-    public void broadcastMessage(String message) {
-        try {
-            SessionResultResponse response = new SessionResultResponse();
-            response.setType("broadcast");
-            response.setExerciseType(message);
-            response.setTimestamp(System.currentTimeMillis());
-
-            messagingTemplate.convertAndSend("/topic/exercises", response);
-
-            log.info("Broadcasted message: {}", message);
-
-        } catch (Exception e) {
-            log.error("Failed to broadcast message: {}", e.getMessage());
-        }
+        messagingTemplate.convertAndSendToUser(principal.getName() ,"/topic/exercises", response);
+        log.info("📤 Sent final result for User {}", principal.getName());
+        response.getExercises().forEach(exerciseResult ->
+                log.info("📤 Exercise: {} {} reps",
+                        exerciseResult.getExerciseType(),
+                        exerciseResult.getRep())
+        );
     }
 }

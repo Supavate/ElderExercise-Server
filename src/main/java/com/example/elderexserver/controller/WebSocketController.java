@@ -10,6 +10,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -19,19 +21,15 @@ public class WebSocketController {
     private final WebSocketService webSocketService;
 
     @MessageMapping("/websocket")
-    public void websocketMessage(@Payload ExerciseDataEvent data, SimpMessageHeaderAccessor headerAccessor) {
+    public void websocketMessage(@Payload ExerciseDataEvent data, SimpMessageHeaderAccessor headerAccessor, Principal principal) {
 
-        String sessionId = headerAccessor.getSessionId();
-
-        if (sessionId == null) {
-            log.warn("Received message with null sessionId");
+        if (principal == null) {
+            log.warn("⚠️ Received WebSocket message from unauthenticated user");
             return;
         }
 
-        log.info("Received - SessionId: {}, Count: {}",
-                sessionId,
-                data.getCount());
+        log.info("Received message from user: {},Type: {}, Count: {}", principal.getName(), data.getType(), data.getCount());
 
-        webSocketService.handleExerciseData(data, sessionId);
+        webSocketService.handleExerciseData(data, headerAccessor.getUser());
     }
 }
