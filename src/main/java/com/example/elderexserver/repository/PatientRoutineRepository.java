@@ -146,7 +146,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
         JOIN exercise e ON
             e.id = re.exercise_id
         LEFT JOIN(
-                es.patient_routine_id,
+            SELECT es.patient_routine_id,
                 sd.exercise_id,
                 SUM(sd.reps) AS total_reps
             FROM
@@ -167,4 +167,80 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
                 e.id;
     """, nativeQuery = true)
     List<PatientCurrentDayProgressRoutineView> findCurrentDayPatientRoutineStatusByPatientId(@Param("patientId") Integer patientId);
+
+    @Query(value = """
+        WITH
+            -- 1. Aggregate reps for today
+            daily AS(
+            SELECT
+                es.patient_routine_id,
+                sd.exercise_id,
+                SUM(sd.reps) AS total_reps
+            FROM
+                exercise_session_detail sd
+            JOIN exercise_session es ON
+                es.id = sd.session_id
+            WHERE
+                sd.start_time >= CURDATE() AND sd.start_time < CURDATE() + INTERVAL 1 DAY
+            GROUP BY
+                es.patient_routine_id, sd.exercise_id),
+                -- 2. Aggregate reps per day for this week
+                weekly_daily AS(
+                SELECT
+                    es.patient_routine_id,
+                    sd.exercise_id,
+                    DATE(sd.start_time) AS exercise_date,
+                    SUM(sd.reps) AS total_reps
+                FROM
+                    exercise_session_detail sd
+                JOIN exercise_session es ON
+                    es.id = sd.session_id
+                WHERE
+                    YEARWEEK(sd.start_time, 1) = YEARWEEK(NOW(), 1)
+                GROUP BY
+                    es.patient_routine_id,
+                    sd.exercise_id,
+                    DATE(sd.start_time)),
+                    -- 3. Count days where weekly target was met
+                    weekly AS(
+                    SELECT
+                        wd.patient_routine_id,
+                        wd.exercise_id,
+                        COUNT(*) AS goal_hit
+                    FROM
+                        weekly_daily wd
+                    JOIN routine_exercises re ON
+                        re.exercise_id = wd.exercise_id AND re.routine_id = wd.patient_routine_id
+                    WHERE
+                        wd.total_reps >=(re.rep * re.set)
+                    GROUP BY
+                        wd.patient_routine_id,
+                        wd.exercise_id
+                )
+            SELECT
+                e.id AS exercise_id,
+                e.name AS exercise_name,
+                (re.rep * re.set) AS target_reps,
+                COALESCE(d.total_reps, 0) AS total_reps_today,
+                COALESCE(w.goal_hit, 0) AS weekly_goal_hit,
+                re.day AS goal_days_per_week
+            FROM
+                patient_routine pr
+            JOIN ROUTINE r ON
+                r.id = pr.routine_id
+            JOIN routine_exercises re ON
+                re.routine_id = pr.routine_id
+            JOIN exercise e ON
+                e.id = re.exercise_id
+            LEFT JOIN daily d ON
+                d.exercise_id = e.id AND d.patient_routine_id = pr.id
+            LEFT JOIN weekly w ON
+                w.exercise_id = e.id AND w.patient_routine_id = pr.id
+            WHERE
+                pr.patient_id = :patientId
+            ORDER BY
+                pr.routine_id,
+                e.id;
+    """, nativeQuery = true)
+    List<PatientProgressDashboardView> findPatientProgressDashboardByPatientId(@Param("patientId") Integer patientId);
 }

@@ -65,7 +65,17 @@ public class PatientRoutineController {
         int patientId = patientAuth.getPatientId();
 
         List<PatientCurrentDayProgressRoutineView> dailyProgress = patientRoutineService.getPatientCurrentDayRoutineByPatientId(patientId);
-        if (dailyProgress.isEmpty()) return ResponseEntity.notFound().build();
+        if (dailyProgress == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(dailyProgress);
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<List<PatientProgressDashboardView>> getDashboardRoutineProgress(Authentication authentication) {
+        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+        int patientId = patientAuth.getPatientId();
+
+        List<PatientProgressDashboardView> dashboard = patientRoutineService.getPatientCurrentWeekRoutineByPatientId(patientId);
+        if (dashboard == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(dashboard);
     }
 }

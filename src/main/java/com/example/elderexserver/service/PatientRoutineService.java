@@ -110,4 +110,9 @@ public class PatientRoutineService {
         List<PatientCurrentDayProgressRoutineView> result = patientRoutineRepository.findCurrentDayPatientRoutineStatusByPatientId(patientId);
         return (result.isEmpty()) ? null : result;
     }
+
+    public List<PatientProgressDashboardView> getPatientCurrentWeekRoutineByPatientId(Integer patientId) {
+        List<PatientProgressDashboardView> result = patientRoutineRepository.findPatientProgressDashboardByPatientId(patientId);
+        return (result.isEmpty()) ? null : result;
+    }
 }
