@@ -220,6 +220,8 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
             SELECT
                 e.id AS exercise_id,
                 e.name AS exercise_name,
+                re.rep AS rep_per_set,
+                re.set AS set_per_day,
                 (re.rep * re.set) AS target_reps,
                 COALESCE(d.total_reps, 0) AS total_reps_today,
                 COALESCE(w.goal_hit, 0) AS weekly_goal_hit,
