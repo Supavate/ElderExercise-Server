@@ -201,6 +201,16 @@ public class JwtUtil {
         }
     }
 
+    public Integer getStaffIdFromToken(String token) {
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+            return (Integer) claims.get("staffId");
+        } catch (Exception e) {
+            logger.error("Error extracting staff ID from token: {}", e.getMessage());
+            return null;
+        }
+    }
+
     public Map<String, Object> getJwtInfo() {
         Map<String, Object> info = new HashMap<>();
         info.put("algorithm", "HS256");
