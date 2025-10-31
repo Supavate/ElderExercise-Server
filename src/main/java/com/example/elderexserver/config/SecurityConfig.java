@@ -103,7 +103,8 @@ public class SecurityConfig {
                                 "/test/config",
                                 "/health",
                                 "/actuator/health",
-                                "/error"
+                                "/error",
+                                "/favicon.ico"
                         ).permitAll()
 
                         // Development endpoints

@@ -62,6 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.debug("No JWT token found in request: {} {}", method, requestURI);
                 return;
             }
+
             logger.debug("JWT token found in request: {} {}", method, requestURI);
 
             if (!jwtUtil.validateToken(jwt)) {
@@ -79,27 +80,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
                     userDetails.getAuthorities()
             );
-            
+
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
             logger.debug("Successfully authenticated user: {} for {} {}", username, method, requestURI);
+
         } catch (Exception ex) {
             logger.error("Cannot set user authentication in security context for {} {}: {}",
                     method, requestURI, ex.getMessage());
-
-            // Clear security context on error
             SecurityContextHolder.clearContext();
+        } finally {
+            filterChain.doFilter(request, response);
         }
-
-        // Continue with the filter chain
-        filterChain.doFilter(request, response);
     }
 
     /**
