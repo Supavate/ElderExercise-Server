@@ -211,6 +211,25 @@ public class JwtUtil {
         }
     }
 
+    public Integer getUserIdFromToken(String token) {
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+            String role = (String) claims.get("role");
+
+            if ("STAFF".equals(role)) {
+                return getStaffIdFromToken(token);
+            }
+
+            if ("PATIENT".equals(role)) {
+                return getPatientIdFromToken(token);
+            }
+
+            throw new IllegalArgumentException("Unknown role in token: " + role);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to extract user ID from token: " + token, e);
+        }
+    }
+
     public Map<String, Object> getJwtInfo() {
         Map<String, Object> info = new HashMap<>();
         info.put("algorithm", "HS256");

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import security.UserPrincipal;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -94,12 +95,19 @@ public class WebSocketService {
     private void sendFinalResult(Principal principal, ExerciseDataEvent data) {
         SessionResultResponse response = processExerciseData(data);
 
-        messagingTemplate.convertAndSendToUser(principal.getName() ,"/topic/exercises", response);
-        log.info("📤 Sent final result for User {}", principal.getName());
-        response.getExercises().forEach(exerciseResult ->
-                log.info("📤 Exercise: {} {} reps",
-                        exerciseResult.getExerciseType(),
-                        exerciseResult.getRep())
+        messagingTemplate.convertAndSendToUser(
+                principal.getName(),
+                "/topic/exercises",
+                response
         );
+
+        if (principal instanceof UserPrincipal userPrincipal) {
+            log.info("📤 Sent final result: UserID={}, SessionID={}, Exercises={}",
+                    userPrincipal.getUserId(),
+                    userPrincipal.getSessionId(),
+                    response.getExercises().size());
+        } else {
+            log.info("📤 Sent final result to: {}", principal.getName());
+        }
     }
 }
