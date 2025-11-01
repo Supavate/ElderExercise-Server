@@ -22,21 +22,24 @@ public class ExerciseSessionController {
 
     @GetMapping("/history")
     public ResponseEntity<List<ExerciseSessionHistory>> getAllHistoryByPatientId(Authentication authentication) {
-        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatientId();
+        try {
+            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+            int patientId = patientAuth.getPatientId();
 
-        List<ExerciseSessionHistory> histories = exerciseSessionService.findAllHistoryByPatientId(patientId);
-        if (histories.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(histories, HttpStatus.OK);
+            List<ExerciseSessionHistory> histories = exerciseSessionService.findAllHistoryByPatientId(patientId);
+            if (histories.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.ok(histories);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/new")
     public ResponseEntity<Exercise_Session> createNewSession(@RequestBody NewExerciseSession newExerciseSession) {
         try {
             Exercise_Session session = exerciseSessionService.newExerciseSession(newExerciseSession);
-            return new ResponseEntity<>(session, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(session);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Failed to create exercise session: " + e.getMessage());
         }
     }

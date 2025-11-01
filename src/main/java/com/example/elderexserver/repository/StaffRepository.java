@@ -18,7 +18,7 @@ public interface StaffRepository extends JpaRepository<Staff, Integer> {
         LEFT JOIN patient p ON p.caretaker_id = s.id
         GROUP BY s.id, s.picture, s.first_name, s.last_name;
     """, nativeQuery = true)
-    List<StaffListView> findStaff();
+    List<StaffListView> findStaffList();
 
     @Query(value = """
         SELECT s.id, s.picture, s.first_name, s.last_name, COUNT(p.id) as patient_count

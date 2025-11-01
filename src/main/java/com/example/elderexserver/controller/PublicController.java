@@ -28,9 +28,13 @@ public class PublicController {
 
     @GetMapping("/allergy/drug")
     public ResponseEntity<List<Drug_Allergy>> getAllDrugAllergies() {
-        List<Drug_Allergy> drugAllergies = drugAllergyRepository.findAll();
-        if (drugAllergies.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(drugAllergies);
+        try {
+            List<Drug_Allergy> drugAllergies = drugAllergyRepository.findAll();
+            if (drugAllergies.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(drugAllergies);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Autowired
@@ -38,9 +42,13 @@ public class PublicController {
 
     @GetMapping("/allergy/food")
     public ResponseEntity<List<Food_Allergy>> getAllFoodAllergies() {
-        List<Food_Allergy> foodAllergies = foodAllergyRepository.findAll();
-        if (foodAllergies.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(foodAllergies);
+        try {
+            List<Food_Allergy> foodAllergies = foodAllergyRepository.findAll();
+            if (foodAllergies.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(foodAllergies);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     //Status
@@ -49,9 +57,13 @@ public class PublicController {
 
     @GetMapping("/status")
     public ResponseEntity<List<Status> >getAllStatus() {
-        List<Status> statusList = statusRepository.findAll();
-        if (statusList.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(statusList);
+        try {
+            List<Status> statusList = statusRepository.findAll();
+            if (statusList.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(statusList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 
@@ -61,9 +73,13 @@ public class PublicController {
 
     @GetMapping("/role")
     public ResponseEntity<List<Role>> getAllRoles() {
-        List<Role> roles = roleRepository.findAll();
-        if (roles.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(roles);
+        try {
+            List<Role> roles = roleRepository.findAll();
+            if (roles.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(roles);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     //BloodType
@@ -72,9 +88,13 @@ public class PublicController {
 
     @GetMapping("/bloodtype")
     public ResponseEntity<List<Blood_Type>> getAllBloodTypes() {
-        List<Blood_Type> bloodTypes = bloodTypeRepository.findAll();
-        if (bloodTypes.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(bloodTypes);
+        try {
+            List<Blood_Type> bloodTypes = bloodTypeRepository.findAll();
+            if (bloodTypes.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(bloodTypes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     //Gender
@@ -83,9 +103,13 @@ public class PublicController {
 
     @GetMapping("/gender")
     public ResponseEntity<List<Gender>> getAllGenders() {
-        List<Gender> genders = genderRepository.findAll();
-        if (genders.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(genders);
+        try {
+            List<Gender> genders = genderRepository.findAll();
+            if (genders.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(genders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Autowired
@@ -99,43 +123,67 @@ public class PublicController {
 
     @GetMapping("/zipcode")
     public ResponseEntity<List<ZipcodeView>> getAllZipcode() {
-        List<ZipcodeView> zipcodeViews = amphoeRepository.getAllZipcode();
-        if (zipcodeViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(zipcodeViews);
+        try {
+            List<ZipcodeView> zipcodeViews = amphoeRepository.getAllZipcode();
+            if (zipcodeViews.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(zipcodeViews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/amphoe")
     public ResponseEntity<List<AmphoeView>> getAllAmphoes() {
-        List<AmphoeView> amphoeViews = amphoeRepository.getAllAmphoes();
-        if (amphoeViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(amphoeViews);
+        try {
+            List<AmphoeView> amphoeViews = amphoeRepository.getAllAmphoes();
+            if (amphoeViews.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(amphoeViews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/amphoe/{province}")
     public ResponseEntity<List<AmphoeView>> getAmphoesByProvince(@PathVariable Integer province) {
-        List<AmphoeView> amphoeViews = amphoeRepository.getAmphoesByProvince(province);
-        if (amphoeViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(amphoeViews);
+        try {
+            List<AmphoeView> amphoeViews = amphoeRepository.getAmphoesByProvince(province);
+            if (amphoeViews.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(amphoeViews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/district")
     public ResponseEntity<List<DistrictView>> getAllDistrict() {
-        List<DistrictView> districtViews = districtRepository.getAllDistrict();
-        if (districtViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(districtViews);
+        try {
+            List<DistrictView> districtViews = districtRepository.getAllDistrict();
+            if (districtViews.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(districtViews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/district/{amphoe}")
     public ResponseEntity<List<DistrictView>> getDistrictByAmphoe(@PathVariable Integer amphoe) {
-        List<DistrictView> districtViews = districtRepository.getDistrictsByAmphoe(amphoe);
-        if (districtViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(districtViews);
+        try {
+            List<DistrictView> districtViews = districtRepository.getDistrictsByAmphoe(amphoe);
+            if (districtViews.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(districtViews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/Province")
     public ResponseEntity<List<ProvinceView>> getAllProvince() {
-        List<ProvinceView> provinceViews = provinceRepository.getAllProvince();
-        if (provinceViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(provinceViews);
+        try {
+            List<ProvinceView> provinceViews = provinceRepository.getAllProvince();
+            if (provinceViews.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(provinceViews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

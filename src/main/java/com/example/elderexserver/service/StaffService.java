@@ -2,6 +2,8 @@ package com.example.elderexserver.service;
 
 import com.example.elderexserver.data.patient.Gender;
 import com.example.elderexserver.data.staff.DTO.NewStaff;
+import com.example.elderexserver.data.staff.DTO.StaffListView;
+import com.example.elderexserver.data.staff.DTO.StaffProfileView;
 import com.example.elderexserver.data.staff.DTO.UpdateStaff;
 import com.example.elderexserver.data.staff.Role;
 import com.example.elderexserver.data.staff.Staff;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @Service
 public class StaffService {
@@ -101,5 +104,21 @@ public class StaffService {
         }
 
         return staffRepository.save(staff);
+    }
+
+    public List<Staff> findAllStaff() {
+        return staffRepository.findAll();
+    }
+
+    public StaffProfileView findStaffById(int id) {
+        return staffRepository.findStaffProfileById(id);
+    }
+
+    public List<StaffListView> findStaffList() {
+        return staffRepository.findStaffList();
+    }
+
+    public List<StaffListView> findStaffBySupervisor(int id) {
+        return staffRepository.findStaffBySupervisor(id);
     }
 }

@@ -19,23 +19,31 @@ public class RoutineController {
 
     @GetMapping("/list")
     public ResponseEntity<List<RoutineList>> getAllRoutines() {
-        List<RoutineList> routineLists = routineService.getRoutineList();
-        if (routineLists.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(routineLists);
+        try {
+            List<RoutineList> routineLists = routineService.getRoutineList();
+            if (routineLists.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(routineLists);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/list/{routineId}")
     public ResponseEntity<RoutineList> getRoutineListById(@PathVariable Integer routineId) {
-        RoutineList routineList = routineService.getRoutineListById(routineId);
-        if (routineList == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(routineList);
+        try {
+            RoutineList routineList = routineService.getRoutineListById(routineId);
+            if (routineList == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(routineList);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/new")
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> newRoutine(@RequestBody NewRoutine newRoutine) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(routineService.newRoutine(newRoutine));
+            return ResponseEntity.ok(routineService.newRoutine(newRoutine));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error registering routine: " + e.getMessage());
         }
