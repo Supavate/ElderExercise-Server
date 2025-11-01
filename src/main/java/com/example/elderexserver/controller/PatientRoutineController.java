@@ -21,61 +21,85 @@ public class PatientRoutineController {
 
     @GetMapping("/report/detail/{date}")
     public ResponseEntity<List<ExerciseSessionDetailListView>> getActualExerciseDetailListByPatientIdAndDate(@PathVariable String date, Authentication authentication) {
-        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatientId();
+        try {
+            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+            int patientId = patientAuth.getPatientId();
 
-        List<ExerciseSessionDetailListView> exerciseSessionDetailListViews = patientRoutineService.getActualExerciseDetailListByPatientIdAndDate(date, patientId);
-        if (exerciseSessionDetailListViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(exerciseSessionDetailListViews);
+            List<ExerciseSessionDetailListView> exerciseSessionDetailListViews = patientRoutineService.getActualExerciseDetailListByPatientIdAndDate(date, patientId);
+            if (exerciseSessionDetailListViews.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(exerciseSessionDetailListViews);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/report")
     public ResponseEntity<List<PatientRoutineView>> getPatientRoutineByPatientId(Authentication authentication) {
-        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatientId();
+        try {
+            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+            int patientId = patientAuth.getPatientId();
 
-        List<PatientRoutineView> patientRoutineViews = patientRoutineService.getPatientRoutineByPatientId(patientId);
-        if (patientRoutineViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(patientRoutineViews);
+            List<PatientRoutineView> patientRoutineViews = patientRoutineService.getPatientRoutineByPatientId(patientId);
+            if (patientRoutineViews.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(patientRoutineViews);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/current")
     public ResponseEntity<PatientRoutineList> getCurrentPatientRoutine(Authentication authentication) {
-        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatientId();
+        try {
+            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+            int patientId = patientAuth.getPatientId();
 
-        PatientRoutineList routine = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
-        if (routine == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(routine);
+            PatientRoutineList routine = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
+            if (routine == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(routine);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/week")
     public ResponseEntity<PatientCurrentWeekProgressRoutine> getWeeklyRoutineProgress(Authentication authentication) {
-        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatientId();
+        try {
+            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+            int patientId = patientAuth.getPatientId();
 
-        PatientCurrentWeekProgressRoutine weekProgress = patientRoutineService.getPatientCurrentWeekProgressRoutine(patientId);
-        if (weekProgress == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(weekProgress);
+            PatientCurrentWeekProgressRoutine weekProgress = patientRoutineService.getPatientCurrentWeekProgressRoutine(patientId);
+            if (weekProgress == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(weekProgress);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/day")
     public ResponseEntity<List<PatientCurrentDayProgressRoutineView>> getDayRoutineProgress(Authentication authentication) {
-        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatientId();
+        try {
+            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+            int patientId = patientAuth.getPatientId();
 
-        List<PatientCurrentDayProgressRoutineView> dailyProgress = patientRoutineService.getPatientCurrentDayRoutineByPatientId(patientId);
-        if (dailyProgress == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(dailyProgress);
+            List<PatientCurrentDayProgressRoutineView> dailyProgress = patientRoutineService.getPatientCurrentDayRoutineByPatientId(patientId);
+            if (dailyProgress == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(dailyProgress);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/dashboard")
     public ResponseEntity<List<PatientProgressDashboardView>> getDashboardRoutineProgress(Authentication authentication) {
-        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatientId();
+        try {
+            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+            int patientId = patientAuth.getPatientId();
 
-        List<PatientProgressDashboardView> dashboard = patientRoutineService.getPatientCurrentWeekRoutineByPatientId(patientId);
-        if (dashboard == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(dashboard);
+            List<PatientProgressDashboardView> dashboard = patientRoutineService.getPatientCurrentWeekRoutineByPatientId(patientId);
+            if (dashboard == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(dashboard);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

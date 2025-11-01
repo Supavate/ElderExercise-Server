@@ -22,12 +22,16 @@ public class ExerciseSessionController {
 
     @GetMapping("/history")
     public ResponseEntity<List<ExerciseSessionHistory>> getAllHistoryByPatientId(Authentication authentication) {
-        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-        int patientId = patientAuth.getPatientId();
+        try {
+            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+            int patientId = patientAuth.getPatientId();
 
-        List<ExerciseSessionHistory> histories = exerciseSessionService.findAllHistoryByPatientId(patientId);
-        if (histories.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(histories, HttpStatus.OK);
+            List<ExerciseSessionHistory> histories = exerciseSessionService.findAllHistoryByPatientId(patientId);
+            if (histories.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(histories, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/new")

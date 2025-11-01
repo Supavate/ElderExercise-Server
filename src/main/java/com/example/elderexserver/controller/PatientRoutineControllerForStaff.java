@@ -23,6 +23,10 @@ public class PatientRoutineControllerForStaff {
 
     @PostMapping("/new")
     public ResponseEntity<Patient_Routine> newPatientRoutine(@RequestBody NewPatientRoutine patientRoutine) {
-        return ResponseEntity.ok(patientRoutineService.newPatientRoutine(patientRoutine));
+        try {
+            return ResponseEntity.ok(patientRoutineService.newPatientRoutine(patientRoutine));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

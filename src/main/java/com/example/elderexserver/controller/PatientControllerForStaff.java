@@ -21,28 +21,44 @@ public class PatientControllerForStaff {
 
     @GetMapping("/age")
     public ResponseEntity<List<PatientWithAge>> getPatientsWithAge() {
-        List<PatientWithAge> patients = patientService.getPatientsWithAge();
-        if (patients.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok().body(patients);
+        try {
+            List<PatientWithAge> patients = patientService.getPatientsWithAge();
+            if (patients.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(patients);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/staff/{id}")
     public ResponseEntity<List<PatientFromCaretakerIdView>> getPatientFromCaretakerId(@PathVariable Integer id) {
-        List<PatientFromCaretakerIdView> patients = patientService.getPatientFromCaretakerId(id);
-        if (patients.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok().body(patients);
+        try {
+            List<PatientFromCaretakerIdView> patients = patientService.getPatientFromCaretakerId(id);
+            if (patients.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(patients);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<PatientDetail> getPatientDetailById(@PathVariable Integer id) {
-        PatientDetail patientDetail = patientService.getPatientDetailById(id);
-        if (patientDetail == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok().body(patientDetail);
+        try {
+            PatientDetail patientDetail = patientService.getPatientDetailById(id);
+            if (patientDetail == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(patientDetail);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/list")
-    public List<PatientListView> getPatientList() {
-        return patientService.getPatientList();
+    public ResponseEntity<List<PatientListView>> getPatientList() {
+        try {
+            return ResponseEntity.ok(patientService.getPatientList());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping("/new")

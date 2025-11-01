@@ -20,16 +20,24 @@ public class ExerciseController {
 
     @GetMapping("/list")
     public ResponseEntity<List<ExerciseListView>> getAllExercises() {
-        List<ExerciseListView> exercises = exerciseService.getAllExercises();
-        if (exercises.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(exercises);
+        try {
+            List<ExerciseListView> exercises = exerciseService.getAllExercises();
+            if (exercises.isEmpty()) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(exercises);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ExerciseView> getExerciseById(@PathVariable int id) {
-        ExerciseView exercise = exerciseService.getExerciseById(id);
-        if (exercise == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(exercise);
+        try {
+            ExerciseView exercise = exerciseService.getExerciseById(id);
+            if (exercise == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(exercise);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PostMapping("/new")

@@ -19,44 +19,48 @@ import java.util.List;
 public class StaffController {
 
     @Autowired
-    private StaffRepository staffRepository;
-
-    @Autowired
     private StaffService staffService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Staff>> getAllStaff() {
-        List<Staff> staffList = staffRepository.findAll();
-        if (staffList.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(staffList);
+        try {
+            return ResponseEntity.ok(staffService.findAllStaff());
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/profile/{id}")
     public ResponseEntity<StaffProfileView> getStaffProfileById(@PathVariable int id) {
-        StaffProfileView staff = staffRepository.findStaffProfileById(id);
-        if (staff == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok().body(staff);
+        try {
+            return ResponseEntity.ok(staffService.findStaffById(id));
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<StaffListView>> getStaffList() {
-        List<StaffListView> staffListViews = staffRepository.findStaff();
-        if (staffListViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(staffListViews);
+        try {
+            return ResponseEntity.ok(staffService.findStaffList());
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/super/{id}")
     public ResponseEntity<List<StaffListView>> getStaffBySupervisor(@PathVariable int id) {
-        List<StaffListView> staffListViews = staffRepository.findStaffBySupervisor(id);
-        if (staffListViews.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(staffListViews);
+        try {
+            return ResponseEntity.ok(staffService.findStaffBySupervisor(id));
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/new")
-    public ResponseEntity<String> addNewStaff(@RequestBody NewStaff newStaff) {
+    public ResponseEntity<?> addNewStaff(@RequestBody NewStaff newStaff) {
         try {
-            staffService.newStaff(newStaff);
-            return ResponseEntity.ok("New staff added");
+            return ResponseEntity.ok(staffService.newStaff(newStaff));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error registering staff: " + e.getMessage());
         }
