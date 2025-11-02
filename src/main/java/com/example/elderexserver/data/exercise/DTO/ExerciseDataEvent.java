@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ExerciseDataEvent {
     private String sessionId;
-    private Integer count;
     private String type;
-    private Long timestamp;
+    private FeaturesRequest features;
 }

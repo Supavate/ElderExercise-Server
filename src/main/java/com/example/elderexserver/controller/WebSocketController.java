@@ -33,7 +33,7 @@ public class WebSocketController {
             return;
         }
 
-        log.info("Received message from user: {},Type: {}, Count: {}", principal.getName(), data.getType(), data.getCount());
+        log.info("Received message from user: {},Type: {}, Features Count: {}", principal.getName(), data.getType(), data.getFeatures().getFeatures().size());
 
         try {
             webSocketService.handleExerciseData(data, principal);

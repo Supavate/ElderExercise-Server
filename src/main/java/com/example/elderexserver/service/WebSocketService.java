@@ -1,6 +1,7 @@
 package com.example.elderexserver.service;
 
 import com.example.elderexserver.data.exercise.DTO.ExerciseDataEvent;
+import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
 import com.example.elderexserver.data.exercise.DTO.SessionResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,71 +12,55 @@ import security.UserPrincipal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
 public class WebSocketService {
 
+    @Autowired
+    private ClassificationService classificationService;
+
     private final SimpMessagingTemplate messagingTemplate;
+
+    private final ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> sessionCounts;
 
     @Autowired
     public WebSocketService(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
+        this.sessionCounts = new ConcurrentHashMap<>();
+    }
+
+    private String getSessionId(Principal principal) {
+        if (principal instanceof UserPrincipal userPrincipal) {
+            return userPrincipal.getSessionId();
+        }
+
+        //should not reach here
+        log.error("Principal is not UserPrincipal! Type: {}", principal.getClass().getName());
+        throw new IllegalStateException("Invalid principal type. Expected UserPrincipal but got: " + principal.getClass().getName());
     }
 
     public void handleExerciseData(ExerciseDataEvent data, Principal principal) {
+        String sessionId = getSessionId(principal);
+
         if ("session_end".equals(data.getType())) {
-            int totalReps = data.getCount() != null ? data.getCount() : 0;
-            sendFinalResult(principal, data);
+            sendFinalResult(principal, sessionId);
             return;
         }
 
-        log.info("Processing - User: {}, Count: {}",
+        log.info("Processing - SessionID: {}, User: {}, Features Count: {}",
+                sessionId,
                 principal.getName(),
-                data.getCount());
-    }
+                data.getFeatures().getFeatures().size()
+        );
 
-    private SessionResultResponse processExerciseData(ExerciseDataEvent data) {
-        int totalReps = data.getCount() != null ? data.getCount() : 0;
+        FeaturesResponse response = classificationService.classify(data.getFeatures());
 
-        List<SessionResultResponse.SessionExercis> exercises = new ArrayList<>();
-
-        int remainingReps = totalReps;
-        int currentCount = 1;
-
-        while (remainingReps > 0) {
-            String exerciseType = determineExerciseType(currentCount);
-            int repsForThisExercise = Math.min(3, remainingReps);
-
-            SessionResultResponse.SessionExercis exerciseResult = new SessionResultResponse.SessionExercis();
-            exerciseResult.setExerciseType(exerciseType);
-            exerciseResult.setRep(repsForThisExercise);
-
-            exercises.add(exerciseResult);
-
-            remainingReps -= repsForThisExercise;
-            currentCount += repsForThisExercise;
-        }
-
-        SessionResultResponse response = new SessionResultResponse();
-        response.setType("final_result");
-        response.setTimestamp(System.currentTimeMillis());
-        response.setExercises(exercises);
-
-        log.info("Session Result: {} reps split into {} exercises", totalReps, exercises.size());
-
-        return response;
-    }
-
-    private String determineExerciseType(int count) {
-        int index = (count - 1) / 3;
-        return switch (index) {
-            case 0 -> "Squat";
-            case 1 -> "Push-up";
-            case 2 -> "Sit-up";
-            case 3 -> "Lunge";
-            default -> "Plank";
-        };
+        sessionCounts.putIfAbsent(sessionId, new ConcurrentHashMap<>());
+        ConcurrentHashMap<Integer, Integer> counts = sessionCounts.get(sessionId);
+        counts.merge(response.getExercise_id(), 1, Integer::sum);
     }
 
     public void sendResultToClient(Principal principal, SessionResultResponse result) {
@@ -92,8 +77,22 @@ public class WebSocketService {
         }
     }
 
-    private void sendFinalResult(Principal principal, ExerciseDataEvent data) {
-        SessionResultResponse response = processExerciseData(data);
+    private void sendFinalResult(Principal principal, String sessionId) {
+        ConcurrentHashMap<Integer, Integer> counts = sessionCounts.getOrDefault(sessionId, new ConcurrentHashMap<>());
+
+        List<SessionResultResponse.SessionExercis> exercises = counts.entrySet()
+                .stream()
+                .map(e -> new SessionResultResponse.SessionExercis(
+                        String.valueOf(e.getKey()),
+                        e.getValue()
+                ))
+                .toList();
+
+        SessionResultResponse response = new SessionResultResponse(
+                "session_result",
+                System.currentTimeMillis(),
+                exercises
+        );
 
         messagingTemplate.convertAndSendToUser(
                 principal.getName(),
@@ -102,12 +101,17 @@ public class WebSocketService {
         );
 
         if (principal instanceof UserPrincipal userPrincipal) {
-            log.info("📤 Sent final result: UserID={}, SessionID={}, Exercises={}",
+            log.info("📤 Sent final result: UserID={}, SessionID={}, Exercises={}, TotalReps={}",
                     userPrincipal.getUserId(),
                     userPrincipal.getSessionId(),
-                    response.getExercises().size());
+                    exercises.size(),
+                    counts.values().stream().mapToInt(Integer::intValue).sum());
         } else {
-            log.info("📤 Sent final result to: {}", principal.getName());
+            log.error("Invalid principal type: {}", principal.getClass().getName());
+            throw new IllegalStateException("Invalid principal type");
         }
+
+        sessionCounts.remove(sessionId);
+        log.info("🧹 Cleaned up session data for: {}", sessionId);
     }
 }
