@@ -14,7 +14,7 @@ public class TagService {
     private ExerciseTagRepository exerciseTagRepository;
 
     public List<ExerciseTag> findAllTags() {
-        return exerciseTagRepository.findAllTags();
+        return exerciseTagRepository.findAll();
     }
 
     public ExerciseTag newExerciseTag(ExerciseTag tag) {
