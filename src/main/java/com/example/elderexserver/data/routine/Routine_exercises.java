@@ -29,6 +29,7 @@ public class Routine_exercises {
     private Exercise exercise;
 
     private int rep;
+    @Column(name = "`set`")
     private int set;
     private int day;
 

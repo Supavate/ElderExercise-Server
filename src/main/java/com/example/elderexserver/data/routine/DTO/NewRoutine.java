@@ -19,5 +19,4 @@ public class NewRoutine {
         private Integer set;
         private Integer day;
     }
-
 }

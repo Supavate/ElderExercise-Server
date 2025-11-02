@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -31,5 +32,6 @@ public class Routine {
         this.name = name;
         this.description = description;
         this.staff = staff;
+        Exercises = new HashSet<>();
     }
 }

@@ -40,12 +40,20 @@ public class RoutineController {
     }
 
     @PostMapping("/new")
-    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> newRoutine(@RequestBody NewRoutine newRoutine) {
         try {
             return ResponseEntity.ok(routineService.newRoutine(newRoutine));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error registering routine: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteRoutine(@PathVariable Integer id) {
+        try {
+            return ResponseEntity.ok(routineService.deleteRoutine(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error deleting routine: " + e.getMessage());
         }
     }
 }

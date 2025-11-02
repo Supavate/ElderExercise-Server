@@ -25,19 +25,10 @@ public class RoutineService {
     private RoutineRepository routineRepository;
 
     @Autowired
-    private RoutineExerciseRepository routineExerciseRepository;
-
-    @Autowired
     private ExerciseRepository exerciseRepository;
 
     @Autowired
     private StaffRepository staffRepository;
-
-    @Autowired
-    private PatientRoutineRepository patientRoutineRepository;
-
-    @Autowired
-    private PatientRepository patientRepository;
 
     @Autowired
     private PatientRoutineService patientRoutineService;
@@ -112,7 +103,6 @@ public class RoutineService {
                 newRoutine.getDescription(),
                 staff
         );
-        routineRepository.save(routine);
 
         List<NewRoutine.routine_exercise> routineExercises = newRoutine.getRoutine_exercises();
         for (NewRoutine.routine_exercise routineExercise : routineExercises) {
@@ -127,13 +117,23 @@ public class RoutineService {
                     routineExercise.getDay()
             );
 
-            routineExerciseRepository.save(routine_exercise);
+            routine.getExercises().add(routine_exercise);
         }
 
         if (newRoutine.getPatient_routine() != null) {
             patientRoutineService.newPatientRoutine(newRoutine.getPatient_routine());
         }
 
-        return routine;
+        return routineRepository.save(routine);
+    }
+
+    @Transactional
+    public String deleteRoutine(Integer routineId) {
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(() -> new IllegalArgumentException("Routine not found with id: " + routineId));
+
+        routineRepository.delete(routine);
+
+        return "Routine deleted successfully";
     }
 }
