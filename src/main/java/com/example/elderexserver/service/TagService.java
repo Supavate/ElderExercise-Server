@@ -1,20 +1,23 @@
 package com.example.elderexserver.service;
 
+import com.example.elderexserver.Exception.ResourceNotFoundException;
 import com.example.elderexserver.data.exercise.ExerciseTag;
 import com.example.elderexserver.repository.ExerciseTagRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TagService {
 
-    @Autowired
-    private ExerciseTagRepository exerciseTagRepository;
+    private final ExerciseTagRepository exerciseTagRepository;
 
     public List<ExerciseTag> findAllTags() {
-        return exerciseTagRepository.findAll();
+        List<ExerciseTag> tags = exerciseTagRepository.findAll();
+        if (tags.isEmpty()) throw new ResourceNotFoundException("No Tags found");
+        return tags;
     }
 
     public ExerciseTag newExerciseTag(ExerciseTag tag) {

@@ -7,11 +7,9 @@ import com.example.elderexserver.data.address.DTO.ProvinceView;
 import com.example.elderexserver.data.address.DTO.ZipcodeView;
 import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
 import com.example.elderexserver.data.patient.*;
-import com.example.elderexserver.repository.*;
 import com.example.elderexserver.data.staff.Role;
-import com.example.elderexserver.service.ClassificationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.example.elderexserver.service.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,183 +18,82 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/public")
+@RequiredArgsConstructor
 public class PublicController {
 
-    //Allergy
-    @Autowired
-    private DrugAllergyRepository drugAllergyRepository;
+    private final PublicService publicService;
 
+    // Allergy
     @GetMapping("/allergy/drug")
     public ResponseEntity<List<Drug_Allergy>> getAllDrugAllergies() {
-        try {
-            List<Drug_Allergy> drugAllergies = drugAllergyRepository.findAll();
-            if (drugAllergies.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(drugAllergies);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getAllDrugAllergies());
     }
-
-    @Autowired
-    private FoodAllergyRepository foodAllergyRepository;
 
     @GetMapping("/allergy/food")
     public ResponseEntity<List<Food_Allergy>> getAllFoodAllergies() {
-        try {
-            List<Food_Allergy> foodAllergies = foodAllergyRepository.findAll();
-            if (foodAllergies.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(foodAllergies);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getAllFoodAllergies());
     }
 
-    //Status
-    @Autowired
-    private StatusRepository statusRepository;
-
+    // Status
     @GetMapping("/status")
-    public ResponseEntity<List<Status> >getAllStatus() {
-        try {
-            List<Status> statusList = statusRepository.findAll();
-            if (statusList.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(statusList);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<List<Status>> getAllStatus() {
+        return ResponseEntity.ok(publicService.getAllStatus());
     }
 
-
-    //Role
-    @Autowired
-    private RoleRepository roleRepository;
-
+    // Role
     @GetMapping("/role")
     public ResponseEntity<List<Role>> getAllRoles() {
-        try {
-            List<Role> roles = roleRepository.findAll();
-            if (roles.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(roles);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getAllRoles());
     }
 
-    //BloodType
-    @Autowired
-    private BloodTypeRepository bloodTypeRepository;
-
+    // Blood Type
     @GetMapping("/bloodtype")
     public ResponseEntity<List<Blood_Type>> getAllBloodTypes() {
-        try {
-            List<Blood_Type> bloodTypes = bloodTypeRepository.findAll();
-            if (bloodTypes.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(bloodTypes);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getAllBloodTypes());
     }
 
-    //Gender
-    @Autowired
-    private GenderRepository genderRepository;
-
+    // Gender
     @GetMapping("/gender")
     public ResponseEntity<List<Gender>> getAllGenders() {
-        try {
-            List<Gender> genders = genderRepository.findAll();
-            if (genders.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(genders);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getAllGenders());
     }
 
-    @Autowired
-    private ProvinceRepository provinceRepository;
-
-    @Autowired
-    private AmphoeRepository amphoeRepository;
-
-    @Autowired
-    private DistrictRepository districtRepository;
-
-    @GetMapping("/zipcode")
-    public ResponseEntity<List<ZipcodeView>> getAllZipcode() {
-        try {
-            List<ZipcodeView> zipcodeViews = amphoeRepository.getAllZipcode();
-            if (zipcodeViews.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(zipcodeViews);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    // Province, Amphoe, District, Zipcode
+    @GetMapping("/province")
+    public ResponseEntity<List<ProvinceView>> getAllProvince() {
+        return ResponseEntity.ok(publicService.getAllProvince());
     }
 
     @GetMapping("/amphoe")
     public ResponseEntity<List<AmphoeView>> getAllAmphoes() {
-        try {
-            List<AmphoeView> amphoeViews = amphoeRepository.getAllAmphoes();
-            if (amphoeViews.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(amphoeViews);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getAllAmphoes());
     }
 
     @GetMapping("/amphoe/{province}")
     public ResponseEntity<List<AmphoeView>> getAmphoesByProvince(@PathVariable Integer province) {
-        try {
-            List<AmphoeView> amphoeViews = amphoeRepository.getAmphoesByProvince(province);
-            if (amphoeViews.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(amphoeViews);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getAmphoesByProvince(province));
     }
 
     @GetMapping("/district")
     public ResponseEntity<List<DistrictView>> getAllDistrict() {
-        try {
-            List<DistrictView> districtViews = districtRepository.getAllDistrict();
-            if (districtViews.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(districtViews);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getAllDistrict());
     }
 
     @GetMapping("/district/{amphoe}")
     public ResponseEntity<List<DistrictView>> getDistrictByAmphoe(@PathVariable Integer amphoe) {
-        try {
-            List<DistrictView> districtViews = districtRepository.getDistrictsByAmphoe(amphoe);
-            if (districtViews.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(districtViews);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(publicService.getDistrictByAmphoe(amphoe));
     }
 
-    @GetMapping("/Province")
-    public ResponseEntity<List<ProvinceView>> getAllProvince() {
-        try {
-            List<ProvinceView> provinceViews = provinceRepository.getAllProvince();
-            if (provinceViews.isEmpty()) return ResponseEntity.notFound().build();
-            return ResponseEntity.ok(provinceViews);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @GetMapping("/zipcode")
+    public ResponseEntity<List<ZipcodeView>> getAllZipcode() {
+        return ResponseEntity.ok(publicService.getAllZipcode());
     }
 
-    @Autowired
-    private ClassificationService classificationService;
+    // ML Test
+    private final ClassificationService classificationService;
 
     @PostMapping("/test")
-    public ResponseEntity<FeaturesResponse> sendFeatures(@RequestBody FeaturesRequest request) {
-        try {
-            FeaturesResponse response = classificationService.classify(request);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public FeaturesResponse classifyFeatures(FeaturesRequest request) {
+        return classificationService.classify(request);
     }
 }

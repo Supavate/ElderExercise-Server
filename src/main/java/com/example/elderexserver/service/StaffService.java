@@ -10,6 +10,7 @@ import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.GenderRepository;
 import com.example.elderexserver.repository.RoleRepository;
 import com.example.elderexserver.repository.StaffRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,20 +19,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StaffService {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private StaffRepository staffRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private GenderRepository genderRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final StaffRepository staffRepository;
+    private final RoleRepository roleRepository;
+    private final GenderRepository genderRepository;
 
     public Staff newStaff(NewStaff newStaff) {
         Gender gender = genderRepository.findById(newStaff.getGender_id())
@@ -61,34 +58,16 @@ public class StaffService {
         Staff staff = staffRepository.findById(updateStaff.getId())
                 .orElseThrow(() -> new RuntimeException("Staff not found"));
 
-        if (updateStaff.getFirst_name() != null) {
-            staff.setFirst_Name(updateStaff.getFirst_name());
-        }
-
-        if (updateStaff.getLast_name() != null) {
-            staff.setLast_Name(updateStaff.getLast_name());
-        }
-
-        if (updateStaff.getEmail() != null) {
-            staff.setEmail(updateStaff.getEmail());
-        }
-
-        if (updateStaff.getTelephone() != null) {
-            staff.setTelephone(updateStaff.getTelephone());
-        }
-
-        if (updateStaff.getPicture() != null) {
-            staff.setPicture(updateStaff.getPicture());
-        }
+        Optional.ofNullable(updateStaff.getFirst_name()).ifPresent(staff::setFirst_Name);
+        Optional.ofNullable(updateStaff.getLast_name()).ifPresent(staff::setLast_Name);
+        Optional.ofNullable(updateStaff.getEmail()).ifPresent(staff::setEmail);
+        Optional.ofNullable(updateStaff.getTelephone()).ifPresent(staff::setTelephone);
+        Optional.ofNullable(updateStaff.getPicture()).ifPresent(staff::setPicture);
 
         if (updateStaff.getDate_of_birth() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            try {
-                LocalDate dob = LocalDate.parse(updateStaff.getDate_of_birth(), formatter);
-                staff.setDate_of_birth(dob);
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException("Invalid date format. Expected dd/MM/yyyy");
-            }
+            LocalDate dob = LocalDate.parse(updateStaff.getDate_of_birth(), formatter);
+            staff.setDate_of_birth(dob);
         }
 
         if (updateStaff.getRole_id() != null) {

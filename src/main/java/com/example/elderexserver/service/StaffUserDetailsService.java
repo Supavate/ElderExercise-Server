@@ -3,6 +3,7 @@ package com.example.elderexserver.service;
 import com.example.elderexserver.data.staff.DTO.StaffAuth;
 import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.StaffRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class StaffUserDetailsService implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(StaffUserDetailsService.class);
-
-    @Autowired
-    private StaffRepository staffRepository;
+    private final StaffRepository staffRepository;
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {

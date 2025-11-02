@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface StaffRepository extends JpaRepository<Staff, Integer> {
-    @Query(value = "SELECT * from Staff s", nativeQuery = true)
-    List<Staff> findBySupervisor(int id);
 
     @Query(value = """
         SELECT s.id, s.picture, s.first_name, s.last_name, COUNT(p.id) as patient_count

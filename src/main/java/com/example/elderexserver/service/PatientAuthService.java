@@ -4,6 +4,7 @@ import com.example.elderexserver.data.patient.DTO.PatientAccountStatus;
 import com.example.elderexserver.data.patient.DTO.PatientAuth;
 import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.repository.PatientRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PatientAuthService {
     private static final Logger logger = LoggerFactory.getLogger(PatientAuthService.class);
 
-    @Autowired
-    private PatientRepository patientRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PatientRepository patientRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public PatientAuth createPatientAuthDTO(Patient patient) {
         PatientAccountStatus status = evaluatePatientAccountStatus(patient);

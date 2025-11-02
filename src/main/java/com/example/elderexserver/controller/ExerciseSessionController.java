@@ -5,6 +5,7 @@ import com.example.elderexserver.data.exercise.Exercise_Session;
 import com.example.elderexserver.data.patient.DTO.PatientAuth;
 import com.example.elderexserver.data.routine.DTO.ExerciseSessionHistory;
 import com.example.elderexserver.service.ExerciseSessionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,46 +16,33 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/session")
+@RequiredArgsConstructor
 public class ExerciseSessionController {
 
-    @Autowired
-    private ExerciseSessionService exerciseSessionService;
+    private final ExerciseSessionService exerciseSessionService;
 
     @GetMapping("/history")
     public ResponseEntity<List<ExerciseSessionHistory>> getAllHistoryByPatientId(Authentication authentication) {
-        try {
-            PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
-            int patientId = patientAuth.getPatientId();
+        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+        int patientId = patientAuth.getPatientId();
 
-            List<ExerciseSessionHistory> histories = exerciseSessionService.findAllHistoryByPatientId(patientId);
-            if (histories.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            return ResponseEntity.ok(histories);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        List<ExerciseSessionHistory> histories = exerciseSessionService.findAllHistoryByPatientId(patientId);
+        if (histories.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
+        return ResponseEntity.ok(histories);
     }
 
     @PostMapping("/new")
     public ResponseEntity<Exercise_Session> createNewSession(@RequestBody NewExerciseSession newExerciseSession) {
-        try {
-            Exercise_Session session = exerciseSessionService.newExerciseSession(newExerciseSession);
-            return ResponseEntity.status(HttpStatus.CREATED).body(session);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create exercise session: " + e.getMessage());
-        }
+        Exercise_Session session = exerciseSessionService.newExerciseSession(newExerciseSession);
+        return ResponseEntity.status(HttpStatus.CREATED).body(session);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteSession(@PathVariable int id) {
-        try {
-            exerciseSessionService.deleteExerciseSession(id);
-            return ResponseEntity.ok("Exercise session deleted successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Exercise session not found with id: " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to delete exercise session");
-        }
+    public ResponseEntity<Void> deleteSession(@PathVariable int id) {
+        exerciseSessionService.deleteExerciseSession(id);
+        return ResponseEntity.ok().build();
     }
 }
+

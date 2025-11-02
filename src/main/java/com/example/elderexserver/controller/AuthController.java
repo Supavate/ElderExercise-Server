@@ -5,7 +5,9 @@ import com.example.elderexserver.data.staff.DTO.StaffAuth;
 import com.example.elderexserver.data.staff.DTO.StaffLoginRequest;
 import com.example.elderexserver.data.staff.DTO.StaffLoginResponse;
 import com.example.elderexserver.data.staff.Staff;
+import com.example.elderexserver.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
@@ -29,146 +31,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final AuthService authService;
 
     @PostMapping("/patient/login")
-    public ResponseEntity<?> patientLogin(@RequestBody PatientLoginRequest request) {
-        try {
-            logger.info("Patient login attempt for identifier: {}", request.getEmail());
-
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-
-            PatientAuth PatientAuth = (PatientAuth) authentication.getPrincipal();
-            Patient patient = PatientAuth.getPatient();
-
-            // Generate JWT token using the Patient entity
-            String token = jwtUtil.generatePatientToken(patient);
-
-            logger.info("Patient login successful for: {} (ID: {})", patient.getEmail(), patient.getId());
-
-            // Create response using patient data
-            PatientLoginResponse response = new PatientLoginResponse(
-                    token,
-                    patient.getId(),
-                    patient.getCitizenId(),
-                    patient.getEmail(),
-                    patient.getFirstName(),
-                    patient.getLastName(),
-                    patient.getPhone(),
-                    patient.getPicture(),
-                    PatientAuth.getGender(),
-                    PatientAuth.getBloodType(),
-                    patient.getCaretaker() != null ? patient.getCaretaker().getFirst_Name() + " " + patient.getCaretaker().getLast_Name() : null,
-                    "Login successful"
-            );
-
-            return ResponseEntity.ok(response);
-        } catch (AuthenticationException e) {
-            logger.warn("Patient login failed for: {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-        }
+    public ResponseEntity<PatientLoginResponse> patientLogin(@RequestBody PatientLoginRequest request) {
+        return ResponseEntity.ok(authService.patientLogin(request));
     }
 
     @PostMapping("/staff/login")
-    public ResponseEntity<?> staffLogin(@RequestBody StaffLoginRequest request) {
-        try {
-            logger.info("Staff login attempt for identifier: {}", request.getEmail());
-
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-
-            StaffAuth staffAuth = (StaffAuth) authentication.getPrincipal();
-            Staff staff = staffAuth.getStaff();
-
-
-            String token = jwtUtil.generateStaffToken(staff);
-
-            logger.info("Staff login successful for: {} (ID: {})", staff.getEmail(), staff.getId());
-
-            StaffLoginResponse response = new StaffLoginResponse(
-                    token,
-                    staff.getId(),
-                    staff.getEmail(),
-                    staff.getFirst_Name(),
-                    staff.getLast_Name(),
-                    staff.getTelephone(),
-                    staff.getPicture(),
-                    staffAuth.getGender(),
-                    staff.getSupervisor_id() != null ? staff.getSupervisor_id() : null,
-                    "Login successful"
-            );
-
-            return ResponseEntity.ok(response);
-        } catch (AuthenticationException e) {
-            logger.warn("Staff login failed for: {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-        }
+    public ResponseEntity<StaffLoginResponse> staffLogin(@RequestBody StaffLoginRequest request) {
+        return ResponseEntity.ok(authService.staffLogin(request));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutSecure(HttpServletRequest request, Authentication authentication) {
-        try {
-            String username = authentication.getName();
-
-            // Extract JWT token from request
-            String token = extractTokenFromRequest(request);
-
-            if (token != null) {
-                Long expirationTime = jwtUtil.getTokenExpiryTime(token);
-
-                logger.info("Patient logout with token blacklisting for: {}", username);
-            }
-
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Logout successful - token invalidated");
-            response.put("timestamp", LocalDateTime.now());
-
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            logger.error("Error during secure logout", e);
-            return ResponseEntity.ok(Map.of("message", "Logout completed"));
-        }
-    }
-
-    private String extractTokenFromRequest(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return null;
+    public ResponseEntity<Map<String, Object>> logoutSecure(HttpServletRequest request, Authentication authentication) {
+        return ResponseEntity.ok(authService.logout(request, authentication));
     }
 
     @GetMapping("/validate")
     public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authHeader) {
-        try {
-            if (!StringUtils.hasText(authHeader) || !authHeader.startsWith("Bearer ")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing Bearer token");
-            }
-
-            String token = authHeader.substring(7);
-
-            if (jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.OK).body("Token validated");
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is invalid or expired");
-            }
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        authService.validateToken(authHeader);
+        return ResponseEntity.ok("Token validated");
     }
 }

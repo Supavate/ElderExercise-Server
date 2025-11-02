@@ -2,6 +2,7 @@ package com.example.elderexserver.service;
 
 import com.example.elderexserver.data.exercise.DTO.FeaturesRequest;
 import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,10 @@ import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ClassificationService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
-
-    public ClassificationService(ApplicationEventPublisher applicationEventPublisher) {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
 
     public FeaturesResponse classify(FeaturesRequest request) {
         log.info("Classification request received");

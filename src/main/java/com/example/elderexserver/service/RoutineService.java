@@ -1,40 +1,31 @@
 package com.example.elderexserver.service;
 
 import com.example.elderexserver.data.exercise.Exercise;
-import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.data.routine.DTO.NewRoutine;
 import com.example.elderexserver.data.routine.DTO.RoutineList;
 import com.example.elderexserver.data.routine.DTO.RoutineListView;
-import com.example.elderexserver.data.routine.Patient_Routine;
 import com.example.elderexserver.data.routine.Routine;
 import com.example.elderexserver.data.routine.Routine_exercises;
 import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class RoutineService {
 
-    @Autowired
-    private RoutineRepository routineRepository;
-
-    @Autowired
-    private ExerciseRepository exerciseRepository;
-
-    @Autowired
-    private StaffRepository staffRepository;
-
-    @Autowired
-    private PatientRoutineService patientRoutineService;
+    private final RoutineRepository routineRepository;
+    private final ExerciseRepository exerciseRepository;
+    private final StaffRepository staffRepository;
+    private final PatientRoutineService patientRoutineService;
 
     public RoutineList getRoutineListById(Integer routineId) {
         List<RoutineListView> routineListView = routineRepository.findRoutineListById(routineId);
+        if (routineListView.isEmpty()) return null;
 
         RoutineListView firstRow = routineListView.get(0);
         RoutineList routine = new RoutineList(
@@ -47,16 +38,13 @@ public class RoutineService {
         );
 
         for (RoutineListView row : routineListView) {
-
-            RoutineList.Exercise exercise = new RoutineList.Exercise(
+            routine.exercise.add(new RoutineList.Exercise(
                     row.getExerciseId(),
                     row.getExerciseName(),
                     row.getRep(),
                     row.getSet(),
                     row.getDay()
-            );
-
-            routine.exercise.add(exercise);
+            ));
         }
 
         return routine;
@@ -64,7 +52,6 @@ public class RoutineService {
 
     public List<RoutineList> getRoutineList() {
         List<RoutineListView> routineList = routineRepository.findRoutineList();
-
         Map<Integer, RoutineList> routineMap = new LinkedHashMap<>();
 
         for (RoutineListView row : routineList) {
@@ -78,16 +65,13 @@ public class RoutineService {
                             new HashSet<>()
                     )
             );
-
-            RoutineList.Exercise exercise = new RoutineList.Exercise(
+            routine.exercise.add(new RoutineList.Exercise(
                     row.getExerciseId(),
                     row.getExerciseName(),
                     row.getRep(),
                     row.getSet(),
                     row.getDay()
-            );
-
-            routine.exercise.add(exercise);
+            ));
         }
 
         return new ArrayList<>(routineMap.values());
@@ -104,20 +88,17 @@ public class RoutineService {
                 staff
         );
 
-        List<NewRoutine.routine_exercise> routineExercises = newRoutine.getRoutine_exercises();
-        for (NewRoutine.routine_exercise routineExercise : routineExercises) {
+        for (NewRoutine.routine_exercise routineExercise : newRoutine.getRoutine_exercises()) {
             Exercise exercise = exerciseRepository.findById(routineExercise.getExercise_id())
                     .orElseThrow(() -> new IllegalArgumentException("Exercise not found"));
 
-            Routine_exercises routine_exercise = new Routine_exercises(
+            routine.getExercises().add(new Routine_exercises(
                     routine,
                     exercise,
                     routineExercise.getRep(),
                     routineExercise.getSet(),
                     routineExercise.getDay()
-            );
-
-            routine.getExercises().add(routine_exercise);
+            ));
         }
 
         if (newRoutine.getPatient_routine() != null) {
@@ -128,12 +109,9 @@ public class RoutineService {
     }
 
     @Transactional
-    public String deleteRoutine(Integer routineId) {
+    public void deleteRoutine(Integer routineId) {
         Routine routine = routineRepository.findById(routineId)
                 .orElseThrow(() -> new IllegalArgumentException("Routine not found with id: " + routineId));
-
         routineRepository.delete(routine);
-
-        return "Routine deleted successfully";
     }
 }

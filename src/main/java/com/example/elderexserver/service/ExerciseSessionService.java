@@ -1,5 +1,6 @@
 package com.example.elderexserver.service;
 
+import com.example.elderexserver.Exception.ResourceNotFoundException;
 import com.example.elderexserver.data.exercise.DTO.NewExerciseSession;
 import com.example.elderexserver.data.exercise.Exercise;
 import com.example.elderexserver.data.exercise.Exercise_Session;
@@ -11,36 +12,33 @@ import com.example.elderexserver.repository.ExerciseRepository;
 import com.example.elderexserver.repository.ExerciseSessionDetailRepository;
 import com.example.elderexserver.repository.ExerciseSessionRepository;
 import com.example.elderexserver.repository.PatientRoutineRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ExerciseSessionService {
-    @Autowired
-    private ExerciseSessionRepository exerciseSessionRepository;
 
-    @Autowired
-    private PatientRoutineRepository patientRoutineRepository;
-
-    @Autowired
-    private ExerciseRepository exerciseRepository;
-
-    @Autowired
-    private ExerciseSessionDetailRepository exerciseSessionDetailRepository;
+    private final ExerciseSessionRepository exerciseSessionRepository;
+    private final PatientRoutineRepository patientRoutineRepository;
+    private final ExerciseRepository exerciseRepository;
 
     public List<ExerciseSessionHistory> findAllHistoryByPatientId(int patientId) {
         List<ExerciseSessionHistoryView> views = exerciseSessionRepository.findAllByPatientId(patientId);
+
+        if (views.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         LinkedHashMap<String, ExerciseSessionHistory> result = new LinkedHashMap<>();
-        HashMap<Integer, ExerciseSessionHistory.Session> sessionMap = new HashMap<>();
+        Map<Integer, ExerciseSessionHistory.Session> sessionMap = new HashMap<>();
 
         for (ExerciseSessionHistoryView row : views) {
-            ExerciseSessionHistory  date = result.computeIfAbsent(row.getDate(), k -> new ExerciseSessionHistory(
+            ExerciseSessionHistory date = result.computeIfAbsent(row.getDate(), k -> new ExerciseSessionHistory(
                     row.getDate(),
                     row.getPatientRoutineId(),
                     new ArrayList<>()
@@ -56,7 +54,6 @@ public class ExerciseSessionService {
                 return newSession;
             });
 
-
             session.getExercises().add(
                     new ExerciseSessionHistory.Exercise(
                             row.getExerciseId(),
@@ -70,43 +67,38 @@ public class ExerciseSessionService {
 
     @Transactional
     public Exercise_Session newExerciseSession(NewExerciseSession newExerciseSession) {
-
-        Patient_Routine patient_routine = patientRoutineRepository.findById(newExerciseSession.getPatientRoutineId())
-                .orElseThrow(() -> new RuntimeException("Patient Routine not found"));
+        Patient_Routine patientRoutine = patientRoutineRepository.findById(newExerciseSession.getPatientRoutineId())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient Routine not found"));
 
         Exercise_Session session = new Exercise_Session();
-        session.setPatientRoutine(patient_routine);
+        session.setPatientRoutine(patientRoutine);
         session.setStart_time(newExerciseSession.getStartTime());
         session.setEnd_time(newExerciseSession.getEndTime());
 
-        List<Exercise_Session_Detail> details = new ArrayList<>();
-
-        for (NewExerciseSession.Detail detail : newExerciseSession.getDetails()) {
-
+        List<Exercise_Session_Detail> details = newExerciseSession.getDetails().stream().map(detail -> {
             Exercise exercise = exerciseRepository.findById(detail.getExerciseId())
-                    .orElseThrow(() -> new RuntimeException("Exercise in Session Detail not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Exercise not found for ID " + detail.getExerciseId()));
 
             Exercise_Session_Detail sessionDetail = new Exercise_Session_Detail();
-
             sessionDetail.setExerciseSession(session);
             sessionDetail.setExercise(exercise);
             sessionDetail.setStart_time(detail.getStartTime());
             sessionDetail.setEnd_time(detail.getEndTime());
             sessionDetail.setReps(detail.getReps());
 
-            details.add(sessionDetail);
-        }
+            return sessionDetail;
+        }).toList();
 
         session.setExercise_session_details(details);
-
         return exerciseSessionRepository.save(session);
     }
 
     @Transactional
     public void deleteExerciseSession(Integer sessionId) {
         Exercise_Session session = exerciseSessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Exercise session not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise session not found with id: " + sessionId));
 
         exerciseSessionRepository.delete(session);
     }
 }
+

@@ -1,5 +1,6 @@
 package com.example.elderexserver.service;
 
+import com.example.elderexserver.Exception.ResourceNotFoundException;
 import com.example.elderexserver.data.address.Address;
 import com.example.elderexserver.data.address.Amphoe;
 import com.example.elderexserver.data.address.District;
@@ -8,9 +9,11 @@ import com.example.elderexserver.data.patient.*;
 import com.example.elderexserver.data.patient.DTO.*;
 import com.example.elderexserver.data.staff.Staff;
 import com.example.elderexserver.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -18,51 +21,24 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class PatientService {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PatientRepository patientRepository;
-
-    @Autowired
-    private GenderRepository genderRepository;
-
-    @Autowired
-    private BloodTypeRepository bloodTypeRepository;
-
-    @Autowired
-    private FoodAllergyRepository foodAllergyRepository;
-
-    @Autowired
-    private DrugAllergyRepository drugAllergyRepository;
-
-    @Autowired
-    private AmphoeRepository amphoeRepository;
-
-    @Autowired
-    private DistrictRepository districtRepository;
-
-    @Autowired
-    private ProvinceRepository provinceRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private StaffRepository staffRepository;
-
-    @Autowired
-    private NationalityRepository nationalityRepository;
-
-    @Autowired
-    private HospitalRepository hospitalRepository;
-
-    @Autowired
-    private MedicineRepository medicineRepository;
-
-    @Autowired
-    private StatusRepository statusRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final PatientRepository patientRepository;
+    private final GenderRepository genderRepository;
+    private final BloodTypeRepository bloodTypeRepository;
+    private final FoodAllergyRepository foodAllergyRepository;
+    private final DrugAllergyRepository drugAllergyRepository;
+    private final AmphoeRepository amphoeRepository;
+    private final DistrictRepository districtRepository;
+    private final ProvinceRepository provinceRepository;
+    private final AddressRepository addressRepository;
+    private final StaffRepository staffRepository;
+    private final NationalityRepository nationalityRepository;
+    private final HospitalRepository hospitalRepository;
+    private final MedicineRepository medicineRepository;
+    private final StatusRepository statusRepository;
 
     public List<PatientListView> getPatientList() {
         return patientRepository.findPatientList();
@@ -73,56 +49,36 @@ public class PatientService {
     }
 
     public List<PatientWithAge> getPatientsWithAge() {
-        List<PatientWithAgeView> patientsWithAge = patientRepository.findAllWithAge();
-
-        return patientsWithAge.stream()
+        return patientRepository.findAllWithAge().stream()
                 .map(p -> new PatientWithAge(
                         p.getId(),
                         p.getFirstName(),
                         p.getLastName(),
                         p.getWeight(),
                         p.getHeight(),
-                        p.getAge()))
-                .toList();
-    }
-
-    public List<PatientFromCaretakerId> getPatientsByCaretakerId(int caretakerId) {
-        List<PatientFromCaretakerIdView> patientFromCaretakerId = patientRepository.findAllByCaretakerId(caretakerId);
-        return patientFromCaretakerId.stream()
-                .map(p -> new PatientFromCaretakerId(p.getId(), p.getPicture(), p.getFirstName(), p.getLastName(), p.getGender(), p.getAge()))
+                        p.getAge()
+                ))
                 .toList();
     }
 
     public PatientDetail getPatientDetailById(int id) {
         List<PatientDetailView> patientDetailViews = patientRepository.findPatientDetailById(id);
-        Set<PatientDetail.Allergy> food_allergies = new HashSet<>();
-        Set<PatientDetail.Allergy> drug_allergies = new HashSet<>();
+        if (patientDetailViews.isEmpty()) {
+            throw new ResourceNotFoundException("Patient not found with ID: " + id);
+        }
+
+        Set<PatientDetail.Allergy> foodAllergies = new HashSet<>();
+        Set<PatientDetail.Allergy> drugAllergies = new HashSet<>();
         Set<PatientDetail.Medicine> medicines = new HashSet<>();
 
         for (PatientDetailView row : patientDetailViews) {
-            food_allergies.add(new PatientDetail.Allergy(
-                            row.getFoodId(),
-                            row.getFoodName(),
-                            row.getFoodDescription()
-                    )
-            );
-
-            drug_allergies.add(new PatientDetail.Allergy(
-                            row.getDrugId(),
-                            row.getDrugName(),
-                            row.getDrugDescription()
-                    )
-            );
-
-            medicines.add(new PatientDetail.Medicine(
-                        row.getMedicineId(),
-                        row.getMedicineName(),
-                        row.getMedicineDescription()
-                    )
-            );
+            foodAllergies.add(new PatientDetail.Allergy(row.getFoodId(), row.getFoodName(), row.getFoodDescription()));
+            drugAllergies.add(new PatientDetail.Allergy(row.getDrugId(), row.getDrugName(), row.getDrugDescription()));
+            medicines.add(new PatientDetail.Medicine(row.getMedicineId(), row.getMedicineName(), row.getMedicineDescription()));
         }
 
         PatientDetailView patient = patientDetailViews.get(0);
+
         return new PatientDetail(
                 patient.getId(),
                 patient.getCitizenId(),
@@ -154,50 +110,47 @@ public class PatientService {
                 patient.getDistrictId(),
                 patient.getDistrict(),
                 patient.getZipcode(),
-                food_allergies,
-                drug_allergies,
+                foodAllergies,
+                drugAllergies,
                 medicines
         );
     }
 
+    @Transactional
     public Patient newPatient(NewPatient newPatient) {
-
         Province province = provinceRepository.findById(newPatient.getProvinceId())
-                .orElseThrow(() -> new IllegalArgumentException("Province not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Province not found"));
 
         Amphoe amphoe = amphoeRepository.findById(newPatient.getAmphoeId())
-                .orElseThrow(() -> new IllegalArgumentException("Amphoe not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Amphoe not found"));
 
         District district = districtRepository.findById(newPatient.getDistrictId())
-                .orElseThrow(() -> new IllegalArgumentException("District not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("District not found"));
 
         Address address = new Address(newPatient.getAddress(), district);
-
         addressRepository.save(address);
 
         Gender gender = genderRepository.findById(newPatient.getGenderId())
-                .orElseThrow(() -> new IllegalArgumentException("Gender not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Gender not found"));
 
         Blood_Type bloodType = bloodTypeRepository.findById(newPatient.getBloodTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("Blood type not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Blood type not found"));
 
         Staff caretaker = staffRepository.findById(newPatient.getCaretakerId())
-                .orElseThrow(() -> new IllegalArgumentException("Caretaker not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Caretaker not found"));
 
         Nationality nationality = nationalityRepository.findById(newPatient.getNationalityId())
-                .orElseThrow(() -> new IllegalArgumentException("Nationality not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Nationality not found"));
 
         Hospital hospital = hospitalRepository.findById(newPatient.getPrimaryHospitalId())
-                .orElseThrow(() -> new IllegalArgumentException("Primary hospital not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Primary hospital not found"));
 
         List<Food_Allergy> foodAllergies = foodAllergyRepository.findAllById(newPatient.getFoodAllergy());
-
         List<Drug_Allergy> drugAllergies = drugAllergyRepository.findAllById(newPatient.getDrugAllergy());
-
-        List<Medicine> medicine = medicineRepository.findAllById(newPatient.getMedicine());
+        List<Medicine> medicines = medicineRepository.findAllById(newPatient.getMedicine());
 
         Status status = statusRepository.findById(newPatient.getStatusId())
-                .orElseThrow(() -> new IllegalArgumentException("Status not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
 
         String hashedPassword = passwordEncoder.encode(newPatient.getPassword());
 
@@ -222,125 +175,87 @@ public class PatientService {
                 address,
                 new HashSet<>(drugAllergies),
                 new HashSet<>(foodAllergies),
-                new HashSet<>(medicine),
+                new HashSet<>(medicines),
                 new HashSet<>()
         );
 
-        Patient_Status patientStatus = new Patient_Status(status, LocalDate.now());
-        patient.addPatientStatus(patientStatus);
+        patient.addPatientStatus(new Patient_Status(status, LocalDate.now()));
 
         return patientRepository.save(patient);
     }
 
+    @Transactional
     public Patient updatePatient(UpdatePatient updatePatient) {
         Patient patient = patientRepository.findById(updatePatient.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
 
-        if (updatePatient.getCitizenId() != null) {
-            patient.setCitizenId(updatePatient.getCitizenId());
-        }
-
-        if (updatePatient.getFirstName() != null) {
-            patient.setFirstName(updatePatient.getFirstName());
-        }
-
-        if (updatePatient.getLastName() != null) {
-            patient.setLastName(updatePatient.getLastName());
-        }
+        Optional.ofNullable(updatePatient.getCitizenId()).ifPresent(patient::setCitizenId);
+        Optional.ofNullable(updatePatient.getFirstName()).ifPresent(patient::setFirstName);
+        Optional.ofNullable(updatePatient.getLastName()).ifPresent(patient::setLastName);
+        Optional.ofNullable(updatePatient.getWeight()).ifPresent(patient::setWeight);
+        Optional.ofNullable(updatePatient.getHeight()).ifPresent(patient::setHeight);
+        Optional.ofNullable(updatePatient.getPhone()).ifPresent(patient::setPhone);
+        Optional.ofNullable(updatePatient.getPicture()).ifPresent(patient::setPicture);
+        Optional.ofNullable(updatePatient.getNote()).ifPresent(patient::setNote);
+        Optional.ofNullable(updatePatient.getSurgicalHistory()).ifPresent(patient::setSurgicalHistory);
+        Optional.ofNullable(updatePatient.getAddress()).ifPresent(patient.getAddress()::setAddress);
 
         if (updatePatient.getGenderId() != null) {
-            Gender gender = genderRepository.findById(updatePatient.getGenderId())
-                    .orElseThrow(() -> new IllegalArgumentException("Gender not found"));
-            patient.setGender(gender);
+            patient.setGender(genderRepository.findById(updatePatient.getGenderId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Gender not found")));
         }
 
         if (updatePatient.getBloodTypeId() != null) {
-            Blood_Type bloodType = bloodTypeRepository.findById(updatePatient.getBloodTypeId())
-                    .orElseThrow(() -> new IllegalArgumentException("Blood type not found"));
-            patient.setBloodType(bloodType);
-        }
-
-        if (updatePatient.getWeight() != null) {
-            patient.setWeight(updatePatient.getWeight());
-        }
-
-        if (updatePatient.getHeight() != null) {
-            patient.setHeight(updatePatient.getHeight());
-        }
-
-        if (updatePatient.getDateOfBirth() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            try {
-                LocalDate dob = LocalDate.parse(updatePatient.getDateOfBirth(), formatter);
-                patient.setDateOfBirth(dob);
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException("Invalid date format. Please use dd/MM/yyyy");
-            }
-        }
-
-        if (updatePatient.getNationalityId() != null) {
-            Nationality nationality = nationalityRepository.findById(updatePatient.getNationalityId())
-                    .orElseThrow(() -> new IllegalArgumentException("Nationality not found"));
-            patient.setNationality(nationality);
-        }
-
-        if (updatePatient.getPhone() != null) {
-            patient.setPhone(updatePatient.getPhone());
-        }
-
-        if (updatePatient.getPicture() != null) {
-            patient.setPicture(updatePatient.getPicture());
-        }
-
-        if (updatePatient.getCaretakerId() != null) {
-            Staff caretaker = staffRepository.findById(updatePatient.getCaretakerId())
-                    .orElseThrow(() -> new IllegalArgumentException("Caretaker not found"));
-            patient.setCaretaker(caretaker);
-        }
-
-        if (updatePatient.getNote() != null) {
-            patient.setNote(updatePatient.getNote());
-        }
-
-        if (updatePatient.getSurgicalHistory() != null) {
-            patient.setSurgicalHistory(updatePatient.getSurgicalHistory());
-        }
-
-        if (updatePatient.getPrimaryHospitalId() != null) {
-            Hospital hospital = hospitalRepository.findById(updatePatient.getPrimaryHospitalId())
-                    .orElseThrow(() -> new IllegalArgumentException("Primary hospital not found"));
-            patient.setPrimaryHospital(hospital);
-        }
-
-        if (updatePatient.getAddress() != null) {
-            patient.getAddress().setAddress(updatePatient.getAddress());
+            patient.setBloodType(bloodTypeRepository.findById(updatePatient.getBloodTypeId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Blood type not found")));
         }
 
         if (updatePatient.getDistrictId() != null) {
             District district = districtRepository.findById(updatePatient.getDistrictId())
-                    .orElseThrow(() -> new IllegalArgumentException("District not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("District not found"));
             patient.getAddress().setDistrict(district);
         }
 
+        if (updatePatient.getNationalityId() != null) {
+            patient.setNationality(nationalityRepository.findById(updatePatient.getNationalityId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Nationality not found")));
+        }
+
+        if (updatePatient.getCaretakerId() != null) {
+            patient.setCaretaker(staffRepository.findById(updatePatient.getCaretakerId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Caretaker not found")));
+        }
+
+        if (updatePatient.getPrimaryHospitalId() != null) {
+            patient.setPrimaryHospital(hospitalRepository.findById(updatePatient.getPrimaryHospitalId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Primary hospital not found")));
+        }
+
         if (updatePatient.getFoodAllergy() != null) {
-            Set<Food_Allergy> foodAllergies = new HashSet<>(foodAllergyRepository.findAllById(updatePatient.getFoodAllergy()));
-            patient.setFoodAllergies(foodAllergies);
+            patient.setFoodAllergies(new HashSet<>(foodAllergyRepository.findAllById(updatePatient.getFoodAllergy())));
         }
 
         if (updatePatient.getDrugAllergy() != null) {
-            Set<Drug_Allergy> drugAllergies = new HashSet<>(drugAllergyRepository.findAllById(updatePatient.getDrugAllergy()));
-            patient.setDrugAllergies(drugAllergies);
+            patient.setDrugAllergies(new HashSet<>(drugAllergyRepository.findAllById(updatePatient.getDrugAllergy())));
         }
 
         if (updatePatient.getMedicine() != null) {
-            Set<Medicine> medicine = new HashSet<>(medicineRepository.findAllById(updatePatient.getMedicine()));
-            patient.setMedicines(medicine);
+            patient.setMedicines(new HashSet<>(medicineRepository.findAllById(updatePatient.getMedicine())));
         }
 
         if (updatePatient.getStatusId() != null) {
             Status status = statusRepository.findById(updatePatient.getStatusId())
-                    .orElseThrow(() -> new IllegalArgumentException("Status not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
             patient.addPatientStatus(new Patient_Status(status, LocalDate.now()));
+        }
+
+        if (updatePatient.getDateOfBirth() != null) {
+            try {
+                patient.setDateOfBirth(LocalDate.parse(updatePatient.getDateOfBirth(),
+                        DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Invalid date format. Please use dd/MM/yyyy");
+            }
         }
 
         return patientRepository.save(patient);

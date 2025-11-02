@@ -3,6 +3,7 @@ package com.example.elderexserver.service;
 import com.example.elderexserver.data.patient.DTO.PatientAuth;
 import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.repository.PatientRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class PatientUserDetailsService implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(PatientUserDetailsService.class);
-
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {

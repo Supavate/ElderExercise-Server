@@ -1,7 +1,10 @@
 package security;
 
+import lombok.Getter;
+
 import java.security.Principal;
 
+@Getter
 public class UserPrincipal implements Principal {
     private final String uniqueId;    // userId-sessionId
     private final Integer userId;
@@ -18,22 +21,6 @@ public class UserPrincipal implements Principal {
     @Override
     public String getName() {
         return uniqueId;  // Returns "userId-sessionId"
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public String getUniqueId() {
-        return uniqueId;
     }
 
     @Override
