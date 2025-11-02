@@ -1,19 +1,19 @@
 package com.example.elderexserver.controller;
 
+import com.example.elderexserver.data.exercise.DTO.FeaturesRequest;
 import com.example.elderexserver.data.address.DTO.AmphoeView;
 import com.example.elderexserver.data.address.DTO.DistrictView;
 import com.example.elderexserver.data.address.DTO.ProvinceView;
 import com.example.elderexserver.data.address.DTO.ZipcodeView;
+import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
 import com.example.elderexserver.data.patient.*;
 import com.example.elderexserver.repository.*;
 import com.example.elderexserver.data.staff.Role;
+import com.example.elderexserver.service.ClassificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -182,6 +182,19 @@ public class PublicController {
             List<ProvinceView> provinceViews = provinceRepository.getAllProvince();
             if (provinceViews.isEmpty()) return ResponseEntity.notFound().build();
             return ResponseEntity.ok(provinceViews);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Autowired
+    private ClassificationService classificationService;
+
+    @PostMapping("/test")
+    public ResponseEntity<FeaturesResponse> sendFeatures(@RequestBody FeaturesRequest request) {
+        try {
+            FeaturesResponse response = classificationService.classify(request);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
