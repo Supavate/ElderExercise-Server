@@ -112,6 +112,6 @@ public class WebSocketService {
         }
 
         sessionCounts.remove(sessionId);
-        log.info("🧹 Cleaned up session data for: {}", sessionId);
+        log.info("Cleaned up session data for: {}", sessionId);
     }
 }
