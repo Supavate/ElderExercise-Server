@@ -39,6 +39,7 @@ public class RoutineController {
         }
     }
 
+    //TODO: move to for staff
     @PostMapping("/new")
     public ResponseEntity<?> newRoutine(@RequestBody NewRoutine newRoutine) {
         try {
