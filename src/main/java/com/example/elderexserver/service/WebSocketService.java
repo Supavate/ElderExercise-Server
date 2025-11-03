@@ -12,11 +12,9 @@ import com.github.benmanes.caffeine.cache.RemovalCause;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import security.UserPrincipal;
 
 import java.security.Principal;
@@ -25,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -131,15 +128,16 @@ public class WebSocketService {
         }
 
         try {
+            SessionResultResponse response;
+
             synchronized (ongoingSession) {
-                SessionResultResponse response = createSessionResult(principal, ongoingSession, endTime);
-                sendResultToClient(principal, response);
-
-                exerciseSessionService.saveSessionToDatabase(sessionId, ongoingSession, endTime);
-
-                sessionCounts.invalidate(sessionId);
-                log.debug("Cleaned up session data for: {}", sessionId);
+                response = createSessionResult(principal, ongoingSession, endTime);
             }
+
+            sendResultToClient(principal, response);
+            exerciseSessionService.saveSessionToDatabase(sessionId, ongoingSession, endTime);
+            sessionCounts.invalidate(sessionId);
+            log.debug("Cleaned up session data for: {}", sessionId);
         } catch (Exception e) {
             log.error("Error processing final result for session {}: {}", sessionId, e.getMessage(), e);
         }
