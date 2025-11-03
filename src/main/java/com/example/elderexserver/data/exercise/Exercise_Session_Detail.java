@@ -25,6 +25,8 @@ public class Exercise_Session_Detail {
     @JsonBackReference
     private Exercise_Session exerciseSession;
 
+    private Integer exercise_id;
+
     @ManyToOne
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
@@ -41,4 +43,7 @@ public class Exercise_Session_Detail {
     private int reps;
     private float calories;
 
+    @Lob
+    @Column(name = "features")
+    private String features;
 }

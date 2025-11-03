@@ -100,5 +100,9 @@ public class ExerciseSessionService {
 
         exerciseSessionRepository.delete(session);
     }
+
+    public void save(Exercise_Session session) {
+        exerciseSessionRepository.save(session);
+    }
 }
 

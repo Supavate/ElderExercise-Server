@@ -24,7 +24,12 @@ public class ClassificationService {
         log.info(request.getFeatures().toString());
         CompletableFuture<FeaturesResponse> responseFuture = new CompletableFuture<>();
 
-        FeaturesRequest eventRequest = new FeaturesRequest(request.getFeatures(), responseFuture);
+        FeaturesRequest eventRequest = new FeaturesRequest(
+                request.getFeatures(),
+                request.getAverageHearthRate(),
+                request.getStartTime(),
+                request.getEndTime(),
+                responseFuture);
         applicationEventPublisher.publishEvent(eventRequest);
 
         try {

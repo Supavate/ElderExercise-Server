@@ -2,8 +2,10 @@ package com.example.elderexserver.service;
 
 import com.example.elderexserver.data.exercise.DTO.ExerciseDataEvent;
 import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
+import com.example.elderexserver.data.exercise.DTO.OngoingSession;
 import com.example.elderexserver.data.exercise.DTO.SessionResultResponse;
-import lombok.RequiredArgsConstructor;
+import com.example.elderexserver.data.exercise.Exercise_Session;
+import com.example.elderexserver.data.exercise.Exercise_Session_Detail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import security.UserPrincipal;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +25,16 @@ public class WebSocketService {
 
     private final ClassificationService classificationService;
     private final SimpMessagingTemplate messagingTemplate;
-    private final ConcurrentHashMap<String, ConcurrentHashMap<Integer, Integer>> sessionCounts;
+    private final ConcurrentHashMap<String, OngoingSession> sessionCounts;
 
-    public WebSocketService(ClassificationService classificationService, SimpMessagingTemplate messagingTemplate) {
+    private final PatientRoutineService patientRoutineService;
+    private final ExerciseSessionService exerciseSessionService;
+
+    public WebSocketService(ClassificationService classificationService, SimpMessagingTemplate messagingTemplate, PatientRoutineService patientRoutineService, ExerciseSessionService exerciseSessionService) {
         this.classificationService = classificationService;
         this.messagingTemplate = messagingTemplate;
+        this.patientRoutineService = patientRoutineService;
+        this.exerciseSessionService = exerciseSessionService;
         this.sessionCounts = new ConcurrentHashMap<>();
     }
 
@@ -42,11 +50,10 @@ public class WebSocketService {
         return asUserPrincipal(principal).getSessionId();
     }
 
-    public void handleExerciseData(ExerciseDataEvent data, Principal principal) {
+    public void handleExerciseData(ExerciseDataEvent event, Principal principal) {
         String sessionId = getSessionId(principal);
 
-        if ("session_end".equals(data.getType())) {
-            sessionCounts.computeIfAbsent(sessionId, k -> new ConcurrentHashMap<>());
+        if ("session_end".equals(event.getType())) {
             sendFinalResult(principal, sessionId);
             return;
         }
@@ -54,12 +61,24 @@ public class WebSocketService {
         log.debug("Processing session {} for user {} with {} features",
                 sessionId,
                 principal.getName(),
-                data.getFeatures().getFeatures().size());
+                event.getData().getFeatures().size());
 
-        FeaturesResponse response = classificationService.classify(data.getFeatures());
+        FeaturesResponse response = classificationService.classify(event.getData());
 
-        ConcurrentHashMap<Integer, Integer> counts = sessionCounts.computeIfAbsent(sessionId, k -> new ConcurrentHashMap<>());
-        counts.merge(response.getExercise_id(), 1, Integer::sum);
+        sessionCounts.putIfAbsent(sessionId, createNewSession(principal));
+        OngoingSession ongoingSession = sessionCounts.get(sessionId);
+
+        ongoingSession.incrementExerciseCount(response.getExercise_id());
+
+        Exercise_Session_Detail detail = new Exercise_Session_Detail();
+        detail.setExercise_id(response.getExercise_id());
+        detail.setReps(1);
+        detail.setStart_time(event.getData().getStartTime());
+        detail.setEnd_time(event.getData().getEndTime());
+
+        ongoingSession.addSessionDetail(detail);
+
+        log.debug("Updated counts for session {}: {}", sessionId, ongoingSession.getCount());
     }
 
     public void sendResultToClient(Principal principal, SessionResultResponse result) {
@@ -76,11 +95,28 @@ public class WebSocketService {
     }
 
     private void sendFinalResult(Principal principal, String sessionId) {
-        ConcurrentHashMap<Integer, Integer> counts = sessionCounts.getOrDefault(sessionId, new ConcurrentHashMap<>());
+        OngoingSession ongoingSession = sessionCounts.get(sessionId);
 
-        List<SessionResultResponse.SessionExercis> exercises = counts.entrySet().stream()
-                .map(e -> new SessionResultResponse.SessionExercis(String.valueOf(e.getKey()), e.getValue()))
-                .toList();
+        if (ongoingSession == null) {
+            log.warn("No session data found for sessionId: {}. Sending empty result.", sessionId);
+            SessionResultResponse emptyResponse = new SessionResultResponse(
+                    "session_result",
+                    System.currentTimeMillis(),
+                    new ArrayList<>()
+            );
+            sendResultToClient(principal, emptyResponse);
+            return;
+        }
+
+        ConcurrentHashMap<Integer, Integer> counts = ongoingSession.getCount();
+
+        List<SessionResultResponse.SessionExercis> exercises = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+            exercises.add(new SessionResultResponse.SessionExercis(
+                    String.valueOf(entry.getKey()),
+                    entry.getValue()
+            ));
+        }
 
         SessionResultResponse response = new SessionResultResponse("session_result", System.currentTimeMillis(), exercises);
 
@@ -93,7 +129,35 @@ public class WebSocketService {
                 exercises.size(),
                 counts.values().stream().mapToInt(Integer::intValue).sum());
 
+        try {
+            Exercise_Session session = ongoingSession.getSession();
+            session.setEnd_time(LocalDateTime.now());
+            exerciseSessionService.save(session);
+            log.info("💾 Saved session to database: SessionID={}", sessionId);
+        } catch (Exception e) {
+            log.error("Failed to save session {}: {}", sessionId, e.getMessage(), e);
+        }
+
         sessionCounts.remove(sessionId);
         log.debug("Cleaned up session data for: {}", sessionId);
+    }
+
+    private OngoingSession createNewSession(Principal principal) {
+        OngoingSession ongoingSession = new OngoingSession();
+        ongoingSession.setCount(new ConcurrentHashMap<>());
+
+        Exercise_Session session = new Exercise_Session();
+        if (principal instanceof UserPrincipal userPrincipal) {
+            Integer patientId = userPrincipal.getUserId();
+            session.setPatientRoutine(patientRoutineService.getCurrentPatientRoutineByPatientId(patientId));
+        } else {
+            throw new IllegalStateException("Invalid principal type. Expected UserPrincipal.");
+        }
+        session.setStart_time(LocalDateTime.now());
+        session.setExercise_session_details(new ArrayList<>());
+
+        ongoingSession.setSession(session);
+
+        return ongoingSession;
     }
 }

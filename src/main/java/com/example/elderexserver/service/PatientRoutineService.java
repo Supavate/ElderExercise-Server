@@ -10,7 +10,6 @@ import com.example.elderexserver.repository.PatientRepository;
 import com.example.elderexserver.repository.PatientRoutineRepository;
 import com.example.elderexserver.repository.RoutineRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +33,8 @@ public class PatientRoutineService {
         return patientRoutineRepository.findPatientRoutineByPatientId(patientId);
     }
 
-    public PatientRoutineList getCurrentPatientRoutineByPatientId(Integer patientId) {
-        List<PatientRoutineView> patientRoutineViews = patientRoutineRepository.findCurrentPatientRoutineByPatientId(patientId);
+    public PatientRoutineList getCurrentPatientRoutineViewByPatientId(Integer patientId) {
+        List<PatientRoutineView> patientRoutineViews = patientRoutineRepository.findCurrentPatientRoutineViewByPatientId(patientId);
         if (patientRoutineViews.isEmpty()) return null;
 
         PatientRoutineView firstRow = patientRoutineViews.get(0);
@@ -99,6 +98,10 @@ public class PatientRoutineService {
 
     public List<PatientProgressDashboardView> getPatientCurrentWeekRoutineByPatientId(Integer patientId) {
         return patientRoutineRepository.findPatientProgressDashboardByPatientId(patientId);
+    }
+
+    public Patient_Routine getCurrentPatientRoutineByPatientId(Integer patientId) {
+        return patientRoutineRepository.findCurrentPatientRoutineByPatientId(patientId);
     }
 }
 

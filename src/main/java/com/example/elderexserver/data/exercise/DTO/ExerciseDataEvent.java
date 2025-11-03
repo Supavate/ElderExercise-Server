@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ExerciseDataEvent {
     private String sessionId;
     private String type;
-    private FeaturesRequest features;
+    private FeaturesRequest data;
 }

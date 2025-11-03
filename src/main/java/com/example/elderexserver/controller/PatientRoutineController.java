@@ -3,10 +3,8 @@ package com.example.elderexserver.controller;
 import com.example.elderexserver.data.exercise.DTO.ExerciseSessionDetailListView;
 import com.example.elderexserver.data.patient.DTO.PatientAuth;
 import com.example.elderexserver.data.routine.DTO.*;
-import com.example.elderexserver.data.routine.Patient_Routine;
 import com.example.elderexserver.service.PatientRoutineService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +38,7 @@ public class PatientRoutineController {
     @GetMapping("/current")
     public ResponseEntity<PatientRoutineList> getCurrentPatientRoutine(Authentication authentication) {
         int patientId = ((PatientAuth) authentication.getPrincipal()).getPatientId();
-        PatientRoutineList routine = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
+        PatientRoutineList routine = patientRoutineService.getCurrentPatientRoutineViewByPatientId(patientId);
         return routine == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(routine);
     }
 
