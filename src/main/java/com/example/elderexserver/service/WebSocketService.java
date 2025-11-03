@@ -181,7 +181,7 @@ public class WebSocketService {
         List<SessionResultResponse.SessionExercis> exercises = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
             exercises.add(new SessionResultResponse.SessionExercis(
-                    String.valueOf(entry.getKey()),
+                    entry.getKey(),
                     entry.getValue()
             ));
         }

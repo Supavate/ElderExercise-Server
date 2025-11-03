@@ -19,7 +19,7 @@ public class SessionResultResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SessionExercis {
-        private String exerciseType;
+        private Integer exerciseId;
         private Integer rep;
     }
 }
