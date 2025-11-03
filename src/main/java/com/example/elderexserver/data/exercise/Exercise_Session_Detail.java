@@ -25,8 +25,6 @@ public class Exercise_Session_Detail {
     @JsonBackReference
     private Exercise_Session exerciseSession;
 
-    private Integer exercise_id;
-
     @ManyToOne
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;

@@ -27,8 +27,6 @@ public class ClassificationService {
         FeaturesRequest eventRequest = new FeaturesRequest(
                 request.getFeatures(),
                 request.getAverageHearthRate(),
-                request.getStartTime(),
-                request.getEndTime(),
                 responseFuture);
         applicationEventPublisher.publishEvent(eventRequest);
 

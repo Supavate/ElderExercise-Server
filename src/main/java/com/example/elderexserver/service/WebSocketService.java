@@ -38,6 +38,7 @@ public class WebSocketService {
 
     private final PatientRoutineService patientRoutineService;
     private final ExerciseSessionService exerciseSessionService;
+    private final ExerciseSessionDetailService exerciseSessionDetailService;
 
     private Cache<String, OngoingSession> sessionCounts;
 
@@ -90,7 +91,7 @@ public class WebSocketService {
 
         synchronized (ongoingSession) {
             ongoingSession.incrementExerciseCount(response.getExercise_id());
-            Exercise_Session_Detail detail = createSessionDetail(response, event);
+            Exercise_Session_Detail detail = exerciseSessionDetailService.createSessionDetail(response, event);
             ongoingSession.addSessionDetail(detail);
         }
         log.debug("Updated counts for session {}: {}", sessionId, ongoingSession.getCount());
@@ -107,15 +108,6 @@ public class WebSocketService {
         } catch (Exception e) {
             log.error("Failed to send result to user {}: {}", principal.getName(), e.getMessage(), e);
         }
-    }
-
-    private Exercise_Session_Detail createSessionDetail(FeaturesResponse response, ExerciseDataEvent event) {
-        Exercise_Session_Detail detail = new Exercise_Session_Detail();
-        detail.setExercise_id(response.getExercise_id());
-        detail.setReps(1);
-        detail.setStart_time(event.getStartTime());
-        detail.setEnd_time(event.getEndTime());
-        return detail;
     }
 
     private void sendFinalResult(Principal principal, String sessionId, LocalDateTime endTime) {
