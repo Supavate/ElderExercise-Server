@@ -33,4 +33,9 @@ public class Exercise_Session {
     @OneToMany(mappedBy = "exerciseSession", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Exercise_Session_Detail> exercise_session_details;
+
+    public void addDetail(Exercise_Session_Detail detail) {
+        exercise_session_details.add(detail);
+        detail.setExerciseSession(this);
+    }
 }

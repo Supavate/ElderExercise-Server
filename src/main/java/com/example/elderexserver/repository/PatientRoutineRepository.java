@@ -85,17 +85,15 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
 
     @Query(value = """
         SELECT
-            *
+            pr.id,
+            pr.patient_id,
+            pr.routine_id,
+            pr.start_date,
+            pr.end_date
         FROM
             patient_routine pr
-        LEFT JOIN ROUTINE r ON
-            pr.routine_id = r.id
-        LEFT JOIN routine_exercises re ON
-            re.routine_id = pr.routine_id
-        LEFT JOIN exercise e ON
-            re.exercise_id = e.id
         WHERE
-            pr.patient_id = :patientId AND pr.start_date < NOW() AND pr.end_date > NOW()
+            pr.patient_id = 1 AND pr.start_date < NOW() AND pr.end_date > NOW()
     """, nativeQuery = true)
     Patient_Routine findCurrentPatientRoutineByPatientId(@Param("patientId") Integer patientId);
 

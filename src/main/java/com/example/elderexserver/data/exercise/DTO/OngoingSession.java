@@ -14,7 +14,7 @@ public class OngoingSession {
     private Exercise_Session session;
 
     public void addSessionDetail(Exercise_Session_Detail detail) {
-        this.session.getExercise_session_details().add(detail);
+        this.session.addDetail(detail);
     }
 
     public void incrementExerciseCount(Integer exerciseId) {
