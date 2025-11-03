@@ -2,6 +2,7 @@ package com.example.elderexserver.service;
 
 import com.example.elderexserver.Exception.ResourceNotFoundException;
 import com.example.elderexserver.data.exercise.DTO.NewExerciseSession;
+import com.example.elderexserver.data.exercise.DTO.OngoingSession;
 import com.example.elderexserver.data.exercise.Exercise;
 import com.example.elderexserver.data.exercise.Exercise_Session;
 import com.example.elderexserver.data.exercise.Exercise_Session_Detail;
@@ -9,16 +10,17 @@ import com.example.elderexserver.data.routine.DTO.ExerciseSessionHistory;
 import com.example.elderexserver.data.routine.DTO.ExerciseSessionHistoryView;
 import com.example.elderexserver.data.routine.Patient_Routine;
 import com.example.elderexserver.repository.ExerciseRepository;
-import com.example.elderexserver.repository.ExerciseSessionDetailRepository;
 import com.example.elderexserver.repository.ExerciseSessionRepository;
 import com.example.elderexserver.repository.PatientRoutineRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ExerciseSessionService {
@@ -103,6 +105,23 @@ public class ExerciseSessionService {
 
     public void save(Exercise_Session session) {
         exerciseSessionRepository.save(session);
+    }
+
+    @Transactional
+    public void saveSessionToDatabase(String sessionId, OngoingSession ongoingSession, LocalDateTime endTime) {
+        if (ongoingSession == null || ongoingSession.getSession() == null) {
+            log.error("Cannot save session {} — missing session data.", sessionId);
+            return;
+        }
+        try {
+            Exercise_Session session = ongoingSession.getSession();
+            session.setEnd_time(endTime);
+            exerciseSessionRepository.save(session);
+            log.info("💾 Saved session to database: SessionID={}", sessionId);
+        } catch (Exception e) {
+            log.error("Failed to save session {}: {}", sessionId, e.getMessage(), e);
+            throw e;
+        }
     }
 }
 
