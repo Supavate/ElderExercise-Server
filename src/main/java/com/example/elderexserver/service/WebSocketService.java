@@ -54,7 +54,7 @@ public class WebSocketService {
         String sessionId = getSessionId(principal);
 
         if ("session_end".equals(event.getType())) {
-            sendFinalResult(principal, sessionId);
+            sendFinalResult(principal, sessionId, event.getEndTime());
             return;
         }
 
@@ -65,7 +65,7 @@ public class WebSocketService {
 
         FeaturesResponse response = classificationService.classify(event.getData());
 
-        sessionCounts.putIfAbsent(sessionId, createNewSession(principal));
+        sessionCounts.putIfAbsent(sessionId, createNewSession(principal, event.getStartTime()));
         OngoingSession ongoingSession = sessionCounts.get(sessionId);
 
         ongoingSession.incrementExerciseCount(response.getExercise_id());
@@ -73,8 +73,8 @@ public class WebSocketService {
         Exercise_Session_Detail detail = new Exercise_Session_Detail();
         detail.setExercise_id(response.getExercise_id());
         detail.setReps(1);
-        detail.setStart_time(event.getData().getStartTime());
-        detail.setEnd_time(event.getData().getEndTime());
+        detail.setStart_time(event.getStartTime());
+        detail.setEnd_time(event.getEndTime());
 
         ongoingSession.addSessionDetail(detail);
 
@@ -94,14 +94,14 @@ public class WebSocketService {
         }
     }
 
-    private void sendFinalResult(Principal principal, String sessionId) {
+    private void sendFinalResult(Principal principal, String sessionId, LocalDateTime endTime) {
         OngoingSession ongoingSession = sessionCounts.get(sessionId);
 
         if (ongoingSession == null) {
             log.warn("No session data found for sessionId: {}. Sending empty result.", sessionId);
             SessionResultResponse emptyResponse = new SessionResultResponse(
                     "session_result",
-                    System.currentTimeMillis(),
+                    endTime,
                     new ArrayList<>()
             );
             sendResultToClient(principal, emptyResponse);
@@ -118,7 +118,7 @@ public class WebSocketService {
             ));
         }
 
-        SessionResultResponse response = new SessionResultResponse("session_result", System.currentTimeMillis(), exercises);
+        SessionResultResponse response = new SessionResultResponse("session_result", endTime, exercises);
 
         sendResultToClient(principal, response);
 
@@ -131,7 +131,7 @@ public class WebSocketService {
 
         try {
             Exercise_Session session = ongoingSession.getSession();
-            session.setEnd_time(LocalDateTime.now());
+            session.setEnd_time(endTime);
             exerciseSessionService.save(session);
             log.info("💾 Saved session to database: SessionID={}", sessionId);
         } catch (Exception e) {
@@ -142,7 +142,7 @@ public class WebSocketService {
         log.debug("Cleaned up session data for: {}", sessionId);
     }
 
-    private OngoingSession createNewSession(Principal principal) {
+    private OngoingSession createNewSession(Principal principal, LocalDateTime startTime) {
         OngoingSession ongoingSession = new OngoingSession();
         ongoingSession.setCount(new ConcurrentHashMap<>());
 
@@ -153,7 +153,7 @@ public class WebSocketService {
         } else {
             throw new IllegalStateException("Invalid principal type. Expected UserPrincipal.");
         }
-        session.setStart_time(LocalDateTime.now());
+        session.setStart_time(startTime);
         session.setExercise_session_details(new ArrayList<>());
 
         ongoingSession.setSession(session);

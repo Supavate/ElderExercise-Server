@@ -13,8 +13,6 @@ import java.util.concurrent.CompletableFuture;
 public class FeaturesRequest {
     private List<Double> features;
     private float averageHearthRate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
 
     @JsonIgnore
     private final CompletableFuture<FeaturesResponse> responseFuture;
