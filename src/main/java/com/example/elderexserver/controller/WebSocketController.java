@@ -4,7 +4,6 @@ import com.example.elderexserver.data.exercise.DTO.ExerciseDataEvent;
 import com.example.elderexserver.service.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -33,7 +32,10 @@ public class WebSocketController {
             return;
         }
 
-        log.info("Received message from user: {},Type: {}, Features Count: {}", principal.getName(), data.getType(), data.getFeatures().getFeatures().size());
+        log.info("Received message from user: {},Type: {}, Features Count: {}",
+                principal.getName(),
+                data.getType(),
+                data.getFeatures() != null ? data.getFeatures().getFeatures().size() : 0);
 
         try {
             webSocketService.handleExerciseData(data, principal);
