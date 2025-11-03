@@ -35,7 +35,7 @@ public class WebSocketController {
         log.info("Received message from user: {},Type: {}, Features Count: {}",
                 principal.getName(),
                 data.getType(),
-                data.getFeatures() != null ? data.getFeatures().getFeatures().size() : 0);
+                data.getData() != null ? data.getData().getFeatures().size() : 0);
 
         try {
             webSocketService.handleExerciseData(data, principal);
