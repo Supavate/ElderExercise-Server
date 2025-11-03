@@ -32,7 +32,7 @@ public class ClassificationService {
 
         try {
             FeaturesResponse response = responseFuture.get(15, TimeUnit.SECONDS);
-            log.info("Response received : {}", response.getExercise_name());
+            log.info("Response received : id:{} {}", response.getExercise_id(), response.getExercise_name());
             return response;
         } catch (TimeoutException e) {
             throw new RuntimeException("Timeout waiting for classification response", e);
