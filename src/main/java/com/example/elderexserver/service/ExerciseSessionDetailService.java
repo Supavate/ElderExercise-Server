@@ -18,6 +18,7 @@ public class ExerciseSessionDetailService {
         detail.setReps(1);
         detail.setStart_time(event.getStartTime());
         detail.setEnd_time(event.getEndTime());
+        detail.setFeatures(event.getData().getFeatures().toString());
         return detail;
     }
 }
