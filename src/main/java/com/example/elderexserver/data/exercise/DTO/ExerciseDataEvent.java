@@ -14,17 +14,25 @@ import java.time.ZoneId;
 public class ExerciseDataEvent {
     private String sessionId;
     private String type;
-    private Long startTime;
-    private Long endTime;
+    private String startTime;
+    private String endTime;
     private FeaturesRequest data;
 
     public LocalDateTime getStartTime() {
-        if (startTime == null) return null;
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(startTime), ZoneId.systemDefault());
+        return parseStartTime(startTime);
     }
 
     public LocalDateTime getEndTime() {
-        if (endTime == null) return null;
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(endTime), ZoneId.systemDefault());
+        return parseStartTime(endTime);
+    }
+
+    private LocalDateTime parseStartTime(String time) {
+        if (time == null) return null;
+        double timestamp = Double.parseDouble(time);
+        long millis = (long) timestamp;
+        return LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(millis),
+                ZoneId.systemDefault()
+        );
     }
 }
