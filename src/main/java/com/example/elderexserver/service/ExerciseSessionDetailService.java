@@ -15,7 +15,7 @@ public class ExerciseSessionDetailService {
     public Exercise_Session_Detail createSessionDetail(FeaturesResponse response, ExerciseDataEvent event) {
         Exercise_Session_Detail detail = new Exercise_Session_Detail();
         detail.setExercise(exerciseRepository.findById(response.getExercise_id()).orElse(null));
-        detail.setAvg_heart_rate(event.getData().getAverageHearthRate());
+        detail.setAvg_heart_rate(event.getData().getAverageHeartRate());
         detail.setReps(1);
         detail.setStart_time(event.getStartTime());
         detail.setEnd_time(event.getEndTime());

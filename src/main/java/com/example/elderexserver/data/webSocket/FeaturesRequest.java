@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 @AllArgsConstructor
 public class FeaturesRequest {
     private List<Double> features;
-    private float averageHearthRate;
+    private float averageHeartRate;
 
     @JsonIgnore
     private final CompletableFuture<FeaturesResponse> responseFuture;
