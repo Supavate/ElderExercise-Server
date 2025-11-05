@@ -35,17 +35,21 @@ public interface ExerciseSessionRepository extends JpaRepository<Exercise_Sessio
         DATE(es.start_time) AS 'date',
         sd.exercise_id,
         e.name,
-        sd.reps
+        SUM(sd.reps) AS reps
     FROM
         exercise_session es
-    JOIN exercise_session_detail sd ON
-        sd.session_id = es.id
-    JOIN exercise e ON
-        e.id = sd.exercise_id
-    JOIN patient_routine pr ON
-        pr.id = es.patient_routine_id AND pr.patient_id = :patientId
+    JOIN
+        exercise_session_detail sd ON sd.session_id = es.id
+    JOIN
+        exercise e ON e.id = sd.exercise_id
+    JOIN
+        patient_routine pr ON pr.id = es.patient_routine_id
+    WHERE
+        pr.patient_id = :patientId
     GROUP BY
         es.id,
+        es.patient_routine_id,
+        es.start_time,
         sd.exercise_id
     ORDER BY
         es.start_time DESC;
