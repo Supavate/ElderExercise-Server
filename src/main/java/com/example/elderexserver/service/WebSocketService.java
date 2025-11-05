@@ -1,100 +1,62 @@
 package com.example.elderexserver.service;
 
-import com.example.elderexserver.data.exercise.DTO.ExerciseDataEvent;
-import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
-import com.example.elderexserver.data.exercise.DTO.OngoingSession;
-import com.example.elderexserver.data.exercise.DTO.SessionResultResponse;
-import com.example.elderexserver.data.exercise.Exercise_Session;
-import com.example.elderexserver.data.exercise.Exercise_Session_Detail;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.RemovalCause;
-import jakarta.annotation.PostConstruct;
+import com.example.elderexserver.Exception.ErrorResponse;
+import com.example.elderexserver.data.webSocket.ExerciseDataEvent;
+import com.example.elderexserver.data.webSocket.SessionResultResponse;
+import com.example.elderexserver.data.webSocket.SessionUpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import security.UserPrincipal;
 
 import java.security.Principal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class WebSocketService {
 
-    @Value("${websocket.session.timeout.minutes}")
-    private int sessionTimeoutMinutes;
-
-    private final ClassificationService classificationService;
+    private final WebSocketSessionService sessionService;
     private final SimpMessagingTemplate messagingTemplate;
-
-    private final PatientRoutineService patientRoutineService;
-    private final ExerciseSessionService exerciseSessionService;
-    private final ExerciseSessionDetailService exerciseSessionDetailService;
-
-    private Cache<String, OngoingSession> sessionCounts;
-
-    @PostConstruct
-    private void initCache() {
-        this.sessionCounts = Caffeine.newBuilder()
-                .expireAfterAccess(Duration.ofMinutes(sessionTimeoutMinutes))
-                .removalListener((String key, OngoingSession value, RemovalCause cause) -> {
-                    if (cause == RemovalCause.EXPIRED) {
-                        handleExpiredSession(key, value);
-                    }
-                })
-                .build();
-    }
-
-    private UserPrincipal asUserPrincipal(Principal principal) {
-        if (principal instanceof UserPrincipal userPrincipal) {
-            return userPrincipal;
-        }
-        log.error("Invalid principal type: {}. Expected UserPrincipal.", principal.getClass().getName());
-        throw new IllegalStateException("Invalid principal type. Expected UserPrincipal.");
-    }
-
-    private String getSessionId(Principal principal) {
-        return asUserPrincipal(principal).getSessionId();
-    }
 
     public void handleExerciseData(ExerciseDataEvent event, Principal principal) {
         String sessionId = getSessionId(principal);
+        Integer userId = getUserId(principal);
+        String userName = asUserPrincipal(principal).getName();
 
         if ("session_end".equals(event.getType())) {
-            sendFinalResult(principal, sessionId, event.getEndTime());
+            handleSessionEnd(principal, event.getEndTime());
             return;
         }
 
-        log.debug("Processing session {} for user {} with {} features",
-                sessionId,
-                principal.getName(),
-                event.getData().getFeatures().size());
-
-        FeaturesResponse response = classificationService.classify(event.getData());
-
-        OngoingSession ongoingSession = sessionCounts.get(sessionId,
-                k -> createNewSession(principal, event.getStartTime()));
-
-        if (ongoingSession == null) {
-            log.error("Failed to create session for sessionId: {}", sessionId);
-            throw new IllegalStateException("Session creation failed");
+        try {
+            SessionUpdateResult result = sessionService.updateSession(sessionId, userId, userName, event);
+            log.debug("Updated counts for session {}: exerciseId={}, count={}", sessionId, result.getExerciseId(), result.getCurrentCount());
+        } catch (Exception e) {
+            log.error("Error processing exercise data for session {}: {}",
+                    sessionId, e.getMessage(), e);
+            sendErrorToClient(principal, "Failed to process exercise data");
         }
+    }
 
-        synchronized (ongoingSession) {
-            ongoingSession.incrementExerciseCount(response.getExercise_id());
-            Exercise_Session_Detail detail = exerciseSessionDetailService.createSessionDetail(response, event);
-            ongoingSession.addSessionDetail(detail);
+    private void handleSessionEnd(Principal principal, LocalDateTime endTime) {
+        String sessionId = getSessionId(principal);
+        Integer userId = getUserId(principal);
+
+        try {
+            SessionResultResponse result = sessionService.finalizeSession(sessionId, endTime);
+            sendResultToClient(principal, result);
+
+            log.info("✅ Session completed: UserID={}, SessionID={}, Exercises={}",
+                    userId, sessionId, result.getExercises().size());
+
+        } catch (Exception e) {
+            log.error("Error finalizing session {}: {}", sessionId, e.getMessage(), e);
+            sendErrorToClient(principal, "Failed to finalize session");
         }
-        log.debug("Updated counts for session {}: {}", sessionId, ongoingSession.getCount());
     }
 
     public void sendResultToClient(Principal principal, SessionResultResponse result) {
@@ -110,62 +72,6 @@ public class WebSocketService {
         }
     }
 
-    private void sendFinalResult(Principal principal, String sessionId, LocalDateTime endTime) {
-        OngoingSession ongoingSession = sessionCounts.getIfPresent(sessionId);
-
-        if (ongoingSession == null) {
-            log.warn("No session data found for sessionId: {}. Sending empty result.", sessionId);
-            sendEmptyResult(principal, endTime);
-            return;
-        }
-
-        try {
-            SessionResultResponse response;
-
-            synchronized (ongoingSession) {
-                response = createSessionResult(principal, ongoingSession, endTime);
-            }
-
-            sendResultToClient(principal, response);
-            exerciseSessionService.saveSessionToDatabase(sessionId, ongoingSession, endTime);
-            sessionCounts.invalidate(sessionId);
-            log.debug("Cleaned up session data for: {}", sessionId);
-        } catch (Exception e) {
-            log.error("Error processing final result for session {}: {}", sessionId, e.getMessage(), e);
-        }
-    }
-
-    private OngoingSession createNewSession(Principal principal, LocalDateTime startTime) {
-        OngoingSession ongoingSession = new OngoingSession();
-        ongoingSession.setCount(new ConcurrentHashMap<>());
-
-        Exercise_Session session = new Exercise_Session();
-        UserPrincipal userPrincipal = asUserPrincipal(principal);
-        Integer patientId = userPrincipal.getUserId();
-
-        var patientRoutine = patientRoutineService.getCurrentPatientRoutineByPatientId(patientId);
-        if (patientRoutine == null) {
-            throw new IllegalStateException("No active routine found for patient: " + patientId);
-        }
-
-        session.setPatientRoutine(patientRoutine);
-        session.setStart_time(startTime);
-        session.setExercise_session_details(new ArrayList<>());
-
-        ongoingSession.setSession(session);
-        return ongoingSession;
-    }
-
-    private void handleExpiredSession(String sessionId, OngoingSession expiredSession) {
-        if (expiredSession == null) return;
-        log.warn("⚠️ Session expired: SessionID={}, ExerciseCount={}",sessionId, expiredSession.getCount().size());
-        try {
-            exerciseSessionService.saveSessionToDatabase(sessionId, expiredSession, LocalDateTime.now());
-        } catch (Exception e) {
-            log.error("Failed to save expired session {}: {}", sessionId, e.getMessage(), e);
-        }
-    }
-
     private void sendEmptyResult(Principal principal, LocalDateTime endTime) {
         SessionResultResponse emptyResponse = new SessionResultResponse(
                 "session_result",
@@ -175,24 +81,38 @@ public class WebSocketService {
         sendResultToClient(principal, emptyResponse);
     }
 
-    private SessionResultResponse createSessionResult( Principal principal, OngoingSession ongoingSession, LocalDateTime endTime) {
-        ConcurrentHashMap<Integer, Integer> counts = ongoingSession.getCount();
+    private void sendErrorToClient(Principal principal, String errorMessage) {
+        try {
+            ErrorResponse error = new ErrorResponse(
+                    500,
+                    "Exercise Session Error",
+                    errorMessage,
+                    LocalDateTime.now()
+            );
 
-        List<SessionResultResponse.SessionExercis> exercises = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
-            exercises.add(new SessionResultResponse.SessionExercis(
-                    entry.getKey(),
-                    entry.getValue()
-            ));
+            messagingTemplate.convertAndSendToUser(
+                    principal.getName(),
+                    "/topic/errors",
+                    error
+            );
+        } catch (Exception e) {
+            log.error("Failed to send error to user {}: {}", principal.getName(), e.getMessage(), e);
         }
+    }
 
-        UserPrincipal user = asUserPrincipal(principal);
-        log.info("📤 Created final result: UserID={}, SessionID={}, Exercises={}, TotalReps={}",
-                user.getUserId(),
-                user.getSessionId(),
-                exercises.size(),
-                counts.values().stream().mapToInt(Integer::intValue).sum());
+    private UserPrincipal asUserPrincipal(Principal principal) {
+        if (principal instanceof UserPrincipal userPrincipal) {
+            return userPrincipal;
+        }
+        log.error("Invalid principal type: {}. Expected UserPrincipal.", principal.getClass().getName());
+        throw new IllegalStateException("Invalid principal type. Expected UserPrincipal.");
+    }
 
-        return new SessionResultResponse("session_result", endTime, exercises);
+    private String getSessionId(Principal principal) {
+        return asUserPrincipal(principal).getSessionId();
+    }
+
+    private Integer getUserId(Principal principal) {
+        return asUserPrincipal(principal).getUserId();
     }
 }

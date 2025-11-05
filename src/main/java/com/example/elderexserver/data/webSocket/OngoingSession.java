@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.exercise.DTO;
+package com.example.elderexserver.data.webSocket;
 
 import com.example.elderexserver.data.exercise.Exercise_Session;
 import com.example.elderexserver.data.exercise.Exercise_Session_Detail;

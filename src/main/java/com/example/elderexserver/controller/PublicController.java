@@ -1,11 +1,11 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.exercise.DTO.FeaturesRequest;
+import com.example.elderexserver.data.webSocket.FeaturesRequest;
 import com.example.elderexserver.data.address.DTO.AmphoeView;
 import com.example.elderexserver.data.address.DTO.DistrictView;
 import com.example.elderexserver.data.address.DTO.ProvinceView;
 import com.example.elderexserver.data.address.DTO.ZipcodeView;
-import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
+import com.example.elderexserver.data.webSocket.FeaturesResponse;
 import com.example.elderexserver.data.patient.*;
 import com.example.elderexserver.data.staff.Role;
 import com.example.elderexserver.service.*;

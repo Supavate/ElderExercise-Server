@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.exercise.DTO;
+package com.example.elderexserver.data.webSocket;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,14 +19,14 @@ public class ExerciseDataEvent {
     private FeaturesRequest data;
 
     public LocalDateTime getStartTime() {
-        return parseStartTime(startTime);
+        return parseTime(startTime);
     }
 
     public LocalDateTime getEndTime() {
-        return parseStartTime(endTime);
+        return parseTime(endTime);
     }
 
-    private LocalDateTime parseStartTime(String time) {
+    private LocalDateTime parseTime(String time) {
         if (time == null) return null;
         double timestamp = Double.parseDouble(time);
         long millis = (long) timestamp;

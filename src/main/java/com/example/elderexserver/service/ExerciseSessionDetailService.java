@@ -1,7 +1,7 @@
 package com.example.elderexserver.service;
 
-import com.example.elderexserver.data.exercise.DTO.ExerciseDataEvent;
-import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
+import com.example.elderexserver.data.webSocket.ExerciseDataEvent;
+import com.example.elderexserver.data.webSocket.FeaturesResponse;
 import com.example.elderexserver.data.exercise.Exercise_Session_Detail;
 import com.example.elderexserver.repository.ExerciseRepository;
 import lombok.RequiredArgsConstructor;

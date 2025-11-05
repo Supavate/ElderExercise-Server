@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.exercise.DTO;
+package com.example.elderexserver.data.webSocket;
 
 import lombok.Getter;
 import lombok.Setter;

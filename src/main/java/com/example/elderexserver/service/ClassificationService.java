@@ -1,7 +1,7 @@
 package com.example.elderexserver.service;
 
-import com.example.elderexserver.data.exercise.DTO.FeaturesRequest;
-import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
+import com.example.elderexserver.data.webSocket.FeaturesRequest;
+import com.example.elderexserver.data.webSocket.FeaturesResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

@@ -1,6 +1,6 @@
 package com.example.elderexserver.controller;
 
-import com.example.elderexserver.data.exercise.DTO.ExerciseDataEvent;
+import com.example.elderexserver.data.webSocket.ExerciseDataEvent;
 import com.example.elderexserver.service.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

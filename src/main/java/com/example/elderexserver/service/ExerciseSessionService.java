@@ -2,7 +2,7 @@ package com.example.elderexserver.service;
 
 import com.example.elderexserver.Exception.ResourceNotFoundException;
 import com.example.elderexserver.data.exercise.DTO.NewExerciseSession;
-import com.example.elderexserver.data.exercise.DTO.OngoingSession;
+import com.example.elderexserver.data.webSocket.OngoingSession;
 import com.example.elderexserver.data.exercise.Exercise;
 import com.example.elderexserver.data.exercise.Exercise_Session;
 import com.example.elderexserver.data.exercise.Exercise_Session_Detail;
@@ -103,6 +103,7 @@ public class ExerciseSessionService {
         exerciseSessionRepository.delete(session);
     }
 
+    @Transactional
     public void save(Exercise_Session session) {
         exerciseSessionRepository.save(session);
     }

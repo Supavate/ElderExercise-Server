@@ -1,7 +1,7 @@
 package com.example.elderexserver.service;
 
-import com.example.elderexserver.data.exercise.DTO.FeaturesRequest;
-import com.example.elderexserver.data.exercise.DTO.FeaturesResponse;
+import com.example.elderexserver.data.webSocket.FeaturesRequest;
+import com.example.elderexserver.data.webSocket.FeaturesResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;

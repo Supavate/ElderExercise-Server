@@ -1,4 +1,4 @@
-package com.example.elderexserver.data.exercise.DTO;
+package com.example.elderexserver.data.webSocket;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
