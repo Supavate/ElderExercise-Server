@@ -44,8 +44,11 @@ public interface ExerciseSessionRepository extends JpaRepository<Exercise_Sessio
         e.id = sd.exercise_id
     JOIN patient_routine pr ON
         pr.id = es.patient_routine_id AND pr.patient_id = :patientId
+    GROUP BY
+        es.id,
+        sd.exercise_id
     ORDER BY
-        es.start_time DESC
+        es.start_time DESC;
     """, nativeQuery = true)
     List<ExerciseSessionHistoryView> findAllByPatientId(int patientId);
 }
