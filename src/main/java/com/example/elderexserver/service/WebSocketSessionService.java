@@ -27,7 +27,6 @@ public class WebSocketSessionService {
     @Value("${websocket.session.timeout.minutes}")
     private int sessionTimeoutMinutes;
 
-
     private final ClassificationService classificationService;
     private final PatientRoutineService patientRoutineService;
     private final ExerciseSessionService exerciseSessionService;
@@ -58,7 +57,7 @@ public class WebSocketSessionService {
 
     public SessionUpdateResult updateSession(String sessionId, Integer userId, String userName, ExerciseDataEvent event) {
 
-        log.debug("Processing session {} for user {} with {} features",
+        log.info("Processing session {} for user {} with {} features",
                 sessionId,
                 userName,
                 event.getData().getFeatures().size());
@@ -130,7 +129,7 @@ public class WebSocketSessionService {
             exerciseSessionService.saveSessionToDatabase(sessionId, ongoingSession, endTime);
             sessionCache.invalidate(sessionId);
 
-            log.debug("Finalized and cleaned up session: {}", sessionId);
+            log.info("Finalized and cleaned up session: {}", sessionId);
 
             return response;
         } catch (Exception e) {

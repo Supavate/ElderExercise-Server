@@ -12,7 +12,6 @@ import security.UserPrincipal;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Slf4j
 @Service
@@ -34,7 +33,7 @@ public class WebSocketService {
 
         try {
             SessionUpdateResult result = sessionService.updateSession(sessionId, userId, userName, event);
-            log.debug("Updated counts for session {}: exerciseId={}, count={}", sessionId, result.getExerciseId(), result.getCurrentCount());
+            log.info("Updated counts for session {}: exerciseId={}, count={}", sessionId, result.getExerciseId(), result.getCurrentCount());
         } catch (Exception e) {
             log.error("Error processing exercise data for session {}: {}",
                     sessionId, e.getMessage(), e);
@@ -66,19 +65,10 @@ public class WebSocketService {
                     "/topic/exercises",
                     result
             );
-            log.debug("Sent result to user {}", principal.getName());
+            log.info("Sent result to user {}", principal.getName());
         } catch (Exception e) {
             log.error("Failed to send result to user {}: {}", principal.getName(), e.getMessage(), e);
         }
-    }
-
-    private void sendEmptyResult(Principal principal, LocalDateTime endTime) {
-        SessionResultResponse emptyResponse = new SessionResultResponse(
-                "session_result",
-                endTime,
-                new ArrayList<>()
-        );
-        sendResultToClient(principal, emptyResponse);
     }
 
     private void sendErrorToClient(Principal principal, String errorMessage) {
