@@ -73,17 +73,21 @@ public class WebSocketSessionService {
         }
 
         synchronized (ongoingSession) {
-            ongoingSession.incrementExerciseCount(classified.getExercise_id());
+            ongoingSession.incrementExerciseCount(classified.getExercise_id(), classified.getExercise_name());
             Exercise_Session_Detail detail = exerciseSessionDetailService.createSessionDetail(classified, event);
             ongoingSession.addSessionDetail(detail);
         }
 
-        return new SessionUpdateResult(classified.getExercise_id(), ongoingSession.getCount().get(classified.getExercise_id()));
+        return new SessionUpdateResult(
+                classified.getExercise_id(),
+                ongoingSession.getExercises().get(classified.getExercise_id()).getName(),
+                ongoingSession.getExercises().get(classified.getExercise_id()).getCount()
+        );
     }
 
     private OngoingSession createNewSession(Integer userId, LocalDateTime startTime) {
         OngoingSession ongoingSession = new OngoingSession();
-        ongoingSession.setCount(new ConcurrentHashMap<>());
+        ongoingSession.setExercises(new ConcurrentHashMap<>());
 
         Exercise_Session session = new Exercise_Session();
 
@@ -102,7 +106,7 @@ public class WebSocketSessionService {
 
     private void handleExpiredSession(String sessionId, OngoingSession expiredSession) {
         if (expiredSession == null) return;
-        log.warn("⚠️ Session expired: SessionID={}, ExerciseCount={}",sessionId, expiredSession.getCount().size());
+        log.warn("⚠️ Session expired: SessionID={}, ExerciseCount={}",sessionId, expiredSession.getExercises().size());
         try {
             exerciseSessionService.saveSessionToDatabase(sessionId, expiredSession, LocalDateTime.now());
         } catch (Exception e) {
@@ -147,19 +151,18 @@ public class WebSocketSessionService {
     }
 
     private SessionResultResponse createSessionResult(OngoingSession ongoingSession, LocalDateTime endTime) {
-        ConcurrentHashMap<Integer, Integer> counts = ongoingSession.getCount();
+        ConcurrentHashMap<Integer, OngoingSession.Exercise> counts = ongoingSession.getExercises();
 
         List<SessionResultResponse.SessionExercis> exercises = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+        for (Map.Entry<Integer, OngoingSession.Exercise> entry : counts.entrySet()) {
             exercises.add(new SessionResultResponse.SessionExercis(
                     entry.getKey(),
-                    entry.getValue()
+                    entry.getValue().getName(),
+                    entry.getValue().getCount()
             ));
         }
 
-        log.info("📤 Created final result: Exercises={}, TotalReps={}",
-                exercises.size(),
-                counts.values().stream().mapToInt(Integer::intValue).sum());
+        log.info("📤 Created final result: {} Exercises", exercises);
 
         return new SessionResultResponse("session_result", endTime, exercises);
     }

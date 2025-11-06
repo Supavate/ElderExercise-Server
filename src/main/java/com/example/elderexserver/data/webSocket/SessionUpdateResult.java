@@ -7,5 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 public class SessionUpdateResult {
     private Integer exerciseId;
+    private String exerciseName;
     private Integer currentCount;
 }

@@ -20,6 +20,7 @@ public class SessionResultResponse {
     @NoArgsConstructor
     public static class SessionExercis {
         private Integer exerciseId;
+        private String exerciseName;
         private Integer rep;
     }
 }
