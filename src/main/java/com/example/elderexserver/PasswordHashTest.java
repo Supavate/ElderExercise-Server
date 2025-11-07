@@ -11,4 +11,3 @@ public class PasswordHashTest {
         System.out.println("Hashed password: " + hashedPassword);
     }
 }
-

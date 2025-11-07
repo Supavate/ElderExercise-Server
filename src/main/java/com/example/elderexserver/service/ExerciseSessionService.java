@@ -40,8 +40,8 @@ public class ExerciseSessionService {
     }
 
     public List<ExerciseSessionHistory> findHistoryByPatientIdWithOffset(int patientId, int offsetAmount) {
-        final int limit = 10;
-        List<ExerciseSessionHistoryView> views = exerciseSessionRepository.findAllByPatientId(patientId, offsetAmount * limit, limit);
+        final int limit = 5;
+        List<ExerciseSessionHistoryView> views = exerciseSessionRepository.findAllByPatientId(patientId, limit, offsetAmount * limit);
 
         if (views.isEmpty()) {
             return Collections.emptyList();

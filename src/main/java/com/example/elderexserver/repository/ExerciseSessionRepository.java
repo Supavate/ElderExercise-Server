@@ -79,38 +79,33 @@ public interface ExerciseSessionRepository extends JpaRepository<Exercise_Sessio
             ),
             ' Sec'
         ) AS session_time,
-        DATE(es.start_time) AS 'date',
+        DATE(es.start_time) AS date,
         sd.exercise_id,
         e.name,
         SUM(sd.reps) AS reps
-    FROM
-        exercise_session es
+    FROM (
+        SELECT id, patient_routine_id, start_time, end_time
+        FROM exercise_session
+        WHERE patient_routine_id IN (
+            SELECT id FROM patient_routine WHERE patient_id = :patientId
+        )
+        AND end_time IS NOT NULL
+        ORDER BY id DESC
+        LIMIT :limitAmount OFFSET :offsetAmount
+    ) es
     JOIN
         exercise_session_detail sd ON sd.session_id = es.id
     JOIN
         exercise e ON e.id = sd.exercise_id
     JOIN
         patient_routine pr ON pr.id = es.patient_routine_id
-    WHERE
-        pr.patient_id = :patientId
-        AND es.end_time IS NOT NULL
-        AND es.id IN (
-            SELECT id\s
-            FROM exercise_session\s
-            WHERE patient_routine_id IN (
-                SELECT id FROM patient_routine WHERE patient_id = :patientId
-            )
-            AND end_time IS NOT NULL
-            ORDER BY id DESC
-            LIMIT :limitAmount OFFSET :offsetAmount
-        )
     GROUP BY
         es.id,
         es.patient_routine_id,
         es.start_time,
         sd.exercise_id
     ORDER BY
-        es.id DESC;
+        es.id DESC
     """, nativeQuery = true)
     List<ExerciseSessionHistoryView> findAllByPatientId(int patientId, int limitAmount, int offsetAmount);
 }
