@@ -93,7 +93,7 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
         FROM
             patient_routine pr
         WHERE
-            pr.patient_id = 1 AND pr.start_date < NOW() AND pr.end_date > NOW()
+            pr.patient_id = :patientId AND pr.start_date < NOW() AND pr.end_date > NOW()
     """, nativeQuery = true)
     Patient_Routine findCurrentPatientRoutineByPatientId(@Param("patientId") Integer patientId);
 
@@ -160,7 +160,8 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
         JOIN exercise e ON
             e.id = re.exercise_id
         LEFT JOIN(
-            SELECT es.patient_routine_id,
+            SELECT
+                es.patient_routine_id,
                 sd.exercise_id,
                 SUM(sd.reps) AS total_reps
             FROM
@@ -184,79 +185,76 @@ public interface PatientRoutineRepository extends JpaRepository<Patient_Routine,
 
     @Query(value = """
         WITH
-            -- 1. Aggregate reps for today
-            daily AS(
+            daily_summary AS(
             SELECT
                 es.patient_routine_id,
                 sd.exercise_id,
-                SUM(sd.reps) AS total_reps
+                DATE(sd.start_time) AS exercise_date,
+                re.rep * re.set AS daily_target,
+                SUM(sd.reps) AS daily_reps,
+                DATE(sd.start_time) = CURDATE() AS is_today
             FROM
                 exercise_session_detail sd
             JOIN exercise_session es ON
                 es.id = sd.session_id
-            WHERE
-                sd.start_time >= CURDATE() AND sd.start_time < CURDATE() + INTERVAL 1 DAY
-            GROUP BY
-                es.patient_routine_id, sd.exercise_id),
-                -- 2. Aggregate reps per day for this week
-                weekly_daily AS(
-                SELECT
-                    es.patient_routine_id,
-                    sd.exercise_id,
-                    DATE(sd.start_time) AS exercise_date,
-                    SUM(sd.reps) AS total_reps
-                FROM
-                    exercise_session_detail sd
-                JOIN exercise_session es ON
-                    es.id = sd.session_id
-                WHERE
-                    YEARWEEK(sd.start_time, 1) = YEARWEEK(NOW(), 1)
-                GROUP BY
-                    es.patient_routine_id,
-                    sd.exercise_id,
-                    DATE(sd.start_time)),
-                    -- 3. Count days where weekly target was met
-                    weekly AS(
-                    SELECT
-                        wd.patient_routine_id,
-                        wd.exercise_id,
-                        COUNT(*) AS goal_hit
-                    FROM
-                        weekly_daily wd
-                    JOIN routine_exercises re ON
-                        re.exercise_id = wd.exercise_id AND re.routine_id = wd.patient_routine_id
-                    WHERE
-                        wd.total_reps >=(re.rep * re.set)
-                    GROUP BY
-                        wd.patient_routine_id,
-                        wd.exercise_id
-                )
-            SELECT
-                e.id AS exercise_id,
-                e.name AS exercise_name,
-                re.rep AS rep_per_set,
-                re.set AS set_per_day,
-                (re.rep * re.set) AS target_reps,
-                COALESCE(d.total_reps, 0) AS total_reps_today,
-                COALESCE(w.goal_hit, 0) AS weekly_goal_hit,
-                re.day AS goal_days_per_week
-            FROM
-                patient_routine pr
-            JOIN ROUTINE r ON
-                r.id = pr.routine_id
+            JOIN patient_routine pr ON
+                pr.id = es.patient_routine_id
             JOIN routine_exercises re ON
-                re.routine_id = pr.routine_id
-            JOIN exercise e ON
-                e.id = re.exercise_id
-            LEFT JOIN daily d ON
-                d.exercise_id = e.id AND d.patient_routine_id = pr.id
-            LEFT JOIN weekly w ON
-                w.exercise_id = e.id AND w.patient_routine_id = pr.id
+                re.routine_id = pr.routine_id AND re.exercise_id = sd.exercise_id
             WHERE
                 pr.patient_id = :patientId
-            ORDER BY
-                pr.routine_id,
-                e.id;
+                -- Inline calculations instead of variables
+                AND sd.start_time >= DATE_SUB(
+                    CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) AND sd.start_time < DATE_ADD(
+                        DATE_SUB(
+                            CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY),
+                            INTERVAL 7 DAY)
+                        GROUP BY
+                            es.patient_routine_id,
+                            sd.exercise_id,
+                            DATE(sd.start_time),
+                            re.rep * re.set
+                        )
+                    SELECT
+                        e.id AS exercise_id,
+                        e.name AS exercise_name,
+                        re.rep AS rep_per_set,
+                        re.set AS set_per_day,
+                        (re.rep * re.set) AS target_reps,
+                        COALESCE(
+                            SUM(
+                                CASE WHEN ds.is_today THEN ds.daily_reps ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS total_reps_today,
+                    COUNT(
+                        CASE WHEN ds.daily_reps >= ds.daily_target THEN 1
+                    END
+                    ) AS weekly_goal_hit,
+                    re.day AS goal_days_per_week
+                FROM
+                    patient_routine pr
+                JOIN ROUTINE r ON
+                    r.id = pr.routine_id
+                JOIN routine_exercises re ON
+                    re.routine_id = pr.routine_id
+                JOIN exercise e ON
+                    e.id = re.exercise_id
+                LEFT JOIN daily_summary ds ON
+                    ds.exercise_id = e.id AND ds.patient_routine_id = pr.id
+                WHERE
+                    pr.patient_id = :patientId
+                GROUP BY
+                    e.id,
+                    e.name,
+                    re.rep,
+                    re.set,
+                    re.day,
+                    pr.routine_id
+                ORDER BY
+                    pr.routine_id,
+                    e.id;
     """, nativeQuery = true)
     List<PatientProgressDashboardView> findPatientProgressDashboardByPatientId(@Param("patientId") Integer patientId);
 }
