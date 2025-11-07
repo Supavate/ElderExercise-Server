@@ -33,6 +33,18 @@ public class ExerciseSessionController {
         return ResponseEntity.ok(histories);
     }
 
+    @GetMapping("/history/{offsetAmount}")
+    public ResponseEntity<List<ExerciseSessionHistory>> getOffsetHistoryByPatientId(Authentication authentication, @PathVariable int offsetAmount) {
+        PatientAuth patientAuth = (PatientAuth) authentication.getPrincipal();
+        int patientId = patientAuth.getPatientId();
+
+        List<ExerciseSessionHistory> histories = exerciseSessionService.findHistoryByPatientIdWithOffset(patientId, offsetAmount);
+        if (histories.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(histories);
+    }
+
     @PostMapping("/new")
     public ResponseEntity<Exercise_Session> createNewSession(@RequestBody NewExerciseSession newExerciseSession) {
         Exercise_Session session = exerciseSessionService.newExerciseSession(newExerciseSession);

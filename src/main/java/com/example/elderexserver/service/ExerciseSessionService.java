@@ -36,6 +36,21 @@ public class ExerciseSessionService {
             return Collections.emptyList();
         }
 
+        return createPatientHistoryList(views);
+    }
+
+    public List<ExerciseSessionHistory> findHistoryByPatientIdWithOffset(int patientId, int offsetAmount) {
+        final int limit = 10;
+        List<ExerciseSessionHistoryView> views = exerciseSessionRepository.findAllByPatientId(patientId, offsetAmount * limit, limit);
+
+        if (views.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return createPatientHistoryList(views);
+    }
+
+    private List<ExerciseSessionHistory> createPatientHistoryList(List<ExerciseSessionHistoryView> views) {
         LinkedHashMap<String, ExerciseSessionHistory> result = new LinkedHashMap<>();
         Map<Integer, ExerciseSessionHistory.Session> sessionMap = new HashMap<>();
 
