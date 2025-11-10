@@ -93,7 +93,6 @@ public class RoutineService {
                     .orElseThrow(() -> new IllegalArgumentException("Exercise not found"));
 
             routine.getExercises().add(new Routine_exercises(
-                    routine,
                     exercise,
                     routineExercise.getRep(),
                     routineExercise.getSet(),

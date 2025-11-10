@@ -33,8 +33,7 @@ public class Routine_exercises {
     private int set;
     private int day;
 
-    public Routine_exercises(Routine routine, Exercise exercise, int rep, int set, int day) {
-        this.routine = routine;
+    public Routine_exercises(Exercise exercise, int rep, int set, int day) {
         this.exercise = exercise;
         this.rep = rep;
         this.set = set;
