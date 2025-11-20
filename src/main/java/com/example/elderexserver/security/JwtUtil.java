@@ -1,4 +1,4 @@
-package security;
+package com.example.elderexserver.security;
 
 import com.example.elderexserver.data.patient.Patient;
 import com.example.elderexserver.data.staff.Staff;

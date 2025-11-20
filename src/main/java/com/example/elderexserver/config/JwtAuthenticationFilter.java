@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import security.JwtUtil;
+import com.example.elderexserver.security.JwtUtil;
 
 import java.io.IOException;
 import java.util.Arrays;

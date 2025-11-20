@@ -17,8 +17,8 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import security.JwtUtil;
-import security.UserPrincipal;
+import com.example.elderexserver.security.JwtUtil;
+import com.example.elderexserver.security.UserPrincipal;
 
 @Slf4j
 @Configuration

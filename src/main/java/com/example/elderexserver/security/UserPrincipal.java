@@ -1,4 +1,4 @@
-package security;
+package com.example.elderexserver.security;
 
 import lombok.Getter;
 
